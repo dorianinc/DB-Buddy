@@ -1,9 +1,12 @@
-# DB-Daddy
-# <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="/backend/assets/lilypad-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="/backend/assets/lilypad.png">
-    <img src="/backend/assets/lilypad.png" alt="Lilypad logo" height="30" width="30">
-</picture> Lilypad
+<h1 style="display: flex; align-items: center;">
+  DB-Daddy
+  <picture style="margin-left: 10px;">
+    <source media="(prefers-color-scheme: dark)" srcset="/assets/images/db-white.png">
+    <source media="(prefers-color-scheme: light)" srcset="/assets/images/db-black.png">
+    <img src="/assets/images/db-white.png" alt="logo" height="30" width="30">
+  </picture>
+</h1>
+
 
 DB-Daddy is an application that is designed to remove the stress of updating your Render database every month by automating it. It's simple but powerful.
 
@@ -29,11 +32,12 @@ DB-Daddy is an application that is designed to remove the stress of updating you
 3. cd into the 'backend' folder and npm install all the dependencies
 4. In the same directory as the 'example.env' create a '.env' file
 5. Copy over all the content from the 'example.env' to the '.env'
-6. Run the the following command in terminal: 
+6. Run the the following command in terminal:
+   
    ```bash
    sh start-db.sh
    ```
-7. If you want to refresh the database, run the following command:
+8. If you want to refresh the database, run the following command:
    ```bash
    sh refresh-db.sh
    ```
@@ -43,4 +47,4 @@ You can access the Login and Signup Modal here. Also, we have a demo user button
 
 ![homepage] 
 
-[homepage]: /backend/assets/frontend.png
+[homepage]:/assets/images/screenshot.png
