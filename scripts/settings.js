@@ -58,7 +58,9 @@ const setupFormFields = (initialCredentials, initialPassword) => {
   }
 
   if (submitButton) {
-    submitButton.addEventListener("click", handleSubmit);
+    submitButton.addEventListener("click", (e) =>
+      handleSubmit(e, credentialsField.value, passwordField.value)
+    );
   }
 
   const validateAndToggleButton = () => {
@@ -77,21 +79,13 @@ const setupFormFields = (initialCredentials, initialPassword) => {
   validateAndToggleButton();
 };
 
-const handleSubmit = (event) => {
+const handleSubmit = async (event, credentials, password) => {
   event.preventDefault(); // Prevent form submission to handle via JavaScript
-
-  const credentials = credentialsField ? credentialsField.value : "";
-  const password = passwordField ? passwordField.value : "";
-
   if (
     validateCredentials(credentials).isValid &&
     validatePassword(password).isValid
   ) {
-    console.log("Form submitted with:", {
-      credentials,
-      password,
-    });
-    // Add further actions here, e.g., form submission via fetch/axios
+    await window.api.saveLoginInfo({credentials, password});
   } else {
     console.error("Form is invalid. Please correct the errors.");
   }
@@ -99,7 +93,6 @@ const handleSubmit = (event) => {
 
 const initializeSettings = async () => {
   try {
-    console.log("in try for initialize settings");
     const { credentials, password } = await window.api.getLoginInfo();
 
     // Call function to set up form fields
@@ -111,5 +104,4 @@ const initializeSettings = async () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   initializeSettings();
-  console.log("Modal is ready");
 });

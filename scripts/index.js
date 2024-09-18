@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
-  console.log("App is ready");
 });
 
 async function initializeApp() {
@@ -16,9 +15,6 @@ async function initializeApp() {
     const services = await window.api.getServices();
     const database = services.database;
     const apps = Object.values(services.apps);
-
-    console.log("🖥️  database: ", database);
-    console.log("🖥️  apps: ", apps);
 
     // Function to create a row
     const createRow = (name, status, type, lastDeployed) => {

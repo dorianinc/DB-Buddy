@@ -69,7 +69,7 @@ const createSettingsModal = () => {
   });
 
   modal.loadFile("./views/settings.html");
-  modal.webContents.openDevTools();
+  // modal.webContents.openDevTools();
 
   return modal;
 };

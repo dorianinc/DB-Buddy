@@ -1,4 +1,4 @@
 {
-    "credentials": null,
-    "password": null
-  }
+  "credentials": "dorianrdba@gmail.com",
+  "password": "password"
+}
