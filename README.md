@@ -1,9 +1,12 @@
 # DB-Daddy
-# <img src="/backend/assets/lilypad.png" height="30" width="30"> Lilypad
+# <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="/backend/assets/lilypad-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="/backend/assets/lilypad.png">
+    <img src="/backend/assets/lilypad.png" alt="Lilypad logo" height="30" width="30">
+</picture> Lilypad
 
-Lilypad is a website clone, inspired by [Airbnb](https://www.airbnb.com/). Airdnd can be used to connect hosts who want to post their homes or rooms for travelers to rent. Users can search for unique accommodations in various locations and leave reviews after their stay.
+DB-Daddy is an application that is designed to remove the stress of updating your Render database every month by automating it. It's simple but powerful.
 
-**Live Site: [Lilypad]([https://lilypad.onrender.com/](https://lilypad.onrender.com/))**
 
 #### Please see below links to project Wiki:
 * [Feature List](https://github.com/dorianinc/Lilypad/wiki/Features-List)
@@ -14,19 +17,11 @@ Lilypad is a website clone, inspired by [Airbnb](https://www.airbnb.com/). Airdn
 
 ## 💻 Tech Stack
 #### Frameworks, Platforms and Libraries:
+![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
-![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 
-#### Database:
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
-![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
-
-#### Hosting:
-![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
 #### How to start project locally:
 1. Clone the repo into a desired location
