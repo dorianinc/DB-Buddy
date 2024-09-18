@@ -5,7 +5,6 @@ const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
-const serviceIPC = require("./ipc/service");
 
 const isDev = !app.isPackaged;
 
