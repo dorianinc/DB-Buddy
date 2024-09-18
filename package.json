@@ -1,6 +1,35 @@
 {
+  "name": "db-daddy",
+  "version": "1.0.0",
+  "description": "Cause why not?",
+  "author": "dorian macias <dorianrmacias@gmail.com> (https://dorianmacias.dev/)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "watch": "webpack --config webpack.common.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dorianinc/db-daddy.git"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "^31.1.0",
+    "webpack-merge": "^6.0.1"
+  },
   "dependencies": {
-    "express": "^4.21.0",
-    "playwright": "^1.47.1"
+    "playwright": "^1.47.1",
+    "electron-window-state": "^5.0.3",
+    "electron-squirrel-startup": "^1.0.1"
   }
 }
