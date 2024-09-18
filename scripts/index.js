@@ -19,6 +19,9 @@ async function initializeApp() {
     // Function to create a row
     const createRow = (name, status, type, lastDeployed) => {
       const row = document.createElement("tr");
+      row.setAttribute("class", "table-row")
+      row.setAttribute("data-bs-toggle", "modal")
+      row.setAttribute("data-bs-target", "#service-modal")
 
       const nameCell = document.createElement("th");
       nameCell.setAttribute("scope", "row");

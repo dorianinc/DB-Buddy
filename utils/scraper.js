@@ -77,7 +77,7 @@ const getServices = async () => {
   }
 
   const response = { database, apps: services };
-  writeToFile("services.txt", response);
+  writeToFile(false, "services.txt", response);
   return response;
 };
 

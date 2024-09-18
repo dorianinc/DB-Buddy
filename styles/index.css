@@ -35,7 +35,6 @@ body {
   gap: 20px;
 }
 
-
 .main-container {
   display: flex;
   align-items: center;
@@ -46,4 +45,21 @@ body {
 
 .table {
   width: 90%;
+}
+
+.table-row:hover {
+  cursor: pointer;
+}
+
+.modal-content {
+  background-color: #373a3e;
+  color: #fff;
+}
+
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.modal-header .btn-close {
+  filter: invert(1); /* This inverts the color to white */
 }
