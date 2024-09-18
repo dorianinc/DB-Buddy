@@ -3,7 +3,7 @@
     "name": "test-db-1",
     "url": "https://dashboard.render.com/d/dpg-crkjs0jv2p9s73e30sm0-a",
     "type": "PostgreSQL",
-    "lastDeployed": "20 hours ago",
+    "lastDeployed": "a day ago",
     "status": "Available"
   },
   "apps": {
@@ -11,14 +11,14 @@
       "name": "Lilypad",
       "url": "https://dashboard.render.com/web/srv-cihg1d2ip7vpelu8jr7g",
       "type": "Web Service",
-      "lastDeployed": "a day ago",
+      "lastDeployed": "2 days ago",
       "status": "Deployed"
     },
     "Phaunos": {
       "name": "Phaunos",
       "url": "https://dashboard.render.com/web/srv-chhuslak728p863qudtg",
       "type": "Web Service",
-      "lastDeployed": "22 days ago",
+      "lastDeployed": "23 days ago",
       "status": "Deployed"
     },
     "Study-Buddy": {
