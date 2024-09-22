@@ -1,16 +1,38 @@
-const path = require('path');
-const fs = require('fs').promises;
+const path = require("path");
+const fs = require("fs").promises;
 
-const writeToFile = async (envFormat, file, data) => {
-  let filePath = path.resolve(__dirname, "..", "data", file);
-
-  if (envFormat) {
-    data = convertForEnv(data); 
-    filePath = path.resolve(__dirname, "..", file);
-  }
-
+const writeToFile = async (fileName, data, format = "plain" ) => {
   try {
-    await fs.writeFile(filePath, file === ".env" ? data : JSON.stringify(data, null, 2));
+    let filePath;
+    let dataToWrite;
+
+    // Assign values to filePath and dataToWrite based on the format
+    switch (format) {
+      case "json":
+        if (typeof data === "object") {
+          filePath = path.resolve(__dirname, "..", "data", fileName);
+          dataToWrite = JSON.stringify(data, null, 2);
+        } else {
+          throw new Error("Data must be an object for JSON format.");
+        }
+        break;
+      case "env":
+        if (typeof data === "object") {
+          filePath = path.resolve(__dirname, "..", fileName);
+          dataToWrite = convertToEnv(data);
+        } else {
+          throw new Error("Data must be an object for ENV format.");
+        }
+        break;
+      case "plain":
+      default:
+        filePath = path.resolve(__dirname, "..", "data", fileName);
+        dataToWrite = data;
+    }
+
+    // Write the data to the file here
+    fs.writeFile(filePath, dataToWrite);
+    console.log("File written successfully:", filePath);
   } catch (err) {
     console.error("Error writing to file:", err);
     throw err;
@@ -18,13 +40,16 @@ const writeToFile = async (envFormat, file, data) => {
 };
 
 // Extracted function to convert object keys/values into .env format
-function convertForEnv(data) {
+function convertToEnv(data) {
   let envData = "";
   for (const key in data) {
-    const snakeCaseKey = key.replace(/([A-Z])/g, '_$1').toUpperCase().trim();
+    const snakeCaseKey = key
+      .replace(/([A-Z])/g, "_$1")
+      .toUpperCase()
+      .trim();
     envData += `${snakeCaseKey}="${data[key]}"\n`;
   }
-  return envData; 
+  return envData;
 }
 
 const readFromFile = async (file) => {

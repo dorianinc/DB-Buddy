@@ -1,5 +1,6 @@
 const { ipcMain } = require("electron");
 const { getServices } = require("../utils/scraper");
+const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
   //  Get services from render
@@ -14,9 +15,16 @@ const serviceIPC = () => {
     }
   });
 
-  ipcMain.handle("greet", async (_e) => {
-    console.log("~~~~ Handling get-service-data ~~~~~");
-    return "hello world";
+  ipcMain.handle("save-service-env", async (_e, data) => {
+    console.log("~~~~ Handling save-service-data ~~~~~");
+    console.log("🖥️  data.appName: ", data.appName);
+    console.log("🖥️  data.env: ", data.env);
+    try {
+      await writeToFile(`${data.appName}.env`, data.env);
+    } catch (error) {
+      console.error("Error in save-service-data IPC handler:", error);
+      throw error;
+    }
   });
 };
 

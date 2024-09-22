@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { ipcMain } = require("electron");
-const { writeToFile, readFromFile } = require("../utils/helpers");
+const { writeToFile } = require("../utils/helpers");
 
 const authIPC = () => {
   //  Get login info
@@ -23,7 +23,7 @@ const authIPC = () => {
   ipcMain.handle("save-login-info", async (_e, data) => {
     console.log("~~~~ Handling save-login-info ~~~~~");
     try {
-      await writeToFile(true, ".env", data);
+      await writeToFile(".env", data, "env");
     } catch (error) {
       console.error("Error in get-login-info IPC handler:", error);
       throw error;
