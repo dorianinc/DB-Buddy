@@ -1,7 +1,7 @@
 const path = require("path");
-const fs = require("fs").promises;
+const fs = require("fs");
 
-const writeToFile = async (fileName, data, format = "plain" ) => {
+const writeToFile = async (fileName, data, format = "plain") => {
   try {
     let filePath;
     let dataToWrite;
@@ -31,7 +31,7 @@ const writeToFile = async (fileName, data, format = "plain" ) => {
     }
 
     // Write the data to the file here
-    fs.writeFile(filePath, dataToWrite);
+    fs.writeFileSync(filePath, dataToWrite);
     console.log("File written successfully:", filePath);
   } catch (err) {
     console.error("Error writing to file:", err);
@@ -53,11 +53,17 @@ function convertToEnv(data) {
 }
 
 const readFromFile = async (fileName) => {
-  console.log("🖥️  fileName: ", fileName)
-  const filePath = path.resolve(__dirname, "..", "data", fileName);
+  console.log("🖥️  fileName: ", fileName);
   try {
-    const data = await fs.readFile(filePath, "utf8");
-    return data;
+    const filePath = path.resolve(__dirname, "..", "data", fileName);
+    if (fs.existsSync(filePath)) {
+      console.log("file does exist");
+      const data = fs.readFileSync(filePath, "utf8");
+      return data;
+    } else {
+      console.log("file does not exist");
+      return null;
+    }
   } catch (err) {
     // Handle the error appropriately
     console.error("Error reading from file:", err);
@@ -65,16 +71,7 @@ const readFromFile = async (fileName) => {
   }
 };
 
-
-const convertToCamelCase = (str) => {
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-    return index === 0 ? word.toLowerCase() : word.toUpperCase();
-  }).replace(/\s+/g, '');
-}
-
-
 module.exports = {
   writeToFile,
   readFromFile,
-  convertToCamelCase
 };

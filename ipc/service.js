@@ -1,10 +1,6 @@
 const { ipcMain } = require("electron");
 const { getServices } = require("../utils/scraper");
-const {
-  writeToFile,
-  readFromFile,
-  convertToCamelCase,
-} = require("../utils/helpers");
+const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
   //  Get services from render
@@ -24,7 +20,7 @@ const serviceIPC = () => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
       const appName = data.toLowerCase();
-      console.log("🖥️  appName: ", appName)
+      console.log("🖥️  appName: ", appName);
       const services = await readFromFile(`${appName}.txt`);
       return services;
     } catch (error) {
@@ -35,9 +31,9 @@ const serviceIPC = () => {
 
   // Save service data to file
   ipcMain.handle("save-service-data", async (_e, data) => {
-    console.log("🖥️  data: ", data)
+    console.log("🖥️  data: ", data);
     console.log("~~~~ Handling save-service-data ~~~~~");
-    const appName = convertToCamelCase(data.appName.toLowerCase());
+    const appName = data.appName.toLowerCase();
     try {
       await writeToFile(`${appName}.txt`, data.env);
     } catch (error) {

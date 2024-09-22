@@ -1,4 +1,4 @@
-// const { convertToCamelCase } = require("../utils/helpers");
+
 
 // Function to handle modal population
 const populateModal = async (name, apps) => {
