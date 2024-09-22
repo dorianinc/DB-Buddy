@@ -52,8 +52,9 @@ function convertToEnv(data) {
   return envData;
 }
 
-const readFromFile = async (file) => {
-  const filePath = path.resolve(__dirname, "..", "data", file);
+const readFromFile = async (fileName) => {
+  console.log("🖥️  fileName: ", fileName)
+  const filePath = path.resolve(__dirname, "..", "data", fileName);
   try {
     const data = await fs.readFile(filePath, "utf8");
     return data;

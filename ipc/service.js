@@ -23,7 +23,9 @@ const serviceIPC = () => {
   ipcMain.handle("get-single-service-data", async (_e, data) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
-      const services = await readFromFile();
+      const appName = data.toLowerCase();
+      console.log("🖥️  appName: ", appName)
+      const services = await readFromFile(`${appName}.txt`);
       return services;
     } catch (error) {
       console.error("Error in get-service-data IPC handler:", error);
@@ -33,10 +35,11 @@ const serviceIPC = () => {
 
   // Save service data to file
   ipcMain.handle("save-service-data", async (_e, data) => {
+    console.log("🖥️  data: ", data)
     console.log("~~~~ Handling save-service-data ~~~~~");
-    const appName = convertToCamelCase(data.appName);
+    const appName = convertToCamelCase(data.appName.toLowerCase());
     try {
-      await writeToFile(`${appName}.env`, data.env);
+      await writeToFile(`${appName}.txt`, data.env);
     } catch (error) {
       console.error("Error in save-service-data IPC handler:", error);
       throw error;

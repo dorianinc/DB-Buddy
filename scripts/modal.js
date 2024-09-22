@@ -1,8 +1,22 @@
+// const { convertToCamelCase } = require("../utils/helpers");
+
 // Function to handle modal population
-const populateModal = (name, apps) => {
+const populateModal = async (name, apps) => {
   const app = apps[name];
   const textArea = document.querySelector("#env-text-area");
-  textArea.spellcheck = false;
+  try {
+    const fileData = await window.api.getSingleService(app.name);
+    console.log("🖥️  fileData: ", fileData);
+    textArea.spellcheck = false;
+    console.log("there is data");
+    textArea.value = fileData;
+  } catch (error) {
+    console.log("there is no data");
+    textArea.value = "";
+    textArea.innerText = "";
+    console.error("Error populating modal:", error);
+    throw error;
+  }
 
   const appNameSpan = document.querySelectorAll("#app-name");
   appNameSpan.forEach((span) => {
@@ -19,4 +33,3 @@ const populateModal = (name, apps) => {
     await window.api.saveEnv({ appName: app.name, env: envValues });
   });
 };
-
