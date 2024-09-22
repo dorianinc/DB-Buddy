@@ -1,19 +1,15 @@
+let previousHandler = null; // To store the previous handler
 
-
-// Function to handle modal population
 const populateModal = async (name, apps) => {
   const app = apps[name];
   const textArea = document.querySelector("#env-text-area");
+
   try {
     const fileData = await window.api.getSingleService(app.name);
-    console.log("🖥️  fileData: ", fileData);
     textArea.spellcheck = false;
-    console.log("there is data");
     textArea.value = fileData;
   } catch (error) {
-    console.log("there is no data");
     textArea.value = "";
-    textArea.innerText = "";
     console.error("Error populating modal:", error);
     throw error;
   }
@@ -25,11 +21,24 @@ const populateModal = async (name, apps) => {
 
   const button = document.querySelector("#save-env-btn");
 
-  button.addEventListener("click", async (e) => {
+  // If there's a previous handler, remove it
+  if (previousHandler) {
+    button.removeEventListener("click", previousHandler);
+  }
+
+  // Define the new handler
+  const newSaveHandler = async (e) => {
     e.preventDefault();
     const envValues = textArea.value;
+    console.log("🖥️  app.name: ", app.name);
     console.log("🖥️  envValues: ", envValues);
 
     await window.api.saveEnv({ appName: app.name, env: envValues });
-  });
+  };
+
+  // Add the new handler
+  button.addEventListener("click", newSaveHandler);
+
+  // Store the current handler so it can be removed later
+  previousHandler = newSaveHandler;
 };

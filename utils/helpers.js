@@ -53,7 +53,6 @@ function convertToEnv(data) {
 }
 
 const readFromFile = async (fileName) => {
-  console.log("🖥️  fileName: ", fileName);
   try {
     const filePath = path.resolve(__dirname, "..", "data", fileName);
     if (fs.existsSync(filePath)) {

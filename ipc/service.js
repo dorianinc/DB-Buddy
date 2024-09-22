@@ -20,7 +20,6 @@ const serviceIPC = () => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
       const appName = data.toLowerCase();
-      console.log("🖥️  appName: ", appName);
       const services = await readFromFile(`${appName}.txt`);
       return services;
     } catch (error) {
@@ -31,9 +30,10 @@ const serviceIPC = () => {
 
   // Save service data to file
   ipcMain.handle("save-service-data", async (_e, data) => {
-    console.log("🖥️  data: ", data);
     console.log("~~~~ Handling save-service-data ~~~~~");
     const appName = data.appName.toLowerCase();
+    console.log("🖥️  appName: ", appName)
+    console.log("🖥️  appName: ", appName)
     try {
       await writeToFile(`${appName}.txt`, data.env);
     } catch (error) {
