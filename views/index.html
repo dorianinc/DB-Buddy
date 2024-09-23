@@ -20,6 +20,7 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="../styles/index.css" />
+    <link rel="stylesheet" href="../styles/modal.css" />
   </head>
   <body>
     <div class="header">
@@ -28,13 +29,8 @@
     </div>
     <div class="main-container">
       <!-- Spinner -->
-      <div class="spinner-container">
-        <div
-          class="spinner-border text-light"
-          style="width: 3rem; height: 3rem"
-          role="status"
-        ></div>
-        <h2 class="text-light">Loading Web Services...</h2>
+      <div class="status-container">
+
       </div>
 
       <!-- Table (hidden initially) -->
@@ -62,7 +58,7 @@
       class="modal fade"
       id="service-modal"
       tabindex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="serviceModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
@@ -88,14 +84,24 @@
             </p>
           </div>
           <div class="modal-footer">
+            <div id="message-container" style="flex: 1; text-align: center">
+              <span id="message" style="display: none; font-size: 14px"></span>
+            </div>
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-secondary btn-md"
               data-bs-dismiss="modal"
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary" id="save-env-btn">Save changes</button>
+            <button
+              type="button"
+              class="btn btn-primary btn-md"
+              id="save-env-btn"
+              style="width: 130px; height: 38px"
+            >
+              <span>Save Changes</span>
+            </button>
           </div>
         </div>
       </div>

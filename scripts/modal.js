@@ -21,24 +21,51 @@ const populateModal = async (name, apps) => {
 
   const button = document.querySelector("#save-env-btn");
 
-  // If there's a previous handler, remove it
   if (previousHandler) {
     button.removeEventListener("click", previousHandler);
   }
 
-  // Define the new handler
   const newSaveHandler = async (e) => {
     e.preventDefault();
     const envValues = textArea.value;
-    console.log("🖥️  app.name: ", app.name);
-    console.log("🖥️  envValues: ", envValues);
+    const message = document.querySelector("#message");
 
-    await window.api.saveEnv({ appName: app.name, env: envValues });
+    // Reset message display
+    message.style.display = "none";
+    message.innerText = "";
+    button.innerText = "";
+    button.innerHTML = `
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+    `;
+
+    // Call the saveEnv API and handle response with if-else
+    const saveToEnv = await window.api.saveEnv({
+      appName: app.name,
+      env: envValues,
+    });
+
+    if (saveToEnv.success) {
+      setTimeout(() => {
+        button.innerHTML = `
+          <i class="fa-solid fa-circle-check" style="color: #ffffff;"></i>
+        `;
+        message.style.color = "green";
+        message.innerText = "Environment variables saved successfully!";
+        message.style.display = "block"; // Show the success message
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        button.innerHTML = `
+          <i class="fa-solid fa-circle-exclamation" style="color: #ffffff;"></i>
+        `;
+        message.style.color = "red";
+        message.innerText = "Failed to save environment variables.";
+        message.style.display = "block"; // Show the error message
+      }, 1500);
+    }
   };
 
-  // Add the new handler
   button.addEventListener("click", newSaveHandler);
 
-  // Store the current handler so it can be removed later
   previousHandler = newSaveHandler;
 };

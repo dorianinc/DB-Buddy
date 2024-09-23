@@ -1,0 +1,52 @@
+/* .modal{
+  width: 800px;
+} */
+
+.modal-content {
+  background-color: #373a3e;
+  color: #fff;
+  width: 800px;
+}
+
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.modal-header .btn-close {
+  filter: invert(1); /* This inverts the color to white */
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#env-text-area {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: none; /* Disables the drag-to-resize option */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.note {
+  font-size: 12px;
+  color: #f8f9fa; /* Light color for notes */
+  text-align: center;
+  margin-top: 10px;
+}
+
+#save-env-button {
+  position: relative;
+}
+
+#btn-spinner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+}
