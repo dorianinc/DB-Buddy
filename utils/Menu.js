@@ -1,6 +1,3 @@
-const { contextBridge, ipcRenderer } = require("electron");
-
-
 exports.createTemplate = (app, webContents, openSettings) => {
   return [
     {
@@ -15,8 +12,10 @@ exports.createTemplate = (app, webContents, openSettings) => {
         {
           label: "Refresh Services",
           click: () => {
-            // Send a message to the main process to trigger refresh
-            console.log("potato ========> ", webContents.getAllWebContents())
+            webContents.send(
+              "refresh-services",
+              "Add a new element to the DOM"
+            );
           },
         },
         {

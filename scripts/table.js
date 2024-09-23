@@ -1,6 +1,7 @@
 // Function to handle table population
 const populateTable = (table, database, apps) => {
   const tableBody = table.querySelector("tbody");
+  tableBody.innerHTML = ""
 
   // Function to create a row
   const createRow = (name, status, type, lastDeployed) => {

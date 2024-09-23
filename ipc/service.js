@@ -3,7 +3,6 @@ const { fetchRenderServices } = require("../utils/scraper");
 const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
-
   //  Get services from render
   const res = {
     success: true,
@@ -13,11 +12,9 @@ const serviceIPC = () => {
   };
 
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
-    console.log("🖥️  refresh : ", refresh )
-    console.log("🖥️  refresh : ", refresh )
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
-      const localServices = !refresh && await getLocalServices();
+      const localServices = !refresh && (await getLocalServices());
       const services = localServices || (await fetchRenderServices());
 
       res.success = true;
@@ -68,12 +65,6 @@ const serviceIPC = () => {
     }
   });
 
-
-  // refresh services 
-  ipcMain.handle("refresh-service-data", async (_e) => {
-    console.log("---------- hot potato -----------------")
-  });
-
   // Save service data to file
   ipcMain.handle("save-service-data", async (_e, data) => {
     console.log("~~~~ Handling save-service-data ~~~~~");
@@ -91,14 +82,5 @@ const serviceIPC = () => {
     }
   });
 };
-
-
-  // Handle the refresh request from the renderer
-  ipcMain.on('refresh-services-request', async (event) => {
-    console.log("Received request to refresh services");
-    // const response = await ipcMain.handle("refresh-service-data");
-    // event.reply('refresh-services-response', response); // Optional: reply back to renderer
-  });
-
 
 module.exports = serviceIPC;

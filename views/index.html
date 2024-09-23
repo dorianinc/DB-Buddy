@@ -29,14 +29,12 @@
     </div>
     <div class="main-container">
       <!-- Spinner -->
-      <div class="status-container">
-
-      </div>
+      <div class="status-container"></div>
 
       <!-- Table (hidden initially) -->
       <table
         class="table table-dark table-hover"
-        id="servicesTable"
+        id="services-table"
         style="display: none"
       >
         <thead>
@@ -47,7 +45,7 @@
             <th scope="col">Last Deployed</th>
           </tr>
         </thead>
-        <tbody class="table-body">
+        <tbody id="table-body">
           <!-- Rows will be inserted here -->
         </tbody>
       </table>
@@ -114,5 +112,6 @@
     <script src="../scripts/index.js"></script>
     <script src="../scripts/table.js"></script>
     <script src="../scripts/modal.js"></script>
+    <script src="../renderer.js"></script>
   </body>
 </html>
