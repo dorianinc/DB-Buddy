@@ -85,7 +85,7 @@ const handleSubmit = async (event, credentials, password) => {
     validateCredentials(credentials).isValid &&
     validatePassword(password).isValid
   ) {
-    await window.api.saveLoginInfo({credentials, password});
+    await window.api.auth.saveLoginInfo({credentials, password});
   } else {
     console.error("Form is invalid. Please correct the errors.");
   }
@@ -93,7 +93,7 @@ const handleSubmit = async (event, credentials, password) => {
 
 const initializeSettings = async () => {
   try {
-    const { credentials, password } = await window.api.getLoginInfo();
+    const { credentials, password } = await window.api.auth.getLoginInfo();
 
     // Call function to set up form fields
     setupFormFields(credentials, password);

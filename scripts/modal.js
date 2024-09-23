@@ -5,7 +5,7 @@ const populateModal = async (name, apps) => {
   const textArea = document.querySelector("#env-text-area");
 
   try {
-    const fileData = await window.api.getSingleService(app.name);
+    const fileData = await window.api.services.getSingleService(app.name);
     textArea.spellcheck = false;
     textArea.value = fileData;
   } catch (error) {
@@ -39,7 +39,7 @@ const populateModal = async (name, apps) => {
     `;
 
     // Call the saveEnv API and handle response with if-else
-    const saveToEnv = await window.api.saveEnv({
+    const saveToEnv = await window.api.services.saveEnv({
       appName: app.name,
       env: envValues,
     });

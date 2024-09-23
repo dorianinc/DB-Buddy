@@ -1,22 +1,18 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-// // Renderer process
-ipcRenderer.on('refresh-services-request', async (event, msg) => {
-  console.log("Received request to refresh services");
-  const response = await ipcRenderer.invoke("refresh-service-data");
-  event.sender.send('refresh-services-response', response);
-})
+// invoke --> executes immediately and returns a promise with the result
+// on --> sets up a listener that persists and waits for the event to trigger
 
 contextBridge.exposeInMainWorld("api", {
-  getServices: async (refreshBool) => ipcRenderer.invoke("get-service-data", refreshBool),
-  getSingleService: async (data) => ipcRenderer.invoke("get-single-service-data", data),
-  refreshServices: async () => ipcRenderer.invoke("refresh-service-data"),
-  getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
-  saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
-  saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
-  refreshService: (callback) => {
-    ipcRenderer.on('refresh-services', (_e, data) => {
-      callback(data);  
-    });
-  }
+  services: {
+    getServices: async (refreshBool) =>
+      ipcRenderer.invoke("get-service-data", refreshBool),
+    getSingleService: async (data) =>
+      ipcRenderer.invoke("get-single-service-data", data),
+    refreshService: (callback) => ipcRenderer.on("refresh-services", callback),
+  },
+  auth: {
+    getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
+    saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
+  },
 });

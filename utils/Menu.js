@@ -14,7 +14,6 @@ exports.createTemplate = (app, webContents, openSettings) => {
           click: () => {
             webContents.send(
               "refresh-services",
-              "Add a new element to the DOM"
             );
           },
         },

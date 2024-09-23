@@ -45,7 +45,7 @@ async function fetchServiceData(statusContainer, refresh) {
   `;
 
   try {
-    const fetchServices = await window.api.getServices(refresh);
+    const fetchServices = await window.api.services.getServices(refresh);
 
     // Handle both successful fetch and API-level failure
     if (!fetchServices.success) {
