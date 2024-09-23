@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   startApplication();
 });
 
-const startApplication = async () => {
+const startApplication = async (refreshApp = false) => {
   const statusContainer = document.querySelector(".status-container");
 
   const table = document.getElementById("servicesTable");
@@ -19,7 +19,7 @@ const startApplication = async () => {
     retryButton.disabled = false;
   });
 
-  const serviceData = await fetchServiceData(statusContainer);
+  const serviceData = await fetchServiceData(statusContainer, refreshApp);
   const database = serviceData.payload.database;
   const apps = serviceData.payload.apps;
   console.log("🖥️  serviceData: ", serviceData);
@@ -35,14 +35,14 @@ const startApplication = async () => {
   }
 };
 
-async function fetchServiceData(statusContainer) {
+async function fetchServiceData(statusContainer, refresh) {
   statusContainer.innerHTML = `
     <div class="spinner-border text-light" style="width: 3rem; height: 3rem" role="status"></div>
     <h2 class="text-light">Loading Web Services...</h2>
   `;
 
   try {
-    const fetchServices = await window.api.getServices();
+    const fetchServices = await window.api.getServices(refresh);
     
     // Handle both successful fetch and API-level failure
     if (!fetchServices.success) {

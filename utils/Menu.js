@@ -1,4 +1,7 @@
-exports.createTemplate = (app, openSettings) => {
+const { contextBridge, ipcRenderer } = require("electron");
+
+
+exports.createTemplate = (app, webContents, openSettings) => {
   return [
     {
       label: process.platform === "darwin" ? app.getName() : "Menu",
@@ -7,6 +10,13 @@ exports.createTemplate = (app, openSettings) => {
           label: "Settings",
           click: () => {
             openSettings();
+          },
+        },
+        {
+          label: "Refresh Services",
+          click: () => {
+            // Send a message to the main process to trigger refresh
+            console.log("potato ========> ", webContents.getAllWebContents())
           },
         },
         {

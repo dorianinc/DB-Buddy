@@ -1,8 +1,9 @@
 const { ipcMain } = require("electron");
-const { getServices } = require("../utils/scraper");
+const { fetchRenderServices } = require("../utils/scraper");
 const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
+
   //  Get services from render
   const res = {
     success: true,
@@ -11,10 +12,14 @@ const serviceIPC = () => {
     payload: null,
   };
 
-  ipcMain.handle("get-service-data", async (_e) => {
+  ipcMain.handle("get-service-data", async (_e, refresh = false) => {
+    console.log("🖥️  refresh : ", refresh )
+    console.log("🖥️  refresh : ", refresh )
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
-      const services = await getServices();
+      const localServices = !refresh && await getLocalServices();
+      const services = localServices || (await fetchRenderServices());
+
       res.success = true;
       res.message = "Successfully pulled data from Render";
       res.payload = services;
@@ -24,6 +29,29 @@ const serviceIPC = () => {
       res.success = false;
       res.error = error.message;
       return res;
+    }
+
+    async function getLocalServices() {
+      try {
+        const localData = await readFromFile("services.txt");
+        const parsedData = JSON.parse(localData);
+
+        if (parsedData && parsedData.database) {
+          const { database, apps } = parsedData;
+          const daysSinceLastDeploy = parseInt(
+            database.lastDeployed.split(" ").shift(),
+            10
+          );
+
+          if (daysSinceLastDeploy < 30 && Object.keys(apps).length > 0) {
+            return parsedData;
+          }
+        }
+        return null;
+      } catch (error) {
+        console.error("Error reading or parsing local data:", error);
+        return null;
+      }
     }
   });
 
@@ -38,6 +66,12 @@ const serviceIPC = () => {
       console.error("Error in get-service-data IPC handler:", error);
       throw error;
     }
+  });
+
+
+  // refresh services 
+  ipcMain.handle("refresh-service-data", async (_e) => {
+    console.log("---------- hot potato -----------------")
   });
 
   // Save service data to file
@@ -57,5 +91,14 @@ const serviceIPC = () => {
     }
   });
 };
+
+
+  // Handle the refresh request from the renderer
+  ipcMain.on('refresh-services-request', async (event) => {
+    console.log("Received request to refresh services");
+    // const response = await ipcMain.handle("refresh-service-data");
+    // event.reply('refresh-services-response', response); // Optional: reply back to renderer
+  });
+
 
 module.exports = serviceIPC;

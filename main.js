@@ -1,10 +1,7 @@
-const { app, BrowserWindow, Menu, Tray, ipcMain } = require("electron");
-const { createTemplate } = require("./utils/Menu");
+const { app, BrowserWindow, Menu, Tray } = require("electron");
 const path = require("path");
-const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
-const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 const windowStateKeeper = require("electron-window-state");
-const deployIPCListeners = require("./ipc");
+const deployIPCListeners = require("./ipc"); // Ensure this file exists and sets up IPC listeners
 
 const isDev = !app.isPackaged;
 
@@ -32,7 +29,6 @@ const createMainWindow = () => {
       enableRemoteModule: false,
       nodeIntegration: false,
     },
-    // alwaysOnTop: isDev ? true : false,
   });
 
   windowState.manage(mainWindow);
@@ -41,13 +37,15 @@ const createMainWindow = () => {
     mainWindow.webContents.openDevTools();
   }
 
+  let wc = mainWindow.webContents
+
+  console.log("all contents ===>", wc)
+    wc.on('dom-ready', () => {
+    console.log('DOM Ready')
+  })
+
   return mainWindow;
 };
-
-if (process.platform === "darwin") {
-  app.dock.setIcon(dockIcon);
-}
-////////////////////////////////////////////////////////////////
 
 const createSettingsModal = () => {
   const modal = new BrowserWindow({
@@ -57,7 +55,7 @@ const createSettingsModal = () => {
     height: 500,
     width: 400,
     autoHideMenuBar: true,
-    alwaysOnTop: isDev ? true : false,
+    alwaysOnTop: isDev,
     transparent: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -68,8 +66,6 @@ const createSettingsModal = () => {
   });
 
   modal.loadFile("./views/settings.html");
-  // modal.webContents.openDevTools();
-
   return modal;
 };
 
@@ -78,15 +74,9 @@ const openSettings = () => {
   const mainBounds = mainWindow.getBounds();
   const modalBounds = modal.getBounds();
 
-  // Calculate the position to center the modal window within the main window
-  const modalX = Math.round(
-    mainBounds.x + (mainBounds.width - modalBounds.width) / 2
-  );
-  const modalY = Math.round(
-    mainBounds.y + (mainBounds.height - modalBounds.height) / 2
-  );
+  const modalX = Math.round(mainBounds.x + (mainBounds.width - modalBounds.width) / 2);
+  const modalY = Math.round(mainBounds.y + (mainBounds.height - modalBounds.height) / 2);
 
-  // Set the position of the modal window
   modal.setPosition(modalX, modalY);
 
   modal.once("ready-to-show", () => {
@@ -95,18 +85,18 @@ const openSettings = () => {
 };
 
 const setTray = (app, openSettings) => {
-  let tray = null;
-  const template = createTemplate(app, openSettings);
+  const tray = new Tray(path.join(__dirname, "assets", "images", "react_icon.png"));
+  const template = []; // Replace with your menu template
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  tray = new Tray(trayIcon);
   tray.setContextMenu(menu);
 };
 
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
-  deployIPCListeners();
+  deployIPCListeners(); // Ensure this sets up IPC listeners properly
+
   setTray(app, openSettings);
 
   mainApp.once("ready-to-show", () => {

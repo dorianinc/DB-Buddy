@@ -33,7 +33,7 @@ const login = async (page) => {
   }
 };
 
-const getServices = async () => {
+const fetchRenderServices = async () => {
   try {
     const page = await getPage();
     await login(page);
@@ -89,11 +89,11 @@ const getServices = async () => {
     await writeToFile("services.txt", response, "json");
     return response;
   } catch (error) {
-    console.error("Error in getServices:", error);
+    console.error("Error in fetchRenderServices:", error);
     throw error; // Re-throw the error after logging
   }
 };
 
 module.exports = {
-  getServices,
+  fetchRenderServices,
 };
