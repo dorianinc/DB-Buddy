@@ -16,10 +16,11 @@
   filter: invert(1); /* This inverts the color to white */
 }
 
-.modal-body.service {
+.modal-body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
 .note {
@@ -27,6 +28,7 @@
   color: #f8f9fa; /* Light color for notes */
   text-align: center;
   margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 /* database modal css*/

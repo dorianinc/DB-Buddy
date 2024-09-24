@@ -1,19 +1,23 @@
-const { app, BrowserWindow, Menu, Tray, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, Tray } = require("electron");
 const { createTemplate } = require("./utils/Menu");
 const path = require("path");
-const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
-const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
 
-const isDev = !app.isPackaged;
+const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
+const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 
+const isDev = !app.isPackaged;
 let windowState;
 let mainWindow;
 
+// Exit if Electron Squirrel startup
 if (require("electron-squirrel-startup")) app.quit();
 
-const createMainWindow = () => {
+//---------------------- create windows ------------- //
+
+// Main Window Creation
+function createMainWindow() {
   windowState = windowStateKeeper({
     defaultHeight: 775,
     defaultWidth: 1315,
@@ -32,7 +36,6 @@ const createMainWindow = () => {
       enableRemoteModule: false,
       nodeIntegration: false,
     },
-    // alwaysOnTop: isDev ? true : false,
   });
 
   windowState.manage(mainWindow);
@@ -43,14 +46,10 @@ const createMainWindow = () => {
   }
 
   return mainWindow;
-};
-
-if (process.platform === "darwin") {
-  app.dock.setIcon(dockIcon);
 }
-////////////////////////////////////////////////////////////////
 
-const createSettingsModal = () => {
+// settings window creation
+function createSettingsWindow() {
   const modal = new BrowserWindow({
     parent: mainWindow,
     modal: true,
@@ -58,7 +57,7 @@ const createSettingsModal = () => {
     height: 500,
     width: 400,
     autoHideMenuBar: true,
-    alwaysOnTop: isDev ? true : false,
+    alwaysOnTop: isDev,
     transparent: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -69,17 +68,23 @@ const createSettingsModal = () => {
   });
 
   modal.loadFile("./views/settings.html");
-  // modal.webContents.openDevTools();
-
   return modal;
-};
+}
 
-const openSettings = () => {
-  const modal = createSettingsModal();
+// Set Dock Icon for macOS
+if (process.platform === "darwin") {
+  app.dock.setIcon(dockIcon);
+}
+
+//---------------------- helpers ------------- //
+
+// Open Settings Modal and Center within Main Window
+function openSettings() {
+  const modal = createSettingsWindow();
   const mainBounds = mainWindow.getBounds();
   const modalBounds = modal.getBounds();
 
-  // Calculate the position to center the modal window within the main window
+  // Center modal window within the main window
   const modalX = Math.round(
     mainBounds.x + (mainBounds.width - modalBounds.width) / 2
   );
@@ -87,35 +92,28 @@ const openSettings = () => {
     mainBounds.y + (mainBounds.height - modalBounds.height) / 2
   );
 
-  // Set the position of the modal window
   modal.setPosition(modalX, modalY);
 
   modal.once("ready-to-show", () => {
     modal.show();
   });
-};
+}
 
-const setTray = (app, openSettings) => {
-  let tray = null;
-  const template = createTemplate(app, openSettings);
+// Set Tray Icon and Menu
+function setTray(app, webContents, openSettings) {
+  const template = createTemplate(app, webContents, openSettings);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  tray = new Tray(trayIcon);
+  const tray = new Tray(trayIcon);
   tray.setContextMenu(menu);
-};
+}
+
+//---------------------- app initialization ------------- //
 
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
-  const webContents = mainApp.webContents
-  // setTimeout(() => {
-  //   console.log("in timeout ...")
-  //   mainApp.webContents.send(
-  //     "refresh-services",
-  //     "Add a new element to the DOM"
-  //   );
-  // }, 3000);
-
+  const webContents = mainApp.webContents;
 
   deployIPCListeners();
   setTray(app, webContents, openSettings);
@@ -125,6 +123,7 @@ app.whenReady().then(() => {
   });
 });
 
+// Quit the app when all windows are closed (except on macOS)
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

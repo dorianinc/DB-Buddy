@@ -21,7 +21,6 @@ const databaseIPC = () => {
 
       const localData = await readFromFile("database.txt");
       const parsedData = JSON.parse(localData);
-      console.log("🖥️  parsedData: ", parsedData);
 
       if (parsedData) {
         db.name = parsedData.name || null;
@@ -37,7 +36,6 @@ const databaseIPC = () => {
       res.error = error.message;
     }
 
-    console.log("Response: ", res);
     return res;
   });
 
