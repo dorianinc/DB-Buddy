@@ -12,6 +12,10 @@ contextBridge.exposeInMainWorld("api", {
     saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
     refreshService: (callback) => ipcRenderer.on("refresh-services", callback),
   },
+  database: {
+    getDatabase: async () => ipcRenderer.invoke("get-database-data"),
+    saveDatabase: async (data) => ipcRenderer.invoke("save-database-data", data),
+  },
   auth: {
     getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
     saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),

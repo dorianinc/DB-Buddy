@@ -3,7 +3,6 @@ const { fetchRenderServices } = require("../utils/scraper");
 const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
-  //  Get services from render
   const res = {
     success: true,
     message: "",
@@ -11,6 +10,7 @@ const serviceIPC = () => {
     payload: null,
   };
 
+  //  Get services from render
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
@@ -52,13 +52,16 @@ const serviceIPC = () => {
     }
   });
 
-  //  Get single service from data
+  //  Get single service data from file
   ipcMain.handle("get-single-service-data", async (_e, data) => {
-    console.log("~~~~ Handling get-service-data ~~~~~");
+    console.log("~~~~ Handling get-single-service-data ~~~~~");
     try {
       const appName = data.toLowerCase();
       const services = await readFromFile(`${appName}.txt`);
-      return services;
+      res.success = true;
+      res.message = "Successfully pulled data from Render";
+      res.payload = { services };
+      return res;
     } catch (error) {
       console.error("Error in get-service-data IPC handler:", error);
       throw error;

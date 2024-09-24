@@ -16,12 +16,38 @@
   filter: invert(1); /* This inverts the color to white */
 }
 
-.modal-body {
+.modal-body.service {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.note {
+  font-size: 12px;
+  color: #f8f9fa; /* Light color for notes */
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* database modal css*/
+#modal-form {
+  display: flex;
+  gap: 10px; /* Space between flex items */
+  width: 100%;
+  align-items: flex-start; /* Align items to the top */
+}
+
+
+#auto-update {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 12px;
+  margin-top: auto;
+}
+
+/* web service modal css*/
 #env-text-area {
   width: 100%;
   height: 200px;
@@ -33,20 +59,13 @@
   font-size: 14px;
 }
 
-.note {
-  font-size: 12px;
-  color: #f8f9fa; /* Light color for notes */
-  text-align: center;
-  margin-top: 10px;
-}
-
 #save-env-button {
   position: relative;
 }
 
-#btn-spinner{
+#btn-spinner {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); 
+  transform: translate(-50%, -50%);
 }

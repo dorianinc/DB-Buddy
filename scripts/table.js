@@ -15,7 +15,7 @@ const populateTable = (table, database, apps) => {
     // Pass the event along with name and apps
     row.addEventListener("click", () => {
       const appName = row.getAttribute("data-name");
-      openModal(appName, apps, type); // Send the name and apps to the modal
+      openModal(appName, apps, type); 
     });
 
     const nameCell = document.createElement("th");
