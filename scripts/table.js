@@ -10,11 +10,12 @@ const populateTable = (table, database, apps) => {
     row.setAttribute("data-bs-toggle", "modal");
     row.setAttribute("data-bs-target", "#service-modal");
     row.setAttribute("data-name", name);
+  
 
     // Pass the event along with name and apps
     row.addEventListener("click", () => {
       const appName = row.getAttribute("data-name");
-      populateModal(appName, apps); // Send the name and apps to the modal
+      openModal(appName, apps, type); // Send the name and apps to the modal
     });
 
     const nameCell = document.createElement("th");

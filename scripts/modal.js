@@ -1,6 +1,6 @@
 let previousHandler = null; // To store the previous handler
 
-const populateModal = async (name, apps) => {
+const openModal = async (name, apps) => {
   const app = apps[name];
   const textArea = document.querySelector("#env-text-area");
 
@@ -49,7 +49,6 @@ const populateModal = async (name, apps) => {
         button.innerHTML = `
           <i class="fa-solid fa-circle-check" style="color: #ffffff;"></i>
         `;
-        message.style.color = "green";
         message.innerText = "Environment variables saved successfully!";
         message.style.display = "block"; // Show the success message
       }, 1500);
@@ -69,3 +68,5 @@ const populateModal = async (name, apps) => {
 
   previousHandler = newSaveHandler;
 };
+
+

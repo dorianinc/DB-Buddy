@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.invoke("get-service-data", refreshBool),
     getSingleService: async (data) =>
       ipcRenderer.invoke("get-single-service-data", data),
+    saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
     refreshService: (callback) => ipcRenderer.on("refresh-services", callback),
   },
   auth: {
