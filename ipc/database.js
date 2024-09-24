@@ -16,6 +16,7 @@ const databaseIPC = () => {
     try {
       const db = {
         name: null,
+        key: null,
         autoUpdate: false,
       };
 
@@ -24,6 +25,7 @@ const databaseIPC = () => {
 
       if (parsedData) {
         db.name = parsedData.name || null;
+        db.key = parsedData.key || null;
         db.autoUpdate = parsedData.autoUpdate || false;
       }
 
