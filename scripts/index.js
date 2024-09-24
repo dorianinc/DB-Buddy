@@ -10,6 +10,9 @@ const startApplication = async (refreshApp = false) => {
   const table = document.getElementById("services-table");
   table.style.display = "none";
 
+  const buildButton = document.getElementById("build-button");
+  buildButton.style.display = "none";
+
   const retryButton = document.createElement("button");
   retryButton.className = "btn btn-primary";
   retryButton.innerText = "Retry";
@@ -30,6 +33,10 @@ const startApplication = async (refreshApp = false) => {
     retryButton.style.display = "none"; // Hide button if fetch is successful
     statusContainer.style.display = "none";
     table.style.display = "table";
+    buildButton.innerText = database.name
+      ? "Rebuild Database"
+      : "Build Database";
+    buildButton.style.display = "inline";
     populateTable(table, database, apps);
   } else {
     console.log("no service data");
