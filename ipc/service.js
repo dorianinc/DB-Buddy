@@ -35,11 +35,7 @@ const serviceIPC = () => {
 
         if (parsedData && parsedData.database) {
           const { database, apps } = parsedData;
-          const daysSinceLastDeploy = parseInt(
-            database.lastDeployed.split(" ").shift(),
-            10
-          );
-
+          const daysSinceLastDeploy = calculateDays(database.lastDeployed);
           if (daysSinceLastDeploy < 30 && Object.keys(apps).length > 0) {
             return parsedData;
           }
@@ -48,6 +44,14 @@ const serviceIPC = () => {
       } catch (error) {
         console.error("Error reading or parsing local data:", error);
         return null;
+      }
+    }
+
+    function calculateDays(timeString) {
+      if (timeString.includes("minute") || timeString.includes("second")) {
+        return 0;
+      } else {
+        return timeString.split(" ").shift();
       }
     }
   });

@@ -23,7 +23,7 @@ async function populateWithWebService(name, apps) {
     </div>
     <div class="modal-body service">
       <textarea id="env-text-area" placeholder="ENV variables go here..."></textarea>
-      <p class="note"><strong>Note:</strong> Don't include the variable internal database URL.</p>
+      <p class="note"><strong>Note:</strong> Don't include the variable internal database URL, and wrap values in double qoutes.</p>
     </div>
     <div class="modal-footer d-flex justify-content-between align-items-center">
       <div id="message-container" style="flex: 1; text-align: center">
