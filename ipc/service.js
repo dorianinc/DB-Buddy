@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron");
-const { fetchRenderServices } = require("../utils/scraper");
+const { fetchRenderData } = require("../scripts/fetchRenderData");
 const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const serviceIPC = () => {
@@ -14,8 +14,8 @@ const serviceIPC = () => {
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
-      const localServices = !refresh && (await getLocalServices());
-      const services = localServices || (await fetchRenderServices());
+      const localServices = !refresh && (await loadSavedServices());
+      const services = localServices || (await fetchRenderData());
 
       res.success = true;
       res.message = "Successfully pulled data from Render";
@@ -28,7 +28,7 @@ const serviceIPC = () => {
       return res;
     }
 
-    async function getLocalServices() {
+    async function loadSavedServices() {
       try {
         const localData = await readFromFile("services.txt");
         const parsedData = JSON.parse(localData);

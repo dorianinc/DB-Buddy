@@ -21,7 +21,7 @@ module.exports = {
     {
       name: "@electron-forge/maker-deb",
       config: {
-        name: "Happi Scraper"
+        name: "DB Daddy"
       },
     },
   ],

@@ -13,6 +13,7 @@ const startApplication = async (refreshApp = false) => {
   const buildButton = document.getElementById("build-button");
   buildButton.style.display = "none";
 
+
   const retryButton = document.createElement("button");
   retryButton.className = "btn btn-primary";
   retryButton.innerText = "Retry";
@@ -29,14 +30,18 @@ const startApplication = async (refreshApp = false) => {
   if (serviceData && !isEmpty(serviceData.payload.apps)) {
     const database = serviceData.payload.database;
     const apps = serviceData.payload.apps;
+    const buttonText = database.name
+    ? "Rebuild Database"
+    : "Build Database";
 
     retryButton.style.display = "none"; // Hide button if fetch is successful
     statusContainer.style.display = "none";
     table.style.display = "table";
-    buildButton.innerText = database.name
-      ? "Rebuild Database"
-      : "Build Database";
+    buildButton.innerText = buttonText
     buildButton.style.display = "inline";
+    buildButton.addEventListener("click", () => {
+      openModal(buttonText, null, "Warning");
+    });
     populateTable(table, database, apps);
   } else {
     console.log("no service data");

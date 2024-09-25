@@ -1,39 +1,8 @@
-const { chromium } = require("playwright");
-const { writeToFile } = require("./helpers");
 
-const getPage = async () => {
-  // Launch browser and open a new page
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+const { writeToFile } = require("../utils/helpers");
+const {getPage, login} = require("./helpers")
 
-  // Navigate to the website
-  await page.goto("https://dashboard.render.com/");
-  return page;
-};
-
-const login = async (page) => {
-  // Click the "Github" button
-  await page.getByRole("button", { name: "Github" }).click();
-
-  // Log in (if necessary)
-  await page.getByLabel("Username or email address").fill("dorianinc");
-  await page.waitForTimeout(1000);
-  await page.getByLabel("Password").fill("Drm#0540095");
-  await page.waitForTimeout(1000);
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await page.waitForTimeout(1000);
-
-  const authButton = page.getByRole("button", {
-    name: "Authorize Render",
-  });
-
-  const isVisible = await authButton.isVisible();
-  if (isVisible) {
-    await authButton.click();
-  }
-};
-
-const fetchRenderServices = async () => {
+const fetchRenderData = async () => {
   try {
     const page = await getPage();
     await login(page);
@@ -89,11 +58,11 @@ const fetchRenderServices = async () => {
     await writeToFile("services.txt", response, "json");
     return response;
   } catch (error) {
-    console.error("Error in fetchRenderServices:", error);
+    console.error("Error in fetchRenderData:", error);
     throw error; // Re-throw the error after logging
   }
 };
 
 module.exports = {
-  fetchRenderServices,
+  fetchRenderData,
 };
