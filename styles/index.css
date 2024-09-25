@@ -52,3 +52,7 @@ body {
 .table-row:hover {
   cursor: pointer;
 }
+
+.sync-check-input:hover{
+  cursor: pointer;
+}

@@ -13,7 +13,7 @@ const populateTable = (table, database, apps) => {
     if (type === "PostgreSQL") {
       const pizza = document.createElement("i");
 
-      pizza.setAttribute("class", "fa-solid fa-pizza-slice");
+      pizza.setAttribute("class", "fa-solid fa-robot");
       pizza.style.color = "#ffffff"
       syncCell.append(pizza);
     } else if (type === "Web Service") {
