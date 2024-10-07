@@ -6,9 +6,6 @@ const populateTable = (table, database, apps) => {
 
   // Function to create a row
   const createRow = (name, status, type, version = null, lastDeployed) => {
-    console.log("🖥️  name: ", name)
-    console.log("🖥️  status: ", status)
-    console.log("🖥️  lastDeployed: ", lastDeployed)
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
 

@@ -41,7 +41,7 @@ const startApplication = async (refreshApp = false) => {
     });
     populateTable(table, database, apps);
   } else {
-    console.log("no Render data");
+    console.log("No Render data");
     retryButton.style.display = "block"; // Show button if fetch fails
     statusContainer.append(retryButton);
   }

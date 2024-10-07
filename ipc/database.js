@@ -16,7 +16,6 @@ const databaseIPC = () => {
 
     try {
       const database = await fetchDatabase();
-      console.log("🖥️  database: ", database);
       res.payload = database;
       return res;
     } catch (error) {

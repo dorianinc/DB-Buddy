@@ -2,6 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
 const { formatDistanceToNow } = require("date-fns");
+const store = require("../store/index");
 
 const baseUrl = "https://api.render.com/v1";
 const databaseName = process.env.DATABASE_NAME; // name of new render database
@@ -12,16 +13,19 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 
 const fetchDatabase = async (databaseId) => {
   try {
+    const storedDatabase = store.get("database");
+    if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
+
     const response = databaseId
       ? await axios.get(`${baseUrl}/postgres/${databaseId}`, options)
       : await axios.get(`${baseUrl}/postgres`, options);
 
     if (databaseId && response.data) {
+      const database = response.data;
       const connectionInfo = await fetchConnectionInfo(databaseId);
-      return {
-        ...response.data,
-        connectionInfo: connectionInfo || null,
-      };
+      database.connectionInfo = connectionInfo || null;
+      store.set("database", database);
+      return database;
     }
 
     const freeDatabases = response.data
@@ -33,10 +37,9 @@ const fetchDatabase = async (databaseId) => {
       database.lastDeployed = lastDeployed =
         formatDistanceToNow(database.updatedAt) + " ago";
       const connectionInfo = await fetchConnectionInfo(database.id);
-      return {
-        ...database,
-        connectionInfo: connectionInfo || null,
-      };
+      database.connectionInfo = connectionInfo || null;
+      store.set("database", database);
+      return database; 
     }
 
     return null;
@@ -176,6 +179,11 @@ const handleError = (error, functionName) => {
     }`
   );
 };
+
+
+function isEmpty(obj) {
+  return Object.values(obj).length === 0;
+}
 
 module.exports = {
   fetchDatabase,

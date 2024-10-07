@@ -3,22 +3,28 @@ const axios = require("axios");
 const options = require("./configs");
 const baseUrl = "https://api.render.com/v1";
 const { formatDistanceToNow } = require("date-fns");
+const store = require("../store/index");
 
 // Service --------------------------------------------------------------------------------------------
 
 const fetchServices = async () => {
   try {
+    const storedServices = store.get("services");
+    if (storedServices && !isEmpty(storedServices)) return storedServices;
+
     const response = await axios.get(`${baseUrl}/services`, options);
     const services = await response.data
       .filter((item) => item.service.type === "web_service")
-      .map((item) => item.service);
+      .map((item) => item.service)
+      .filter((service) => service !== null);
 
     for (let service of services) {
       service.status = await checkServiceStatus(service);
-      service.lastDeployed = formatDistanceToNow(service.updatedAt) + " ago"
+      service.lastDeployed = formatDistanceToNow(service.updatedAt) + " ago";
     }
 
-    return services.filter((service) => service !== null);
+    store.set("services", services);
+    return services;
   } catch (error) {
     handleError(error, "fetchServices");
   }
@@ -94,6 +100,10 @@ const handleError = (error, functionName) => {
     }`
   );
 };
+
+function isEmpty(obj) {
+  return Object.values(obj).length === 0;
+}
 
 module.exports = {
   fetchServices,
