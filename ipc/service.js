@@ -1,3 +1,6 @@
+require("dotenv").config();
+
+const axios = require("axios");
 const { ipcMain } = require("electron");
 const { fetchRenderData } = require("../scripts/fetchRenderData");
 const { writeToFile, readFromFile } = require("../utils/helpers");
@@ -10,52 +13,30 @@ const serviceIPC = () => {
     payload: null,
   };
 
+  const API_KEY = process.env.RENDER_API_KEY;
+
   //  Get services from render
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
-    try {
-      const localServices = !refresh && (await loadSavedServices());
-      const services = localServices || (await fetchRenderData());
 
-      res.success = true;
-      res.message = "Successfully pulled data from Render";
-      res.payload = services;
-      return res;
-    } catch (error) {
-      console.error("Error in get-service-data IPC handler:", error);
-      res.success = false;
-      res.error = error.message;
-      return res;
-    }
+    const headers = {
+      Authorization: `Bearer ${API_KEY}`,
+      "Content-Type": "application/json",
+    };
 
-    async function loadSavedServices() {
+    const fetchData = async () => {
       try {
-        const localData = await readFromFile("services.txt");
-        const parsedData = JSON.parse(localData);
-
-        if (parsedData && parsedData.database) {
-          const { database, apps } = parsedData;
-          const daysSinceLastDeploy = calculateDays(database.lastDeployed);
-          if (daysSinceLastDeploy < 30 && Object.keys(apps).length > 0) {
-            return parsedData;
-          }
-        }
-        return null;
+        const response = await axios.get("https://api.render.com/v1/services?limit=20", headers);
+        console.log(response.data);
       } catch (error) {
-        console.error("Error reading or parsing local data:", error);
-        return null;
+        // Handle error
+        console.error(error);
       }
-    }
+    };
 
-    function calculateDays(timeString) {
-      if (timeString.includes("minute") || timeString.includes("second")) {
-        return 0;
-      } else {
-        return timeString.split(" ").shift();
-      }
-    }
+    fetchData();
   });
-
+ 
   //  Get single service data from file
   ipcMain.handle("get-single-service-data", async (_e, data) => {
     console.log("~~~~ Handling get-single-service-data ~~~~~");
