@@ -1,4 +1,5 @@
 const { ipcMain } = require("electron");
+const { fetchDatabase } = require("../controllers/database");
 const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const databaseIPC = () => {
@@ -14,31 +15,13 @@ const databaseIPC = () => {
     console.log("~~~~ Handling get-database-data ~~~~~");
 
     try {
-      const db = {
-        name: null,
-        key: null,
-        autoUpdate: false,
-      };
-
-      const localData = await readFromFile("database.txt");
-      const parsedData = JSON.parse(localData);
-
-      if (parsedData) {
-        db.name = parsedData.name || null;
-        db.key = parsedData.key || null;
-        db.autoUpdate = parsedData.autoUpdate || false;
-      }
-
-      res.success = true;
-      res.message = "Successfully retrieved data";
-      res.payload = db;
+      const database = await fetchDatabase();
+      console.log("🖥️  database: ", database);
+      res.payload = database;
+      return res;
     } catch (error) {
-      console.error("Error in get-database-data IPC handler:", error);
-      res.message = "Failed to retrieve data";
-      res.error = error.message;
+      handleError(error, "fetchDatabase");
     }
-
-    return res;
   });
 
   // Save database data to file

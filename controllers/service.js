@@ -1,0 +1,102 @@
+require("dotenv").config();
+const axios = require("axios");
+const options = require("./configs");
+const baseUrl = "https://api.render.com/v1";
+const { formatDistanceToNow } = require("date-fns");
+
+// Service --------------------------------------------------------------------------------------------
+
+const fetchServices = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/services`, options);
+    const services = await response.data
+      .filter((item) => item.service.type === "web_service")
+      .map((item) => item.service);
+
+    for (let service of services) {
+      service.status = await checkServiceStatus(service);
+      service.lastDeployed = formatDistanceToNow(service.updatedAt) + " ago"
+    }
+
+    return services.filter((service) => service !== null);
+  } catch (error) {
+    handleError(error, "fetchServices");
+  }
+};
+
+const deployService = async (service) => {
+  const body = {
+    clearCache: "do_not_clear",
+  };
+
+  try {
+    const response = await axios.post(
+      `${baseUrl}/services/${service.id}/deploys`,
+      body,
+      options
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error, "deployServices");
+  }
+};
+
+const checkServiceStatus = async (service) => {
+  return new Promise(async (resolve) => {
+    try {
+      let serviceStatus = "deploying";
+      while (serviceStatus === "deploying") {
+        await new Promise((timeoutResolve) =>
+          setTimeout(timeoutResolve, 10000)
+        );
+        const response = await axios.get(
+          `${baseUrl}/services/${service.id}/events?limit=10`,
+          options
+        );
+        const event = response.data[0].event;
+        const eventType = event.type;
+        const statusCode = event.details.status;
+        if (eventType === "deploy_ended") {
+          switch (statusCode) {
+            case 2:
+              serviceStatus = "deployed";
+              break;
+            case 3:
+              serviceStatus = "not deployed";
+              break;
+            default:
+              serviceStatus = "error";
+          }
+        }
+      }
+      resolve(serviceStatus);
+    } catch (error) {
+      handleError(error, "fetchServiceEvents");
+      resolve("error");
+    }
+  });
+};
+
+const handleError = (error, functionName) => {
+  const statusCode = error.response?.status;
+  const errorMessage =
+    error.response?.data?.message || "An unknown error occurred";
+
+  console.error(
+    `Error in ${functionName}: ${errorMessage} ${
+      !statusCode ? "" : `Status code: ${statusCode}`
+    }`
+  );
+
+  throw new Error(
+    `Error in ${functionName}: ${errorMessage} ${
+      !statusCode ? "" : `Status code: ${statusCode}`
+    }`
+  );
+};
+
+module.exports = {
+  fetchServices,
+  deployService,
+  checkServiceStatus,
+};

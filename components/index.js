@@ -13,7 +13,6 @@ const startApplication = async (refreshApp = false) => {
   const buildButton = document.getElementById("build-button");
   buildButton.style.display = "none";
 
-
   const retryButton = document.createElement("button");
   retryButton.className = "btn btn-primary";
   retryButton.innerText = "Retry";
@@ -25,45 +24,45 @@ const startApplication = async (refreshApp = false) => {
     retryButton.disabled = false;
   });
 
-  const serviceData = await fetchServiceData(statusContainer, refreshApp);
+  const renderData = await fetchRenderData(statusContainer, refreshApp);
 
-  if (serviceData && !isEmpty(serviceData.payload.apps)) {
-    const database = serviceData.payload.database;
-    const apps = serviceData.payload.apps;
-    const buttonText = database.name
-    ? "Rebuild Database"
-    : "Build Database";
+  if (renderData && !isEmpty(renderData.apps)) {
+    const database = renderData.database;
+    const apps = renderData.apps;
+    const buttonText = database.name ? "Rebuild Database" : "Build Database";
 
     retryButton.style.display = "none"; // Hide button if fetch is successful
     statusContainer.style.display = "none";
     table.style.display = "table";
-    buildButton.innerText = buttonText
+    buildButton.innerText = buttonText;
     buildButton.style.display = "inline";
     buildButton.addEventListener("click", () => {
       openModal(buttonText, null, "Warning");
     });
     populateTable(table, database, apps);
   } else {
-    console.log("no service data");
+    console.log("no Render data");
     retryButton.style.display = "block"; // Show button if fetch fails
     statusContainer.append(retryButton);
   }
 };
 
-async function fetchServiceData(statusContainer, refresh) {
+async function fetchRenderData(statusContainer, refresh) {
   statusContainer.innerHTML = `
     <div class="spinner-border text-light" style="width: 3rem; height: 3rem" role="status"></div>
     <h2 class="text-light">Loading Web Services...</h2>
   `;
 
   try {
+    const fetchDatabase = await window.api.database.getDatabase(refresh);
     const fetchServices = await window.api.services.getServices(refresh);
 
     // Handle both successful fetch and API-level failure
-    if (!fetchServices.success) {
+    if (!fetchDatabase.success || !fetchServices.success) {
       throw new Error("Failed to retrieve Render Data");
     }
-    return fetchServices;
+
+    return { database: fetchDatabase.payload, apps: fetchServices.payload };
   } catch (error) {
     console.error("Error fetching services:", error);
     statusContainer.innerHTML = `
