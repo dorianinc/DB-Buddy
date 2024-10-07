@@ -8,8 +8,17 @@
   width: 1500px;
 }
 
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0) !important; /* Ensures the backdrop remains transparent */
+  transition: none !important; /* Removes the fade transition */
+}
+
 .modal-backdrop.show {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.5); /* If you want to have a light background when open, adjust the opacity here */
+}
+
+.modal-backdrop.fade {
+  opacity: 0;
 }
 
 .modal-header .btn-close {
@@ -19,7 +28,7 @@
 .modal-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: flex-start; */
   justify-content: space-between;
 }
 

@@ -1,10 +1,7 @@
 const openModal = async (name, apps, type) => {
   switch (type) {
-    case "Web Service":
-      await populateWithWebService(name, apps);
-      break;
-    case "PostgreSQL":
-      await populateWithDatabase();
+    case "Settings":
+      await populateSettings();
       break;
     case "Warning":
       populateWithWarning(name);
@@ -14,151 +11,84 @@ const openModal = async (name, apps, type) => {
   }
 };
 
-function populateWithWarning(name) {
-  setModalSize("md");
 
-  setModalContent(`
-<div class="modal-header">
-  <h1 class="modal-title fs-5">${name}</h1>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
 
-<div class="modal-body database">
-  <div class="alert alert-warning mt-3">
-    <strong>Warning:</strong> You are about delete all existing variables from your app and replace them with the new values you've provided.
-  </div>
-  
-  <p class="note">
-    <strong>Note: The process may take a couple of minutes.</strong> 
-  </p>
-</div>
-
-<div class="modal-footer d-flex justify-content-between align-items-center">
-  <div id="message-container" style="flex: 1; text-align: center">
-    <span id="message" class="fs-6"></span>
-  </div>
-  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-  <button type="button" class="btn btn-danger" id="confirm-delete-btn" style="width: 130px; height: 38px">
-    <span>Continue</span>
-  </button>
-</div>
-
-  `);
-}
-
-async function populateWithWebService(name, apps) {
-  setModalSize("lg");
+async function populateSettings() {
+  setModalSize("lg")
 
   setModalContent(`
     <div class="modal-header">
       <h1 class="modal-title fs-5">
-        <span id="app-name"></span> Service Variables
+        <span id="app-name"></span> Settings Configuration
       </h1>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body service">
-      <textarea id="env-text-area" placeholder="ENV variables go here..."></textarea>
-      <p class="note"><strong>Note:</strong> Don't include the variable internal database URL, and wrap values in double qoutes.</p>
+    <div class="modal-body settings">
+      <div class="mb-3 row">
+        <div class="col">
+          <label for="db-name" class="form-label">Database Name</label>
+          <input type="text" class="form-control" id="db-name" placeholder="Enter database name">
+        </div>
+        <div class="col">
+          <label for="db-env-key" class="form-label">Database Env Key</label>
+          <input type="text" class="form-control" id="db-env-key" placeholder="Enter database env key">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="render-api-key" class="form-label">Render API Key</label>
+        <input type="password" class="form-control" id="render-api-key" placeholder="Enter Render API key">
+        <button class="btn btn-outline-secondary mt-2" type="button" id="toggle-api-key">Show</button>
+      </div>
+      <div class="mb-3">
+        <label for="region" class="form-label">Region</label>
+        <select class="form-select" id="region">
+          <option value="oregon">Oregon, USA</option>
+          <option value="ohio">Ohio, USA</option>
+          <option value="virginia">Virginia, USA</option>
+          <option value="frankfurt">Frankfurt, Germany</option>
+          <option value="singapore">Singapore</option>
+        </select>
+      </div>
+      <p class="note"><strong>Note:</strong> Ensure all keys and values are correct before saving.</p>
     </div>
     <div class="modal-footer d-flex justify-content-between align-items-center">
       <div id="message-container" style="flex: 1; text-align: center">
         <span id="message" class="fs-6"></span>
       </div>
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary" id="save-env-btn" style="width: 130px; height: 38px">
+      <button type="button" class="btn btn-primary" id="save-settings-btn" style="width: 130px; height: 38px">
         <span>Save Changes</span>
       </button>
     </div>
   `);
+  
+  // Toggle visibility for the API key
+  document.getElementById('toggle-api-key').addEventListener('click', function() {
+    const apiKeyInput = document.getElementById('render-api-key');
+    
+    // Toggle the input type
+    if (apiKeyInput.type === 'password') {
+      apiKeyInput.type = 'text';
+      this.textContent = 'Hide';
+    } else {
+      apiKeyInput.type = 'password';
+      this.textContent = 'Show';
+    }
+  });
+  
+  
 
-  const app = apps[name];
-  const textArea = document.querySelector("#env-text-area");
-  document.querySelector("#app-name").innerText = name;
+  // Optionally populate fields with existing data if necessary
+  // await populateFieldsWithSettingsData(app);
 
-  await populateTextAreaWithServiceData(app, textArea);
-
-  const saveButton = document.querySelector("#save-env-btn");
-  saveButton.addEventListener("click", (e) =>
-    handleSaveService(e, app, textArea)
-  );
+  const saveButton = document.querySelector("#save-settings-btn");
+  // saveButton.addEventListener("click", (e) =>
+  //   handleSaveSettings(e, app)
+  // );
 }
 
-async function populateWithDatabase() {
-  setModalSize("md");
 
-  setModalContent(`
-    <div class="modal-header">
-      <h1 class="modal-title fs-5">Database Preferences</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body database">
-      <div id="modal-form">
-          <label id="db-name">
-          Internal database key
-          <input type="text" id="db-key-input" name="db-key" placeholder="Ex: DATABASE_URL" />
-        </label>
-        <label id="db-name">
-        Database name
-          <input type="text" id="db-name-input" name="db-name" placeholder="Ex: my-db" />
-        </label>
-        <label id="auto-update">Auto-update
-          <input type="checkbox" id="auto-update-input" name="auto-update">
-        </label>
-      </div>
-      <p class="note">
-        <strong>Note:</strong> These values will be used when creating your new db.
-      </p>
-    </div>
-    <div class="modal-footer d-flex justify-content-between align-items-center">
-      <div id="message-container" style="flex: 1; text-align: center">
-        <span id="message" class="fs-6"></span>
-      </div>
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary" id="save-env-btn" style="width: 130px; height: 38px">
-        <span>Save Changes</span>
-      </button>
-    </div>
-  `);
 
-  const nameField = document.querySelector("#db-name-input");
-  const keyField = document.querySelector("#db-key-input");
-  const autoUpdateCheckbox = document.querySelector("#auto-update-input");
-
-  await populateDatabaseFields(nameField, keyField, autoUpdateCheckbox);
-
-  const saveButton = document.querySelector("#save-env-btn");
-  saveButton.addEventListener("click", (e) =>
-    handleSaveDatabase(e, nameField, keyField, autoUpdateCheckbox)
-  );
-}
-
-async function populateTextAreaWithServiceData(app, textArea) {
-  try {
-    const fileData = await window.api.services.getSingleService(app.name);
-    textArea.value = fileData.payload.services;
-    textArea.spellcheck = false;
-  } catch (error) {
-    textArea.value = "";
-    console.error("Error populating modal:", error);
-    throw error;
-  }
-}
-
-async function populateDatabaseFields(nameField, keyField, autoUpdateCheckbox) {
-  try {
-    const fileData = await window.api.database.getDatabase();
-    nameField.value = fileData.payload.name;
-    keyField.value = fileData.payload.key;
-    autoUpdateCheckbox.checked = fileData.payload.autoUpdate;
-    nameField.spellcheck = false;
-    keyField.spellcheck = false;
-  } catch (error) {
-    nameField.value = "";
-    keyField.value = "";
-    console.error("Error populating modal:", error);
-    throw error;
-  }
-}
 
 function setModalSize(size) {
   const modal = document.querySelector(".modal-dialog");
@@ -171,7 +101,7 @@ function setModalContent(content) {
   modalContent.innerHTML = content;
 }
 
-async function handleSaveService(e, app, textArea) {
+async function handleSaveSettings(e, app, textArea) {
   e.preventDefault();
   const saveButton = e.target;
   const envValues = textArea.value;
@@ -247,43 +177,6 @@ async function handleSaveDatabase(e, nameField, keyField, autoUpdateCheckbox) {
   }
 }
 
-// Function to validate ENV variables format
-function validateEnvVariables(envString) {
-  if (envString === null || !envString.length) {
-    return {
-      success: false,
-      message: "ENV values are required",
-    };
-  }
-
-  // Split the input into lines
-  const lines = envString.split("\n");
-
-  // Regex: matches valid ENV format like KEY="VALUE"
-  const envRegex = /^[A-Z0-9_]+="[^"]*"$/;
-
-  // Loop through each line and validate
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmedLine = line.trim(); // Trim any extra spaces
-
-    // Skip empty lines (allow multi-line ENV files)
-    if (trimmedLine === "") continue;
-
-    // Check if the line matches the ENV variable pattern
-    if (!envRegex.test(trimmedLine)) {
-      console.log(`Invalid ENV on line ${i + 1}:`, line); // Log the line number (1-based index)
-
-      // Return an object with success as false and the invalid line number
-      return {
-        success: false,
-        message: `Invalid ENV format at line ${i + 1}`,
-      };
-    }
-  }
-
-  return { success: true }; // All lines are valid
-}
 
 // Validation for the database key
 function validateDatabaseKey(key) {

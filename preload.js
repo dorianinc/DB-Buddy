@@ -14,10 +14,14 @@ contextBridge.exposeInMainWorld("api", {
   },
   database: {
     getDatabase: async () => ipcRenderer.invoke("get-database-data"),
-    saveDatabase: async (data) => ipcRenderer.invoke("save-database-data", data),
+    saveDatabase: async (data) =>
+      ipcRenderer.invoke("save-database-data", data),
   },
   auth: {
     getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
     saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
+  },
+  settings: {
+    open: (callback) => ipcRenderer.on("open-settings", callback),
   },
 });

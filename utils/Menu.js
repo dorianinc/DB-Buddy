@@ -6,7 +6,9 @@ exports.createTemplate = (app, webContents, openSettings) => {
         {
           label: "Settings",
           click: () => {
-            openSettings();
+            webContents.send("open-settings");
+
+            // openSettings();
           },
         },
         {

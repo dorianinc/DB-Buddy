@@ -9,24 +9,24 @@ const populateTable = (table, database, apps) => {
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
 
-    const syncCell = document.createElement("td");
-    if (type === "Database") {
-      const pizza = document.createElement("i");
-      pizza.setAttribute("class", "fa-solid fa-robot");
-      pizza.style.color = "#ffffff";
-      syncCell.append(pizza);
-    } else if (type === "Web Service") {
-      const checkBox = document.createElement("input");
-      checkBox.setAttribute("type", "checkbox");
-      checkBox.setAttribute("class", "sync-check-input");
-      checkBox.setAttribute("name", name);
-      checkBox.setAttribute("data-value", name);
-      checkBox.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent the checkbox click from triggering the row click
-      });
+    // const syncCell = document.createElement("td");
+    // if (type === "Database") {
+    //   const pizza = document.createElement("i");
+    //   pizza.setAttribute("class", "fa-solid fa-robot");
+    //   pizza.style.color = "#ffffff";
+    //   syncCell.append(pizza);
+    // } else if (type === "Web Service") {
+    //   const checkBox = document.createElement("input");
+    //   // checkBox.setAttribute("type", "checkbox");
+    //   checkBox.setAttribute("class", "sync-check-input");
+    //   checkBox.setAttribute("name", name);
+    //   checkBox.setAttribute("data-value", name);
+    //   checkBox.addEventListener("click", (e) => {
+    //     e.stopPropagation(); // Prevent the checkbox click from triggering the row click
+    //   });
 
-      syncCell.append(checkBox);
-    }
+    //   syncCell.append(checkBox);
+    // }
 
     const nameCell = document.createElement("td");
     nameCell.setAttribute("scope", "row");
@@ -55,7 +55,7 @@ const populateTable = (table, database, apps) => {
     lastDeployedCell.textContent = lastDeployed;
     addModalListener(lastDeployedCell, name, apps, type);
 
-    row.appendChild(syncCell);
+    // row.appendChild(syncCell);
     row.appendChild(nameCell);
     row.appendChild(statusCell);
     row.appendChild(typeCell);
@@ -70,7 +70,7 @@ const populateTable = (table, database, apps) => {
     element.setAttribute("data-name", name);
     element.addEventListener("click", () => {
       const appName = element.getAttribute("data-name");
-      openModal(appName, apps, type);
+      openModal(appName, apps, "Settings");
     });
   };
 

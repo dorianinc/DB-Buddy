@@ -79,10 +79,11 @@ if (process.platform === "darwin") {
 //---------------------- helpers ------------- //
 
 // Open Settings Modal and Center within Main Window
+// Open Settings Modal and Center within Main Window
 function openSettings() {
   const modal = createSettingsWindow();
-  const mainBounds = mainWindow.getBounds();
-  const modalBounds = modal.getBounds();
+  let mainBounds = mainWindow.getBounds();
+  let modalBounds = modal.getBounds();
 
   // Center modal window within the main window
   const modalX = Math.round(
@@ -97,7 +98,41 @@ function openSettings() {
   modal.once("ready-to-show", () => {
     modal.show();
   });
+
+  // Keep modal window within parent window bounds and move it with the parent
+  mainWindow.on('move', () => {
+    mainBounds = mainWindow.getBounds();  // Get updated main window bounds
+    modalBounds = modal.getBounds();      // Get updated modal bounds
+
+    let newModalX = Math.round(
+      mainBounds.x + (mainBounds.width - modalBounds.width) / 2
+    );
+    let newModalY = Math.round(
+      mainBounds.y + (mainBounds.height - modalBounds.height) / 2
+    );
+
+    modal.setPosition(newModalX, newModalY);
+  });
+
+  // Optional: Prevent the child window from being dragged outside the parent window
+  modal.on('move', () => {
+    const modalPos = modal.getPosition();
+    const modalX = modalPos[0];
+    const modalY = modalPos[1];
+
+    // Ensure the modal stays within the parent's bounds
+    const maxX = mainBounds.x + mainBounds.width - modalBounds.width;
+    const maxY = mainBounds.y + mainBounds.height - modalBounds.height;
+
+    let clampedX = Math.max(mainBounds.x, Math.min(modalX, maxX));
+    let clampedY = Math.max(mainBounds.y, Math.min(modalY, maxY));
+
+    if (modalX !== clampedX || modalY !== clampedY) {
+      modal.setPosition(clampedX, clampedY);
+    }
+  });
 }
+
 
 // Set Tray Icon and Menu
 function setTray(app, webContents, openSettings) {
