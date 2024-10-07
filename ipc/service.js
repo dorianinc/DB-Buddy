@@ -14,7 +14,7 @@ const serviceIPC = () => {
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
-      const services = await fetchServices();
+      const services = await fetchServices(refresh);
       res.payload = services;
       return res;
     } catch (error) {

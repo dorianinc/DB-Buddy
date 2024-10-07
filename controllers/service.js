@@ -7,9 +7,9 @@ const store = require("../store/index");
 
 // Service --------------------------------------------------------------------------------------------
 
-const fetchServices = async () => {
+const fetchServices = async (refresh) => {
   try {
-    const storedServices = store.get("services");
+    const storedServices = !refresh && store.get("services");
     if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);

@@ -11,23 +11,12 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 
 // Database --------------------------------------------------------------------------------------------
 
-const fetchDatabase = async (databaseId) => {
+const fetchDatabase = async (refresh) => {
   try {
-    const storedDatabase = store.get("database");
+    const storedDatabase = !refresh && store.get("database");
     if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
 
-    const response = databaseId
-      ? await axios.get(`${baseUrl}/postgres/${databaseId}`, options)
-      : await axios.get(`${baseUrl}/postgres`, options);
-
-    if (databaseId && response.data) {
-      const database = response.data;
-      const connectionInfo = await fetchConnectionInfo(databaseId);
-      database.connectionInfo = connectionInfo || null;
-      store.set("database", database);
-      return database;
-    }
-
+    const response = await axios.get(`${baseUrl}/postgres`, options);
     const freeDatabase = response.data
       .filter((db) => db.postgres.plan === "free")
       .map((db) => db.postgres)[0];
@@ -35,7 +24,8 @@ const fetchDatabase = async (databaseId) => {
     if (!isEmpty(freeDatabase)) {
       const { id, name, status, version } = freeDatabase;
       const database = { id, name, status, version };
-      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt) + " ago";
+      database.lastDeployed =
+        formatDistanceToNow(freeDatabase.updatedAt) + " ago";
       const { internalConnectionString } = await fetchConnectionInfo(id);
       database.internalDatabaseUrl = internalConnectionString || null;
       store.set("database", database);

@@ -11,11 +11,11 @@ const databaseIPC = () => {
   };
 
   // get database data from file
-  ipcMain.handle("get-database-data", async (_e) => {
+  ipcMain.handle("get-database-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-database-data ~~~~~");
 
     try {
-      const database = await fetchDatabase();
+      const database = await fetchDatabase(refresh);
       res.payload = database;
       return res;
     } catch (error) {
