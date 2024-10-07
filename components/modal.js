@@ -100,11 +100,11 @@ async function populateFieldsWithSettingsData(
 ) {
   try {
     const settingsData = await window.api.settings.getSettings();
-    dbNameField.value = settingsData.dbName;
-    dbKeyField.value = settingsData.dbKey;
-    apiKeyField.value = settingsData.apiKey;
-    if (settingsData.region) {
-      regionField.value = settingsData.region;
+    dbNameField.value = settingsData.payload.dbName;
+    dbKeyField.value = settingsData.payload.dbKey;
+    apiKeyField.value = settingsData.payload.apiKey;
+    if (settingsData.payload.region) {
+      regionField.value = settingsData.payload.region;
     }
   } catch (error) {
     // textArea.value = "";

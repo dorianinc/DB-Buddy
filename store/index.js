@@ -8,26 +8,26 @@ const schema = {
       properties: {
         id: {
           type: "string",
-          minLength: 1, // Ensures the name is not empty
+          minLength: 1,
         },
         name: {
           type: "string",
-          minLength: 1, // Ensures the name is not empty
+          minLength: 1,
         },
         type: {
           type: "string",
-          enum: ["web_service"], // Allowed types
+          enum: ["web_service"],
         },
         status: {
           type: "string",
-          enum: ["deployed", "pending", "failed"], // Allowed statuses
+          enum: ["deployed", "pending", "failed"],
         },
         lastDeployed: {
           type: "string",
-          minLength: 1, // Ensures lastDeployed is not empty
+          minLength: 1,
         },
       },
-      required: ["id", "name", "type", "status", "lastDeployed"], // Require these fields
+      required: ["id", "name", "type", "status", "lastDeployed"],
     },
   },
   database: {
@@ -35,27 +35,27 @@ const schema = {
     properties: {
       id: {
         type: "string",
-        minLength: 1, // Ensures the ID is not empty
+        minLength: 1,
       },
       name: {
         type: "string",
-        minLength: 1, // Ensures the name is not empty
+        minLength: 1,
       },
       status: {
         type: "string",
-        enum: ["available", "unavailable", "deployed"], // Define allowed statuses
+        enum: ["available", "unavailable", "deployed"],
       },
       version: {
         type: "string",
-        pattern: "^[0-9]+$", // Ensures the version is a numeric string
+        pattern: "^[0-9]+$",
       },
       lastDeployed: {
         type: "string",
-        minLength: 1, // Ensures lastDeployed is not empty
+        minLength: 1,
       },
       internalDatabaseUrl: {
         type: "string",
-        format: "uri", // This will check if the string is a valid URI
+        format: "uri",
       },
     },
     required: [
@@ -65,7 +65,32 @@ const schema = {
       "version",
       "lastDeployed",
       "internalDatabaseUrl",
-    ], // All fields are required
+    ],
+  },
+  settings: {
+    type: "object",
+    properties: {
+      dbName: {
+        type: "string",
+        pattern: "^(?![_-])[a-zA-Z0-9_-]+(?<![_-])$",
+        minLength: 1,
+      },
+      dbKey: {
+        type: "string",
+        pattern: "^[A-Z0-9_]+$",
+        minLength: 1,
+      },
+      apiKey: {
+        type: "string",
+        pattern: "^rnd_.*$",
+        minLength: 5,
+      },
+      region: {
+        type: "string",
+        enum: ["oregon", "ohio", "virginia", "frankfurt", "singapore"],
+      },
+    },
+    required: ["dbName", "dbKey", "apiKey", "region"],
   },
 };
 

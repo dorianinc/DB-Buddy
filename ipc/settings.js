@@ -14,8 +14,9 @@ const settingsIPC = () => {
   ipcMain.handle("get-settings-data", async (_e) => {
     console.log("~~~~ Handling get-settings-data ~~~~~");
     try {
-      const settings = await getSettings();
-      console.log("🖥️  settings: ", settings)
+      const settings = getSettings();
+      res.success = true;
+      res.message = "Successfully got settings data";
       res.payload = settings;
       return res;
     } catch (error) {
@@ -28,6 +29,9 @@ const settingsIPC = () => {
     console.log("~~~~ Handling save-settings-data ~~~~~");
     try {
       saveSettings(data)
+      res.success = true;
+      res.message = "Successfully saved settings data";
+      return res;
     } catch (error) {
       console.error("Error in get-service-data IPC handler:", error);
       throw error;

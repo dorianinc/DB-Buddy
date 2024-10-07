@@ -1,6 +1,12 @@
 const store = require("../store/index");
 
 // Settings --------------------------------------------------------------------------------------------
+const res = {
+  success: true,
+  message: "",
+  error: "",
+  payload: null,
+};
 
 const getSettings = () => {
   try {
@@ -16,7 +22,6 @@ const getSettings = () => {
         settings[key] = storedSettings[key] || null;
       }
     }
-    console.log("🖥️  settings in get settings: ", settings);
     return settings;
   } catch (error) {
     console.error("error ==> ", error);
@@ -24,8 +29,14 @@ const getSettings = () => {
 };
 
 const saveSettings = (settings) => {
-  console.log("🖥️  settings: ", settings);
-  console.log("🖥️  settings: ", settings);
+  try {
+    store.set("settings", settings);
+    res.success = true;
+    res.message = "Successfully saved variables";
+    return res;
+  } catch (error) {
+    console.error("error in saveSettings: ", error);
+  }
 };
 
 function isEmpty(obj) {
