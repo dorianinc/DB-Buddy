@@ -46,7 +46,8 @@ const schema = {
         enum: ["available", "unavailable", "deployed"], // Define allowed statuses
       },
       version: {
-        type: number,
+        type: "string",
+        pattern: "^[0-9]+$", // Ensures the version is a numeric string
       },
       lastDeployed: {
         type: "string",
