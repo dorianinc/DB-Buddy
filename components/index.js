@@ -3,12 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const openSettings = () => {
-  console.log("bark bark")
-
-  const myModal = new bootstrap.Modal(document.getElementById('main-modal'));
-  openModal(null, null, "Settings")
+  const myModal = new bootstrap.Modal(document.getElementById("main-modal"));
+  openModal("Settings");
   myModal.show();
-}
+};
 
 const startApplication = async (refreshApp = false) => {
   console.log("starting application....");

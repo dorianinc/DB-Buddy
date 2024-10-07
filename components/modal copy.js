@@ -147,6 +147,7 @@ async function populateTextAreaWithServiceData(app, textArea) {
 async function populateDatabaseFields(nameField, keyField, autoUpdateCheckbox) {
   try {
     const fileData = await window.api.database.getDatabase();
+    console.log("🖥️  fileData: ", fileData);
     nameField.value = fileData.payload.name;
     keyField.value = fileData.payload.key;
     autoUpdateCheckbox.checked = fileData.payload.autoUpdate;
@@ -181,6 +182,10 @@ async function handleSaveService(e, app, textArea) {
   saveButton.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>`;
 
   // Perform validation
+  console.log("🖥️  envValues : ", envValues);
+  console.log("🖥️  envValues !== null: ", envValues !== null);
+  const isEnvValid = validateEnvVariables(envValues);
+  console.log("🖥️  isEnvValid: ", isEnvValid);
 
   if (!isEnvValid.success) {
     displayMessage(isEnvValid.message, false, saveButton);

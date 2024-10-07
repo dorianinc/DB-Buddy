@@ -1,20 +1,15 @@
-const openModal = async (name, apps, type) => {
+const openModal = async (type) => {
   switch (type) {
     case "Settings":
       await populateSettings();
-      break;
-    case "Warning":
-      populateWithWarning(name);
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
 };
 
-
-
 async function populateSettings() {
-  setModalSize("lg")
+  setModalSize("lg");
 
   setModalContent(`
     <div class="modal-header">
@@ -35,8 +30,8 @@ async function populateSettings() {
         </div>
       </div>
       <div class="mb-3">
-        <label for="render-api-key" class="form-label">Render API Key</label>
-        <input type="password" class="form-control" id="render-api-key" placeholder="Enter Render API key">
+        <label for="api-key" class="form-label">Render API Key</label>
+        <input type="password" class="form-control" id="api-key" placeholder="Enter Render API key">
         <button class="btn btn-outline-secondary mt-2" type="button" id="toggle-api-key">Show</button>
       </div>
       <div class="mb-3">
@@ -61,34 +56,62 @@ async function populateSettings() {
       </button>
     </div>
   `);
-  
+
   // Toggle visibility for the API key
-  document.getElementById('toggle-api-key').addEventListener('click', function() {
-    const apiKeyInput = document.getElementById('render-api-key');
-    
-    // Toggle the input type
-    if (apiKeyInput.type === 'password') {
-      apiKeyInput.type = 'text';
-      this.textContent = 'Hide';
-    } else {
-      apiKeyInput.type = 'password';
-      this.textContent = 'Show';
-    }
-  });
-  
-  
+  document
+    .getElementById("toggle-api-key")
+    .addEventListener("click", function () {
+      const apiKeyInput = document.getElementById("api-key");
+
+      // Toggle the input type
+      if (apiKeyInput.type === "password") {
+        apiKeyInput.type = "text";
+        this.textContent = "Hide";
+      } else {
+        apiKeyInput.type = "password";
+        this.textContent = "Show";
+      }
+    });
+
+  const dbNameField = document.querySelector("#db-name");
+  const dbKeyField = document.querySelector("#db-env-key");
+  const apiKeyField = document.querySelector("#api-key");
+  const regionField = document.querySelector("#region");
 
   // Optionally populate fields with existing data if necessary
-  // await populateFieldsWithSettingsData(app);
+  await populateFieldsWithSettingsData(
+    dbNameField,
+    dbKeyField,
+    apiKeyField,
+    regionField
+  );
 
   const saveButton = document.querySelector("#save-settings-btn");
-  // saveButton.addEventListener("click", (e) =>
-  //   handleSaveSettings(e, app)
-  // );
+  saveButton.addEventListener("click", (e) =>
+    handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField)
+  );
 }
 
-
-
+async function populateFieldsWithSettingsData(
+  dbNameField,
+  dbKeyField,
+  apiKeyField,
+  regionField
+) {
+  try {
+    const settingsData = await window.api.settings.getSettings();
+    dbNameField.value = settingsData.dbName;
+    dbKeyField.value = settingsData.dbKey;
+    apiKeyField.value = settingsData.apiKey;
+    if (settingsData.region) {
+      regionField.value = settingsData.region;
+    }
+  } catch (error) {
+    // textArea.value = "";
+    console.error("Error populating modal:", error);
+    throw error;
+  }
+}
 
 function setModalSize(size) {
   const modal = document.querySelector(".modal-dialog");
@@ -101,100 +124,63 @@ function setModalContent(content) {
   modalContent.innerHTML = content;
 }
 
-async function handleSaveSettings(e, app, textArea) {
+async function handleSaveSettings(
+  e,
+  dbNameField,
+  dbKeyField,
+  apiKeyField,
+  regionField
+) {
   e.preventDefault();
   const saveButton = e.target;
-  const envValues = textArea.value;
+  const dbName = dbNameField.value || null;
+  const dbKey = dbKeyField.value || null;
+  const apiKey = apiKeyField.value || null;
+  const region = regionField.value || null;
 
   // Clear any previous messages or icons
   resetMessageAndButton(saveButton);
   saveButton.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>`;
 
   // Perform validation
+  const isValidName = validateDatabaseName(dbName);
+  const isValidDbKey = validateDatabaseKey(dbKey);
+  const isValidApiKey = validateApiKey(apiKey);
+  const isValidRegion = validateRegion(region);
 
-  if (!isEnvValid.success) {
-    displayMessage(isEnvValid.message, false, saveButton);
+  if (!isValidName.success) {
+    displayMessage(isValidName.message, false, saveButton);
+    return; // Stop execution if validation fails
+  }
+  if (!isValidDbKey.success) {
+    displayMessage(isValidDbKey.message, false, saveButton);
+    return; // Stop execution if validation fails
+  }
+  if (!isValidApiKey.success) {
+    displayMessage(isValidApiKey.message, false, saveButton);
+    return; // Stop execution if validation fails
+  }
+  if (!isValidRegion.success) {
+    displayMessage(isValidRegion.message, false, saveButton);
     return; // Stop execution if validation fails
   }
 
   try {
-    const saveResponse = await window.api.services.saveEnv({
-      appName: app.name,
-      env: envValues,
+    const saveResponse = await window.api.settings.saveSettings({
+      dbName,
+      dbKey,
+      apiKey,
+      region,
     });
     displayMessage(
-      saveResponse.success
-        ? "Environment variables saved!"
-        : "Failed to save environment variables.",
+      saveResponse.success ? "Settings saved!" : "Failed to save setting.",
       saveResponse.success,
       saveButton
     );
   } catch (error) {
-    console.error("Error saving environment variables:", error);
-    displayMessage("Failed to save environment variables.", false, saveButton);
+    console.error("Error saving settings:", error);
+    displayMessage("Failed to save settings", false, saveButton);
   }
-}
-
-async function handleSaveDatabase(e, nameField, keyField, autoUpdateCheckbox) {
-  e.preventDefault();
-  const saveButton = e.target;
-  const dbName = nameField.value || null;
-  const dbKey = keyField.value || null;
-
-  // Clear previous messages or icons
-  resetMessageAndButton(saveButton);
-  saveButton.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>`;
-
-  // Perform validation
-  const validateKey = validateDatabaseKey(dbKey);
-  const validateName = validateDatabaseName(dbName);
-
-  // If validation fails, show error messages and stop execution
-  if (!validateKey.success) {
-    displayMessage(validateKey.message, false, saveButton);
-    return;
-  }
-
-  if (!validateName.success) {
-    displayMessage(validateName.message, false, saveButton);
-    return;
-  }
-
-  try {
-    const saveResponse = await window.api.database.saveDatabase({
-      name: dbName,
-      key: dbKey,
-      autoUpdate: autoUpdateCheckbox.checked,
-    });
-    displayMessage(
-      "Successfully saved database details.",
-      saveResponse.success,
-      saveButton
-    );
-  } catch (error) {
-    console.error("Error saving database details:", error);
-    displayMessage("Failed to save database details.", false, saveButton);
-  }
-}
-
-
-// Validation for the database key
-function validateDatabaseKey(key) {
-  if (key === null || !key.length) {
-    return {
-      success: false,
-      message: "Key is required",
-    };
-  }
-  const keyRegex = /^[A-Z0-9_]+$/;
-  if (!keyRegex.test(key)) {
-    return {
-      success: false,
-      message: "Invalid name",
-    };
-  }
-
-  return { success: true };
 }
 
 // Validation for the database name
@@ -210,6 +196,62 @@ function validateDatabaseName(name) {
     return {
       success: false,
       message: "Invalid name",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the database key
+function validateDatabaseKey(key) {
+  if (key === null || !key.length) {
+    return {
+      success: false,
+      message: "Env Key is required",
+    };
+  }
+  const keyRegex = /^[A-Z0-9_]+$/;
+  if (!keyRegex.test(key)) {
+    return {
+      success: false,
+      message: "Invalid env key",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the region
+function validateRegion(region) {
+  if (region === null || !region.length) {
+    return {
+      success: false,
+      message: "Region is required",
+    };
+  }
+  const validRegions = ["oregon", "ohio", "virginia", "frankfurt", "singapore"];
+  if (!validRegions.includes(region)) {
+    return {
+      success: false,
+      message: "Invalid region",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the region
+function validateApiKey(key) {
+  if (key === null || !key.length) {
+    return {
+      success: false,
+      message: "API key is required",
+    };
+  }
+  if (!key.startsWith("rnd_")) {
+    return {
+      success: false,
+      message: "Invalid API key",
     };
   }
 

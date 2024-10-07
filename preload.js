@@ -23,5 +23,7 @@ contextBridge.exposeInMainWorld("api", {
   },
   settings: {
     open: (callback) => ipcRenderer.on("open-settings", callback),
+    getSettings: async () => ipcRenderer.invoke("get-settings-data"),
+    saveSettings: async (data) => ipcRenderer.invoke("save-settings-data", data),
   },
 });

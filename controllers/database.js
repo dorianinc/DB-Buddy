@@ -28,18 +28,18 @@ const fetchDatabase = async (databaseId) => {
       return database;
     }
 
-    const freeDatabases = response.data
+    const freeDatabase = response.data
       .filter((db) => db.postgres.plan === "free")
-      .map((db) => db.postgres);
+      .map((db) => db.postgres)[0];
 
-    if (freeDatabases.length > 0) {
-      const database = freeDatabases[0];
-      database.lastDeployed = lastDeployed =
-        formatDistanceToNow(database.updatedAt) + " ago";
-      const connectionInfo = await fetchConnectionInfo(database.id);
-      database.connectionInfo = connectionInfo || null;
+    if (!isEmpty(freeDatabase)) {
+      const { id, name, status, version } = freeDatabase;
+      const database = { id, name, status, version };
+      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt) + " ago";
+      const { internalConnectionString } = await fetchConnectionInfo(id);
+      database.internalDatabaseUrl = internalConnectionString || null;
       store.set("database", database);
-      return database; 
+      return database;
     }
 
     return null;
@@ -179,7 +179,6 @@ const handleError = (error, functionName) => {
     }`
   );
 };
-
 
 function isEmpty(obj) {
   return Object.values(obj).length === 0;

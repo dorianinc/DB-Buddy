@@ -10,17 +10,23 @@ const store = require("../store/index");
 const fetchServices = async () => {
   try {
     const storedServices = store.get("services");
+    // console.log("🖥️  storedServices : ", storedServices);
     if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);
-    const services = await response.data
+
+    const rawServices = await response.data
       .filter((item) => item.service.type === "web_service")
       .map((item) => item.service)
       .filter((service) => service !== null);
 
-    for (let service of services) {
-      service.status = await checkServiceStatus(service);
-      service.lastDeployed = formatDistanceToNow(service.updatedAt) + " ago";
+    const services = [];
+    for (let service of rawServices) {
+      const { id, name, type } = service;
+      const obj = { id, name, type };
+      obj.status = await checkServiceStatus(service);
+      obj.lastDeployed = formatDistanceToNow(service.updatedAt) + " ago";
+      services.push(obj);
     }
 
     store.set("services", services);
