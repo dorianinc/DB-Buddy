@@ -96,10 +96,10 @@ const schema = {
 
 const store = new Store({ watch: true, schema });
 
-const deployStoreListeners = () => {
+const deployStoreListeners = (webContents) => {
   store.onDidChange("database.status", (newValue) => {
     const name = store.get("database.name");
-    mainWindow.webContents.send("set-database-status", {
+    webContents.send("set-database-status", {
       name,
       status: newValue,
     });

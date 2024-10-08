@@ -44,7 +44,7 @@ function createMainWindow() {
   if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
-  deployStoreListeners();
+  deployStoreListeners(mainWindow.webContents);
   setTray(app, mainWindow.webContents);
 
   return mainWindow;
