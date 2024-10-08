@@ -8,25 +8,6 @@ const populateTable = (table, database, apps) => {
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
 
-    // const syncCell = document.createElement("td");
-    // if (type === "Database") {
-    //   const pizza = document.createElement("i");
-    //   pizza.setAttribute("class", "fa-solid fa-robot");
-    //   pizza.style.color = "#ffffff";
-    //   syncCell.append(pizza);
-    // } else if (type === "Web Service") {
-    //   const checkBox = document.createElement("input");
-    //   // checkBox.setAttribute("type", "checkbox");
-    //   checkBox.setAttribute("class", "sync-check-input");
-    //   checkBox.setAttribute("name", name);
-    //   checkBox.setAttribute("data-value", name);
-    //   checkBox.addEventListener("click", (e) => {
-    //     e.stopPropagation(); // Prevent the checkbox click from triggering the row click
-    //   });
-
-    //   syncCell.append(checkBox);
-    // }
-
     const nameCell = document.createElement("td");
     nameCell.setAttribute("scope", "row");
     nameCell.textContent = name;
@@ -36,19 +17,8 @@ const populateTable = (table, database, apps) => {
 
     const statusSpan = document.createElement("span");
     statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
-    statusSpan.setAttribute("id", `${name}-status`);
+    statusSpan.setAttribute("id", `${name}-status`); // Use original name directly
     statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Deploying`;
-    // if (["available", "deployed"].includes(status)) {
-    //   statusSpan.setAttribute("class", "badge text-bg-success");
-    //   statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-    //     status
-    //   )}`;
-    // } else {
-    //   statusSpan.setAttribute("class", "badge text-bg-danger");
-    //   statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
-    //     status
-    //   )}`;
-    // }
     statusCell.appendChild(statusSpan);
 
     const typeCell = document.createElement("td");
@@ -57,7 +27,6 @@ const populateTable = (table, database, apps) => {
     const lastDeployedCell = document.createElement("td");
     lastDeployedCell.textContent = lastDeployed;
 
-    // row.appendChild(syncCell);
     row.appendChild(nameCell);
     row.appendChild(statusCell);
     row.appendChild(typeCell);
@@ -76,12 +45,11 @@ const populateTable = (table, database, apps) => {
       database.lastDeployed
     );
     tableBody.appendChild(dbRow);
+    setDatabaseStatus(database); // Update status after appending to the DOM
   }
 
-  setDatabaseStatus(database)
-
   // Add rows for each app service
-  Object.values(apps).forEach((service) => {
+  for (const service of Object.values(apps)) {
     const row = createRow(
       service.name,
       service.status,
@@ -89,8 +57,9 @@ const populateTable = (table, database, apps) => {
       null,
       service.lastDeployed
     );
-    tableBody.appendChild(row);
-  });
+    tableBody.appendChild(row); // Append to the DOM first
+    setServiceStatus(service); // Update status after appending to the DOM
+  }
 };
 
 const capitalize = (string) => {
@@ -100,17 +69,45 @@ const capitalize = (string) => {
 const setDatabaseStatus = async (database) => {
   const dbName = database.name;
   const status = database.status;
-  
-  const statusSpan = document.getElementById(`${dbName}-status`)
-      if (["available", "deployed"].includes(status)) {
-      statusSpan.setAttribute("class", "badge text-bg-success");
-      statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-        status
-      )}`;
-    } else {
-      statusSpan.setAttribute("class", "badge text-bg-danger");
-      statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
-        status
-      )}`;
-    }
+
+  const statusSpan = document.getElementById(`${dbName}-status`); // Use original name directly
+  if (!statusSpan) {
+    console.error(`Element with id ${dbName}-status not found`);
+    return;
+  }
+
+  if (["available", "deployed"].includes(status)) {
+    statusSpan.setAttribute("class", "status-badge badge text-bg-success");
+    statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+      status
+    )}`;
+  } else {
+    statusSpan.setAttribute("class", "status-badge badge text-bg-danger");
+    statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+      status
+    )}`;
+  }
+};
+
+const setServiceStatus = async (service) => {
+  const serviceName = service.name;
+  const status = service.status;
+
+  const statusSpan = document.getElementById(`${serviceName}-status`); // Use original name directly
+  if (!statusSpan) {
+    console.error(`Element with id ${serviceName}-status not found`);
+    return;
+  }
+
+  if (["available", "deployed"].includes(status)) {
+    statusSpan.setAttribute("class", "status-badge badge text-bg-success");
+    statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+      status
+    )}`;
+  } else {
+    statusSpan.setAttribute("class", "status-badge badge text-bg-danger");
+    statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+      status
+    )}`;
+  }
 };

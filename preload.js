@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.invoke("save-service-data", data),
     refreshService: (callback) => 
       ipcRenderer.on("refresh-services", (_e, refreshBool) => callback(refreshBool)),
+    setStatus: (callback) => 
+      ipcRenderer.on("set-service-status", (_e, data) => callback(data)), 
   },
   database: {
     getDatabase: async (refreshBool) => 

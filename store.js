@@ -2,32 +2,35 @@ const Store = require("electron-store");
 
 const schema = {
   services: {
-    type: "array",
-    items: {
-      type: "object",
-      properties: {
-        id: {
-          type: "string",
-          minLength: 1,
+    type: "object",
+    patternProperties: {
+      "^.+$": {
+        type: "object",
+        properties: {
+          // Add 'properties' inside 'patternProperties'
+          id: {
+            type: "string",
+            minLength: 1,
+          },
+          name: {
+            type: "string",
+            minLength: 1,
+          },
+          status: {
+            type: "string",
+            enum: ["deployed", "pending", "failed"],
+          },
+          type: {
+            type: "string",
+            enum: ["web_service"],
+          },
+          lastDeployed: {
+            type: "string",
+            minLength: 1,
+          },
         },
-        name: {
-          type: "string",
-          minLength: 1,
-        },
-        type: {
-          type: "string",
-          enum: ["web_service"],
-        },
-        status: {
-          type: "string",
-          enum: ["deployed", "pending", "failed"],
-        },
-        lastDeployed: {
-          type: "string",
-          minLength: 1,
-        },
+        required: ["id", "name", "status", "type", "lastDeployed"],
       },
-      required: ["id", "name", "type", "status", "lastDeployed"],
     },
   },
   database: {
@@ -94,15 +97,30 @@ const schema = {
   },
 };
 
+// Initialize store with the corrected schema
 const store = new Store({ watch: true, schema });
+store.clear();
 
 const deployStoreListeners = (webContents) => {
-  store.onDidChange("database.status", (newValue) => {
-    const name = store.get("database.name");
-    webContents.send("set-database-status", {
-      name,
-      status: newValue,
+  store.onDidChange("database", () => {
+    store.onDidChange("database.status", (newStatus) => {
+      const name = store.get("database.name");
+      webContents.send("set-database-status", {
+        name,
+        status: newStatus,
+      });
     });
+  })
+
+  store.onDidChange("services", (newServices) => {
+    for (let serviceName in newServices) {
+      store.onDidChange(`services.${serviceName}.status`, (newStatus) => {
+        webContents.send("set-service-status", {
+          name: service.name,
+          status: newStatus,
+        });
+      });
+    }
   });
 };
 

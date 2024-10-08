@@ -9,7 +9,7 @@ const openSettings = () => {
 };
 
 const buildApplication = async (refreshApp = false) => {
-  console.log("starting application....");
+  console.log("building application....");
   const statusContainer = document.querySelector(".status-container");
   statusContainer.style.display = "flex";
 
@@ -34,7 +34,7 @@ const buildApplication = async (refreshApp = false) => {
 
   if (renderData && !isEmpty(renderData.apps)) {
     const database = renderData.database;
-    const apps = renderData.apps;
+    const apps = Object.values(renderData.apps);
     const databaseExists = database.name.length;
     const buttonText = databaseExists ? "Rebuild Database" : "Build Database";
 
@@ -63,7 +63,7 @@ async function fetchRenderData(statusContainer, refresh) {
   try {
     const fetchDatabase = await window.api.database.getDatabase(refresh);
     const fetchServices = await window.api.services.getServices(refresh);
-
+    
     // Handle both successful fetch and API-level failure
     if (!fetchDatabase.success || !fetchServices.success) {
       throw new Error("Failed to retrieve Render Data");
