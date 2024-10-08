@@ -24,10 +24,13 @@ const fetchDatabase = async (refresh) => {
     if (!isEmpty(freeDatabase)) {
       const { id, name, version } = freeDatabase;
       const database = { id, name, version };
+
       database.status = refresh ? "creating" : await checkDbStatus(database);
       database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
+
       const { internalConnectionString } = await fetchConnectionInfo(id);
       database.internalDatabaseUrl = internalConnectionString || null;
+      
       checkDbStatus(database);
       store.set("database", database);
       return database;
@@ -88,7 +91,7 @@ const deleteDatabase = async (databaseId) => {
 const checkDbStatus = async (database) => {
   return new Promise(async (resolve) => {
     try {
-      let databaseStatus = "creating";
+      let databaseStatus = database.status || "creating";
       while (databaseStatus === "creating") {
         await new Promise(async (timeoutResolve) =>
           setTimeout(timeoutResolve, 10000)
@@ -132,13 +135,8 @@ const rebuildDatabase = async () => {
     const { internalConnectionString } = await fetchConnectionInfo(id);
     newDb.internalDatabaseUrl = internalConnectionString;
 
-    let dbStatus = "creating";
-
     console.log("Waiting for database...");
-
-    while (dbStatus === "creating") {
-      dbStatus = await checkDbStatus();
-    }
+    let dbStatus = await checkDbStatus(database);
 
     if (dbStatus === "available") {
       console.log("Database is available");

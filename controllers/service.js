@@ -22,11 +22,12 @@ const fetchServices = async (refresh) => {
     for (let service of rawServices) {
       const { id, name, type } = service;
       const obj = { id, name, type };
+     
       obj.status = refresh ? "deploying" : await checkServiceStatus(service);
-
       obj.lastDeployed = formatDistanceToNow(service.updatedAt);
       services[service.name] = obj;
     }
+
     listenToServiceStatus(services);
     store.set("services", services);
     return services;
@@ -39,7 +40,7 @@ const deployService = async (service) => {
   const body = {
     clearCache: "do_not_clear",
   };
-
+  
   try {
     const response = await axios.post(
       `${baseUrl}/services/${service.id}/deploys`,
@@ -69,7 +70,7 @@ const listenToServiceStatus = async (services) => {
 const checkServiceStatus = async (service) => {
   return new Promise(async (resolve) => {
     try {
-      let serviceStatus = "deploying";
+      let serviceStatus = service.status || "deploying";
       while (serviceStatus === "deploying") {
         await new Promise((timeoutResolve) =>
           setTimeout(timeoutResolve, 10000)
