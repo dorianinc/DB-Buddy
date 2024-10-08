@@ -90,7 +90,7 @@ const checkDbStatus = async () => {
     const { status } = await fetchDatabase();
     return status;
   } catch (error) {
-    console.error(c.red("Failed checking database status: "), error.message);
+    console.error("Failed checking database status: ", error.message);
     return false;
   }
 };
@@ -107,7 +107,7 @@ const rebuildDatabase = async () => {
     if (database) {
       const deleteDb = await deleteDatabase(database.id);
       if (deleteDb.status !== 204) {
-        console.error(c.red("Failed to delete existing database."));
+        console.error("Failed to delete existing database.");
         return;
       }
     }
@@ -119,14 +119,14 @@ const rebuildDatabase = async () => {
 
     let dbStatus = "creating";
 
-    console.log(c.yellow("Waiting for database..."));
+    console.log("Waiting for database...");
 
     while (dbStatus === "creating") {
       dbStatus = await checkDbStatus();
     }
 
     if (dbStatus === "available") {
-      console.log(c.green("Database is available"));
+      console.log("Database is available");
       console.log("Updating Services");
       for (const service of services) {
         await updateEnvVariable(
@@ -137,13 +137,13 @@ const rebuildDatabase = async () => {
         await deployService(service);
       }
 
-      console.log(c.yellow("Waiting for service status(es)..."));
-      console.log(c.yellow("You can close the program now if you like"));
+      console.log("Waiting for service status(es)...");
+      console.log("You can close the program now if you like");
 
       await Promise.all(services.map((service) => checkServiceStatus(service)));
-      console.log(c.green("Done!"));
+      console.log("Done!");
     } else {
-      console.log(c.red("Something went wrong with your database"));
+      console.log("Something went wrong with your database");
     }
   } catch (error) {
     handleError(error, "rebuildDatabase");
@@ -156,11 +156,9 @@ const handleError = (error, functionName) => {
     error.response?.data?.message || "An unknown error occurred";
 
   console.error(
-    c.red(
-      `Error in ${functionName}: ${errorMessage} ${
-        !statusCode ? "" : `Status code: ${statusCode}`
-      }`
-    )
+    `Error in ${functionName}: ${errorMessage} ${
+      !statusCode ? "" : `Status code: ${statusCode}`
+    }`
   );
 
   throw new Error(

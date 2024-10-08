@@ -1,4 +1,4 @@
-exports.createTemplate = (app, webContents, openSettings) => {
+exports.createTemplate = (app, webContents) => {
   return [
     {
       label: process.platform === "darwin" ? app.getName() : "Menu",
@@ -7,8 +7,6 @@ exports.createTemplate = (app, webContents, openSettings) => {
           label: "Settings",
           click: () => {
             webContents.send("open-settings");
-
-            // openSettings();
           },
         },
         {

@@ -1,7 +1,10 @@
-const openModal = async (type) => {
+const openModal = (type, databaseExists) => {
   switch (type) {
     case "Settings":
-      await populateSettings();
+      populateSettings();
+      break;
+    case "Warning":
+      populateWithWarning(databaseExists);
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -90,6 +93,43 @@ async function populateSettings() {
   saveButton.addEventListener("click", (e) =>
     handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField)
   );
+}
+
+function populateWithWarning(databaseExists) {
+  setModalSize("md");
+
+  setModalContent(`
+<div class="modal-header">
+  <h1 class="modal-title fs-5">${
+    databaseExists ? "Rebuild Database" : "Build Database"
+  }</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body database">
+  <div class="alert alert-warning mt-3">
+    <strong>Warning:</strong> You are about to ${
+      databaseExists ? "rebuild your database" : "create a new database"
+    } and update your application environment variables.
+  </div>
+  
+  <p class="note">
+    <strong>Note: The may take a couple of minutes.</strong> 
+  </p>
+</div>
+
+<div class="modal-footer d-flex justify-content-between align-items-center">
+  <div id="message-container" style="flex: 1; text-align: center">
+    <span id="message" class="fs-6"></span>
+  </div>
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete-btn"
+   style="width: 130px; height: 38px">
+    <span>Continue</span>
+  </button>
+</div>
+
+  `);
 }
 
 async function populateFieldsWithSettingsData(

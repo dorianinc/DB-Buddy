@@ -35,20 +35,21 @@ const startApplication = async (refreshApp = false) => {
   if (renderData && !isEmpty(renderData.apps)) {
     const database = renderData.database;
     const apps = renderData.apps;
-    const buttonText = database.name ? "Rebuild Database" : "Build Database";
+    const databaseExists = database.name.length;
+    const buttonText = databaseExists ? "Rebuild Database" : "Build Database";
 
-    retryButton.style.display = "none"; // Hide button if fetch is successful
+    retryButton.style.display = "none"; 
     statusContainer.style.display = "none";
     table.style.display = "table";
     buildButton.innerText = buttonText;
     buildButton.style.display = "inline";
     buildButton.addEventListener("click", () => {
-      openModal(buttonText, null, "Warning");
+      openModal("Warning", databaseExists);
     });
     populateTable(table, database, apps);
   } else {
     console.log("No Render data");
-    retryButton.style.display = "block"; // Show button if fetch fails
+    retryButton.style.display = "block"; 
     statusContainer.append(retryButton);
   }
 };
