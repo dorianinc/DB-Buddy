@@ -35,17 +35,19 @@ const populateTable = (table, database, apps) => {
     statusCell.setAttribute("scope", "row");
 
     const statusSpan = document.createElement("span");
-    if (["available", "deployed"].includes(status)) {
-      statusSpan.setAttribute("class", "badge text-bg-success");
-      statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-        status
-      )}`;
-    } else {
-      statusSpan.setAttribute("class", "badge text-bg-danger");
-      statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
-        status
-      )}`;
-    }
+    statusSpan.setAttribute("class", "badge text-bg-secondary");
+    statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Deploying`;
+    // if (["available", "deployed"].includes(status)) {
+    //   statusSpan.setAttribute("class", "badge text-bg-success");
+    //   statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+    //     status
+    //   )}`;
+    // } else {
+    //   statusSpan.setAttribute("class", "badge text-bg-danger");
+    //   statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+    //     status
+    //   )}`;
+    // }
     statusCell.appendChild(statusSpan);
 
     const typeCell = document.createElement("td");
