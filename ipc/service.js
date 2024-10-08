@@ -15,6 +15,7 @@ const serviceIPC = () => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
       const services = await fetchServices(refresh);
+      console.log("🖥️  service in ipc: ", services)
       res.payload = services;
       return res;
     } catch (error) {

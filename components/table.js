@@ -4,7 +4,7 @@ const populateTable = (table, database, apps) => {
   tableBody.innerHTML = "";
 
   // Function to create a row
-  const createRow = (name, status, type, version = null, lastDeployed) => {
+  const createRow = (name, type, version = null, lastDeployed) => {
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
 
@@ -25,7 +25,7 @@ const populateTable = (table, database, apps) => {
     typeCell.textContent = type === "Database" ? `PostgreSQL ${version}` : type;
 
     const lastDeployedCell = document.createElement("td");
-    lastDeployedCell.textContent = lastDeployed;
+    lastDeployedCell.textContent = lastDeployed + " ago";
 
     row.appendChild(nameCell);
     row.appendChild(statusCell);
@@ -39,7 +39,6 @@ const populateTable = (table, database, apps) => {
   if (database) {
     const dbRow = createRow(
       database.name,
-      database.status,
       "Database",
       database.version,
       database.lastDeployed
@@ -52,7 +51,6 @@ const populateTable = (table, database, apps) => {
   for (const service of Object.values(apps)) {
     const row = createRow(
       service.name,
-      service.status,
       "Web Service",
       null,
       service.lastDeployed
@@ -67,6 +65,7 @@ const capitalize = (string) => {
 };
 
 const setStatus = async (item) => {
+  console.log("🖥️  item: ", item)
   const name = item.name;
   const status = item.status;
 
@@ -76,15 +75,24 @@ const setStatus = async (item) => {
     return;
   }
 
-  if (["available", "deployed"].includes(status)) {
-    statusSpan.setAttribute("class", "status-badge badge text-bg-success");
-    statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-      status
-    )}`;
-  } else {
-    statusSpan.setAttribute("class", "status-badge badge text-bg-danger");
-    statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
-      status
-    )}`;
+  switch (status) {
+    case "available":
+    case "deployed":
+      statusSpan.setAttribute("class", "status-badge badge text-bg-success");
+      statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
+      break;
+    case "deploying":
+      statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
+      statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${capitalize(
+        status
+      )}`;
+      break;
+    default:
+      statusSpan.setAttribute("class", "status-badge badge text-bg-danger");
+      statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
   }
 };

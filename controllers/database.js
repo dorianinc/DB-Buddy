@@ -12,6 +12,7 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 // Database --------------------------------------------------------------------------------------------
 
 const fetchDatabase = async (refresh) => {
+
   try {
     const storedDatabase = !refresh && store.get("database");
     if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
@@ -25,7 +26,7 @@ const fetchDatabase = async (refresh) => {
       const { id, name, status, version } = freeDatabase;
       const database = { id, name, status, version };
       database.lastDeployed =
-        formatDistanceToNow(freeDatabase.updatedAt) + " ago";
+        formatDistanceToNow(freeDatabase.updatedAt);
       const { internalConnectionString } = await fetchConnectionInfo(id);
       database.internalDatabaseUrl = internalConnectionString || null;
       store.set("database", database);

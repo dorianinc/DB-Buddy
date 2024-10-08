@@ -18,7 +18,7 @@ const schema = {
           },
           status: {
             type: "string",
-            enum: ["deployed", "pending", "failed"],
+            enum: ["deployed", "deploying", "pending", "failed"],
           },
           type: {
             type: "string",
@@ -99,7 +99,7 @@ const schema = {
 
 // Initialize store with the corrected schema
 const store = new Store({ watch: true, schema });
-// store.clear();
+store.clear();
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", () => {
@@ -110,13 +110,14 @@ const deployStoreListeners = (webContents) => {
         status: newStatus,
       });
     });
-  })
+  });
 
   store.onDidChange("services", (newServices) => {
     for (let serviceName in newServices) {
       store.onDidChange(`services.${serviceName}.status`, (newStatus) => {
+        console.log("service in store ===> ", newServices[serviceName])
         webContents.send("set-service-status", {
-          name: service.name,
+          name: serviceName,
           status: newStatus,
         });
       });
