@@ -13,7 +13,6 @@ const fetchServices = async (refresh) => {
     if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);
-
     const rawServices = await response.data
       .filter((item) => item.service.type === "web_service")
       .map((item) => item.service)
@@ -23,8 +22,7 @@ const fetchServices = async (refresh) => {
     for (let service of rawServices) {
       const { id, name, type } = service;
       const obj = { id, name, type };
-      // obj.status = !refresh ? "deploying" : await checkServiceStatus(service);
-      obj.status = "deploying";
+      obj.status = refresh ? "deploying" : await checkServiceStatus(service);
 
       obj.lastDeployed = formatDistanceToNow(service.updatedAt);
       services[service.name] = obj;
@@ -63,7 +61,6 @@ const listenToServiceStatus = async (services) => {
         })
       )
     );
-    console.log("All service status checks completed");
   } catch (error) {
     console.error("Error during background service checks:", error);
   }
@@ -72,7 +69,6 @@ const listenToServiceStatus = async (services) => {
 const checkServiceStatus = async (service) => {
   return new Promise(async (resolve) => {
     try {
-      console.log("checking status of: ", service.name);
       let serviceStatus = "deploying";
       while (serviceStatus === "deploying") {
         await new Promise((timeoutResolve) =>

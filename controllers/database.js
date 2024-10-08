@@ -12,7 +12,6 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 // Database --------------------------------------------------------------------------------------------
 
 const fetchDatabase = async (refresh) => {
-
   try {
     const storedDatabase = !refresh && store.get("database");
     if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
@@ -23,12 +22,13 @@ const fetchDatabase = async (refresh) => {
       .map((db) => db.postgres)[0];
 
     if (!isEmpty(freeDatabase)) {
-      const { id, name, status, version } = freeDatabase;
-      const database = { id, name, status, version };
-      database.lastDeployed =
-        formatDistanceToNow(freeDatabase.updatedAt);
+      const { id, name, version } = freeDatabase;
+      const database = { id, name, version };
+      database.status = refresh ? "creating" : await checkDbStatus(database);
+      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
       const { internalConnectionString } = await fetchConnectionInfo(id);
       database.internalDatabaseUrl = internalConnectionString || null;
+      checkDbStatus(database);
       store.set("database", database);
       return database;
     }
@@ -85,16 +85,29 @@ const deleteDatabase = async (databaseId) => {
   }
 };
 
-const checkDbStatus = async () => {
-  try {
-    await new Promise(async (resolve) => setTimeout(resolve, 10000));
-    const { status } = await fetchDatabase();
-    store.set("database.status", status);
-    return status;
-  } catch (error) {
-    console.error("Failed checking database status: ", error.message);
-    return false;
-  }
+const checkDbStatus = async (database) => {
+  return new Promise(async (resolve) => {
+    try {
+      let databaseStatus = "creating";
+      while (databaseStatus === "creating") {
+        await new Promise(async (timeoutResolve) =>
+          setTimeout(timeoutResolve, 10000)
+        );
+
+        const response = await axios.get(
+          `${baseUrl}/postgres/${database.id}`,
+          options
+        );
+        const { status } = response.data;
+        databaseStatus = status;
+      }
+      store.set("database.status", databaseStatus);
+      resolve(databaseStatus);
+    } catch (error) {
+      console.error("Failed checking database status: ", error.message);
+      return false;
+    }
+  });
 };
 
 const rebuildDatabase = async () => {
