@@ -6,14 +6,14 @@ window.api.services.refreshService((refreshBool) => {
 // Listen for the 'open-settings' event from the main process
 window.api.services.setStatus((data) => {
   console.log("🖥️  data in renderer: ", data);
-  setServiceStatus(data)
+  setStatus(data)
 });
 
 
 // Listen for the 'open-settings' event from the main process
 window.api.database.setStatus((data) => {
   console.log("🖥️  data: ", data);
-  setDatabaseStatus(data)
+  setStatus(data)
 });
 
 

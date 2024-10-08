@@ -45,7 +45,7 @@ const populateTable = (table, database, apps) => {
       database.lastDeployed
     );
     tableBody.appendChild(dbRow);
-    setDatabaseStatus(database); // Update status after appending to the DOM
+    setStatus(database); // Update status after appending to the DOM
   }
 
   // Add rows for each app service
@@ -58,7 +58,7 @@ const populateTable = (table, database, apps) => {
       service.lastDeployed
     );
     tableBody.appendChild(row); // Append to the DOM first
-    setServiceStatus(service); // Update status after appending to the DOM
+    setStatus(service); // Update status after appending to the DOM
   }
 };
 
@@ -66,36 +66,13 @@ const capitalize = (string) => {
   return string.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const setDatabaseStatus = async (database) => {
-  const dbName = database.name;
-  const status = database.status;
+const setStatus = async (item) => {
+  const name = item.name;
+  const status = item.status;
 
-  const statusSpan = document.getElementById(`${dbName}-status`); // Use original name directly
+  const statusSpan = document.getElementById(`${name}-status`); // Use original name directly
   if (!statusSpan) {
-    console.error(`Element with id ${dbName}-status not found`);
-    return;
-  }
-
-  if (["available", "deployed"].includes(status)) {
-    statusSpan.setAttribute("class", "status-badge badge text-bg-success");
-    statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-      status
-    )}`;
-  } else {
-    statusSpan.setAttribute("class", "status-badge badge text-bg-danger");
-    statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
-      status
-    )}`;
-  }
-};
-
-const setServiceStatus = async (service) => {
-  const serviceName = service.name;
-  const status = service.status;
-
-  const statusSpan = document.getElementById(`${serviceName}-status`); // Use original name directly
-  if (!statusSpan) {
-    console.error(`Element with id ${serviceName}-status not found`);
+    console.error(`Element with id ${name}-status not found`);
     return;
   }
 
