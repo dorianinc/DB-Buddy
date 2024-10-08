@@ -1,8 +1,9 @@
-const { app, BrowserWindow, Menu, Tray } = require("electron");
-const { createTemplate } = require("./utils/Menu");
 const path = require("path");
+const { createTemplate } = require("./utils/Menu");
+const { app, BrowserWindow, Menu, Tray, webContents } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
+const store = require("./store");
 
 const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
@@ -40,10 +41,16 @@ function createMainWindow() {
 
   windowState.manage(mainWindow);
   mainWindow.loadFile("./views/index.html");
+  if (isDev) mainWindow.webContents.openDevTools();
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  store.onDidChange('settings.region', (newValue, oldValue) => {
+    const name = store.get("database.name")
+    console.log(`Value changed from ${oldValue} to ${newValue}`);
+
+    // Send the new value to the renderer process
+    mainWindow.webContents.send('set-database-status', {name, status: newValue});
+  });
+
   return mainWindow;
 }
 

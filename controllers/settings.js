@@ -1,4 +1,4 @@
-const store = require("../store/index");
+const store = require("../store");
 
 // Settings --------------------------------------------------------------------------------------------
 const res = {

@@ -94,6 +94,6 @@ const schema = {
   },
 };
 
-const store = new Store({ schema });
+const store = new Store({ watch: true, schema });
 
 module.exports = store;

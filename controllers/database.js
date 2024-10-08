@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
 const { formatDistanceToNow } = require("date-fns");
-const store = require("../store/index");
+const store = require("../store");
 
 const baseUrl = "https://api.render.com/v1";
 const databaseName = process.env.DATABASE_NAME; // name of new render database
@@ -88,6 +88,7 @@ const checkDbStatus = async () => {
   try {
     await new Promise(async (resolve) => setTimeout(resolve, 10000));
     const { status } = await fetchDatabase();
+    store.set("database.status", status)
     return status;
   } catch (error) {
     console.error("Failed checking database status: ", error.message);

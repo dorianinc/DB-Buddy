@@ -35,7 +35,8 @@ const populateTable = (table, database, apps) => {
     statusCell.setAttribute("scope", "row");
 
     const statusSpan = document.createElement("span");
-    statusSpan.setAttribute("class", "badge text-bg-secondary");
+    statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
+    statusSpan.setAttribute("id", `${name}-status`);
     statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Deploying`;
     // if (["available", "deployed"].includes(status)) {
     //   statusSpan.setAttribute("class", "badge text-bg-success");
@@ -77,6 +78,8 @@ const populateTable = (table, database, apps) => {
     tableBody.appendChild(dbRow);
   }
 
+  setDatabaseStatus(database)
+
   // Add rows for each app service
   Object.values(apps).forEach((service) => {
     const row = createRow(
@@ -92,4 +95,22 @@ const populateTable = (table, database, apps) => {
 
 const capitalize = (string) => {
   return string.replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const setDatabaseStatus = async (database) => {
+  const dbName = database.name;
+  const status = database.status;
+  
+  const statusSpan = document.getElementById(`${dbName}-status`)
+      if (["available", "deployed"].includes(status)) {
+      statusSpan.setAttribute("class", "badge text-bg-success");
+      statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
+    } else {
+      statusSpan.setAttribute("class", "badge text-bg-danger");
+      statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
+    }
 };

@@ -49,3 +49,11 @@ body {
 .table {
   width: 90%;
 }
+
+.status-badge{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  gap: 5px;
+}
