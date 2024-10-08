@@ -123,13 +123,16 @@ function populateWithWarning(databaseExists) {
     <span id="message" class="fs-6"></span>
   </div>
   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete-btn"
+  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-btn"
    style="width: 130px; height: 38px">
     <span>Continue</span>
   </button>
 </div>
 
   `);
+
+  const confirmButton = document.querySelector("#confirm-btn");
+  confirmButton.addEventListener("click", (e) => buildApplication(true));
 }
 
 async function populateFieldsWithSettingsData(

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  startApplication();
+  buildApplication();
 });
 
 const openSettings = () => {
@@ -8,7 +8,7 @@ const openSettings = () => {
   myModal.show();
 };
 
-const startApplication = async (refreshApp = false) => {
+const buildApplication = async (refreshApp = false) => {
   console.log("starting application....");
   const statusContainer = document.querySelector(".status-container");
   statusContainer.style.display = "flex";
@@ -26,7 +26,7 @@ const startApplication = async (refreshApp = false) => {
 
   retryButton.addEventListener("click", async () => {
     retryButton.disabled = true;
-    await startApplication(true);
+    await buildApplication(true);
     retryButton.disabled = false;
   });
 

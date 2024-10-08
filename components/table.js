@@ -1,4 +1,3 @@
-
 // Function to handle table population
 const populateTable = (table, database, apps) => {
   const tableBody = table.querySelector("tbody");
@@ -31,7 +30,6 @@ const populateTable = (table, database, apps) => {
     const nameCell = document.createElement("td");
     nameCell.setAttribute("scope", "row");
     nameCell.textContent = name;
-    addModalListener(nameCell, name, apps, type);
 
     const statusCell = document.createElement("td");
     statusCell.setAttribute("scope", "row");
@@ -39,21 +37,22 @@ const populateTable = (table, database, apps) => {
     const statusSpan = document.createElement("span");
     if (["available", "deployed"].includes(status)) {
       statusSpan.setAttribute("class", "badge text-bg-success");
-      statusSpan.textContent = capitalize(status);
+      statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
     } else {
       statusSpan.setAttribute("class", "badge text-bg-danger");
-      statusSpan.textContent = status;
+      statusSpan.innerHTML = `<i class="fa-solid fa-xmark" style="color: #ffffff;"></i> ${capitalize(
+        status
+      )}`;
     }
     statusCell.appendChild(statusSpan);
-    addModalListener(statusCell, name, apps, type);
 
     const typeCell = document.createElement("td");
     typeCell.textContent = type === "Database" ? `PostgreSQL ${version}` : type;
-    addModalListener(typeCell, name, apps, type);
 
     const lastDeployedCell = document.createElement("td");
     lastDeployedCell.textContent = lastDeployed;
-    addModalListener(lastDeployedCell, name, apps, type);
 
     // row.appendChild(syncCell);
     row.appendChild(nameCell);
@@ -62,16 +61,6 @@ const populateTable = (table, database, apps) => {
     row.appendChild(lastDeployedCell);
 
     return row;
-  };
-
-  const addModalListener = (element, name, apps, type) => {
-    element.setAttribute("data-bs-toggle", "modal");
-    element.setAttribute("data-bs-target", "#main-modal");
-    element.setAttribute("data-name", name);
-    element.addEventListener("click", () => {
-      const appName = element.getAttribute("data-name");
-      openModal(appName, apps, "Settings");
-    });
   };
 
   // Add a row for the database service if it exists
