@@ -3,7 +3,7 @@ const { createTemplate } = require("./utils/Menu");
 const { app, BrowserWindow, Menu, Tray, webContents } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
-const store = require("./store");
+const { deployStoreListeners } = require("./store");
 
 const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
@@ -43,13 +43,9 @@ function createMainWindow() {
   mainWindow.loadFile("./views/index.html");
   if (isDev) mainWindow.webContents.openDevTools();
 
-  store.onDidChange('settings.region', (newValue, oldValue) => {
-    const name = store.get("database.name")
-    console.log(`Value changed from ${oldValue} to ${newValue}`);
-
-    // Send the new value to the renderer process
-    mainWindow.webContents.send('set-database-status', {name, status: newValue});
-  });
+  deployIPCListeners();
+  deployStoreListeners();
+  setTray(app, mainWindow.webContents);
 
   return mainWindow;
 }
@@ -63,11 +59,6 @@ if (process.platform === "darwin") {
 
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
-  const webContents = mainApp.webContents;
-
-  deployIPCListeners();
-  setTray(app, webContents);
-
   mainApp.once("ready-to-show", () => {
     mainApp.show();
   });

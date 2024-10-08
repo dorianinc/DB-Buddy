@@ -96,4 +96,14 @@ const schema = {
 
 const store = new Store({ watch: true, schema });
 
-module.exports = store;
+const deployStoreListeners = () => {
+  store.onDidChange("database.status", (newValue) => {
+    const name = store.get("database.name");
+    mainWindow.webContents.send("set-database-status", {
+      name,
+      status: newValue,
+    });
+  });
+};
+
+module.exports = { store, deployStoreListeners };

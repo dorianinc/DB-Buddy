@@ -3,7 +3,7 @@ const axios = require("axios");
 const options = require("./configs");
 const baseUrl = "https://api.render.com/v1";
 const { formatDistanceToNow } = require("date-fns");
-const store = require("../store");
+const { store } = require("../store");
 
 // Service --------------------------------------------------------------------------------------------
 
