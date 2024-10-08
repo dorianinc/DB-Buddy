@@ -102,9 +102,9 @@ const store = new Store({ watch: true, schema });
 store.clear();
 
 const deployStoreListeners = (webContents) => {
-  store.onDidChange("database", () => {
+  store.onDidChange("database", (newDatabase) => {
     store.onDidChange("database.status", (newStatus) => {
-      const name = store.get("database.name");
+      const name = newDatabase.name
       webContents.send("set-database-status", {
         name,
         status: newStatus,

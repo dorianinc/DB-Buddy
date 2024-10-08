@@ -1,6 +1,5 @@
 const { ipcMain } = require("electron");
-const { fetchServices } = require("../controllers/service");
-const { writeToFile, readFromFile } = require("../utils/helpers");
+const { fetchServices, checkServiceStatus } = require("../controllers/service");
 
 const serviceIPC = () => {
   const res = {
@@ -10,12 +9,23 @@ const serviceIPC = () => {
     payload: null,
   };
 
-  //  Get services from render
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     console.log("~~~~ Handling get-service-data ~~~~~");
     try {
       const services = await fetchServices(refresh);
-      console.log("🖥️  service in ipc: ", services)
+      res.payload = services;
+      return res;
+    } catch (error) {
+      console.error("error: ", error);
+      throw error;
+    }
+  });
+
+  //  Get services status
+  ipcMain.handle("get-service-status", async (_e, refresh = false) => {
+    console.log("~~~~ Handling get-service-status ~~~~~");
+    try {
+      const statuses = await checkServiceStatus();
       res.payload = services;
       return res;
     } catch (error) {
@@ -23,44 +33,10 @@ const serviceIPC = () => {
     }
   });
 
-  // set database status
+  // update service status
   ipcMain.handle("set-service-status", async (_e, data) => {
-    console.log("~~~~ Handling set-database-status ~~~~~");
-    console.log("🖥️  data in controller: ", data);
+    console.log("~~~~ Handling set-service-status ~~~~~");
   });
-
-  // //  Get single service data from file
-  // ipcMain.handle("get-single-service-data", async (_e, data) => {
-  //   console.log("~~~~ Handling get-single-service-data ~~~~~");
-  //   try {
-  //     const appName = data.toLowerCase();
-  //     const services = await readFromFile(`${appName}.txt`);
-  //     res.success = true;
-  //     res.message = "Successfully pulled data from Render";
-  //     res.payload = { services };
-  //     return res;
-  //   } catch (error) {
-  //     console.error("Error in get-service-data IPC handler:", error);
-  //     throw error;
-  //   }
-  // });
-
-  // // Save service data to file
-  // ipcMain.handle("save-service-data", async (_e, data) => {
-  //   console.log("~~~~ Handling save-service-data ~~~~~");
-  //   const appName = data.appName.toLowerCase();
-  //   try {
-  //     await writeToFile(`${appName}.txt`, data.env);
-  //     res.success = true;
-  //     res.message = "Successfully saved variables";
-  //     return res;
-  //   } catch (error) {
-  //     console.error("Error in save-service-data IPC handler:", error);
-  //     res.success = false;
-  //     res.error = error.message;
-  //     return res;
-  //   }
-  // });
 };
 
 const handleError = (error, functionName) => {

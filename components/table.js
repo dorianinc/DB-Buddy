@@ -44,7 +44,7 @@ const populateTable = (table, database, apps) => {
       database.lastDeployed
     );
     tableBody.appendChild(dbRow);
-    setStatus(database); // Update status after appending to the DOM
+    setStatus(database); 
   }
 
   // Add rows for each app service
@@ -55,8 +55,8 @@ const populateTable = (table, database, apps) => {
       null,
       service.lastDeployed
     );
-    tableBody.appendChild(row); // Append to the DOM first
-    setStatus(service); // Update status after appending to the DOM
+    tableBody.appendChild(row); 
+    setStatus(service); 
   }
 };
 
@@ -65,27 +65,23 @@ const capitalize = (string) => {
 };
 
 const setStatus = async (item) => {
-  console.log("🖥️  item: ", item)
   const name = item.name;
   const status = item.status;
 
-  const statusSpan = document.getElementById(`${name}-status`); // Use original name directly
-  if (!statusSpan) {
-    console.error(`Element with id ${name}-status not found`);
-    return;
-  }
+  const statusSpan = document.getElementById(`${name}-status`);
 
   switch (status) {
+    case "creating":
+    case "deploying":
+      statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
+      statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${capitalize(
+        status
+      )}`;
+      break;
     case "available":
     case "deployed":
       statusSpan.setAttribute("class", "status-badge badge text-bg-success");
       statusSpan.innerHTML = `<i class="fa-solid fa-check" style="color: #ffffff;"></i> ${capitalize(
-        status
-      )}`;
-      break;
-    case "deploying":
-      statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
-      statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${capitalize(
         status
       )}`;
       break;

@@ -10,7 +10,6 @@ const { store } = require("../store");
 const fetchServices = async (refresh) => {
   try {
     const storedServices = !refresh && store.get("services");
-    console.log("🖥️  storedServices: ", storedServices);
     if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);
@@ -24,10 +23,13 @@ const fetchServices = async (refresh) => {
     for (let service of rawServices) {
       const { id, name, type } = service;
       const obj = { id, name, type };
-      obj.status = !refresh ? await checkServiceStatus(service) : "deploying";
+      // obj.status = !refresh ? "deploying" : await checkServiceStatus(service);
+      obj.status = "deploying";
+
       obj.lastDeployed = formatDistanceToNow(service.updatedAt);
       services[service.name] = obj;
     }
+    listenToServiceStatus(services);
     store.set("services", services);
     return services;
   } catch (error) {
@@ -52,9 +54,25 @@ const deployService = async (service) => {
   }
 };
 
+const listenToServiceStatus = async (services) => {
+  try {
+    await Promise.allSettled(
+      Object.values(services).map((service) =>
+        checkServiceStatus(service).catch((err) => {
+          console.error(`Error checking service ${service}:`, err);
+        })
+      )
+    );
+    console.log("All service status checks completed");
+  } catch (error) {
+    console.error("Error during background service checks:", error);
+  }
+};
+
 const checkServiceStatus = async (service) => {
   return new Promise(async (resolve) => {
     try {
+      console.log("checking status of: ", service.name);
       let serviceStatus = "deploying";
       while (serviceStatus === "deploying") {
         await new Promise((timeoutResolve) =>
@@ -80,6 +98,7 @@ const checkServiceStatus = async (service) => {
           }
         }
       }
+      store.set(`services.${service.name}.status`, serviceStatus);
       resolve(serviceStatus);
     } catch (error) {
       handleError(error, "fetchServiceEvents");

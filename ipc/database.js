@@ -1,6 +1,5 @@
 const { ipcMain } = require("electron");
 const { fetchDatabase } = require("../controllers/database");
-const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const databaseIPC = () => {
   const res = {
@@ -23,26 +22,9 @@ const databaseIPC = () => {
     }
   });
 
-  // Save database data to file
-  ipcMain.handle("save-database-data", async (_e, data) => {
-    console.log("~~~~ Handling save-database-data ~~~~~");
-    try {
-      await writeToFile(`database.txt`, data, "json");
-      res.success = true;
-      res.message = "Successfully saved database data";
-      return res;
-    } catch (error) {
-      console.error("Error in save-database-data IPC handler:", error);
-      res.success = false;
-      res.error = error.message;
-      return res;
-    }
+  // set database status
+  ipcMain.handle("set-database-status", async (_e, data) => {
+    console.log("~~~~ Handling set-database-status ~~~~~");
   });
-
-    // set database status
-    ipcMain.handle("set-database-status", async (_e, data) => {
-      console.log("~~~~ Handling set-database-status ~~~~~");
-      console.log("🖥️  data: ", data)
-    });
 };
 module.exports = databaseIPC;
