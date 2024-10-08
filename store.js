@@ -99,7 +99,7 @@ const schema = {
 
 // Initialize store with the corrected schema
 const store = new Store({ watch: true, schema });
-store.clear();
+// store.clear();
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", () => {
