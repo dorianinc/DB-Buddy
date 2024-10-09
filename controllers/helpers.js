@@ -1,5 +1,4 @@
 const axios = require("axios");
-
 const baseUrl = "https://api.render.com/v1";
 const options = require("./configs");
 

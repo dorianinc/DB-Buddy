@@ -2,7 +2,7 @@ const { ipcMain } = require("electron");
 const { rebuildRender } = require("../controllers/rebuild");
 
 const rebuildIPC = () => {
-  //  Get login info
+  //  Trigger rebuild
   ipcMain.handle("rebuild-render", async (_e) => {
     console.log("~~~~ Handling rebuild-render ~~~~~");
     try {
@@ -15,5 +15,3 @@ const rebuildIPC = () => {
 };
 
 module.exports = rebuildIPC;
-// dpg-cs30hphu0jms7391p970-a
-// dpg-cruv0atds78s73a59uf0-a

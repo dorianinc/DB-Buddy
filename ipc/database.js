@@ -22,10 +22,6 @@ const databaseIPC = () => {
       handleError(error, "fetchDatabase");
     }
   });
-
-  // set database status
-  ipcMain.handle("set-database-status", async (_e, data) => {
-    console.log("~~~~ Handling set-database-status ~~~~~");
-  });
+  
 };
 module.exports = databaseIPC;
