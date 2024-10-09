@@ -4,7 +4,7 @@ const populateTable = (table, database, apps) => {
   tableBody.innerHTML = "";
 
   // Function to create a row
-  const createRow = (name, type, version = null, lastDeployed) => {
+  const createRow = (name, type, version = null) => {
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
 
@@ -18,45 +18,31 @@ const populateTable = (table, database, apps) => {
     const statusSpan = document.createElement("span");
     statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
     statusSpan.setAttribute("id", `${name}-status`); // Use original name directly
-    statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Deploying`;
+    statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Retrieving`;
     statusCell.appendChild(statusSpan);
 
     const typeCell = document.createElement("td");
     typeCell.textContent = type === "Database" ? `PostgreSQL ${version}` : type;
 
-    const lastDeployedCell = document.createElement("td");
-    lastDeployedCell.textContent = lastDeployed + " ago";
-
     row.appendChild(nameCell);
     row.appendChild(statusCell);
     row.appendChild(typeCell);
-    row.appendChild(lastDeployedCell);
 
     return row;
   };
 
   // Add a row for the database service if it exists
   if (database) {
-    const dbRow = createRow(
-      database.name,
-      "Database",
-      database.version,
-      database.lastDeployed
-    );
+    const dbRow = createRow(database.name, "Database", database.version);
     tableBody.appendChild(dbRow);
-    setStatus(database); 
+    setStatus(database);
   }
 
   // Add rows for each app service
   for (const service of Object.values(apps)) {
-    const row = createRow(
-      service.name,
-      "Web Service",
-      null,
-      service.lastDeployed
-    );
-    tableBody.appendChild(row); 
-    setStatus(service); 
+    const row = createRow(service.name, "Web Service", null);
+    tableBody.appendChild(row);
+    setStatus(service);
   }
 };
 
@@ -75,7 +61,7 @@ const setStatus = async (item) => {
     case "deploying":
       statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
       statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${capitalize(
-        status
+        "Retrieving"
       )}`;
       break;
     case "available":

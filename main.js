@@ -1,6 +1,6 @@
 const path = require("path");
 const { createTemplate } = require("./utils/Menu");
-const { app, BrowserWindow, Menu, Tray, webContents } = require("electron");
+const { app, BrowserWindow, Menu, Tray } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
 const { deployStoreListeners } = require("./store");
@@ -20,8 +20,8 @@ if (require("electron-squirrel-startup")) app.quit();
 // Main Window Creation
 function createMainWindow() {
   windowState = windowStateKeeper({
-    defaultHeight: 700,
-    defaultWidth: 800,
+    defaultHeight: 600,
+    defaultWidth: 750,
   });
 
   mainWindow = new BrowserWindow({
@@ -41,7 +41,7 @@ function createMainWindow() {
 
   windowState.manage(mainWindow);
   mainWindow.loadFile("./views/index.html");
-  if (isDev) mainWindow.webContents.openDevTools();
+  // if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
   deployStoreListeners(mainWindow.webContents);

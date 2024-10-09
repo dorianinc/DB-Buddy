@@ -28,12 +28,8 @@ const schema = {
             type: "string",
             enum: ["web_service"],
           },
-          lastDeployed: {
-            type: "string",
-            minLength: 1,
-          },
         },
-        required: ["id", "name", "status", "type", "lastDeployed"],
+        required: ["id", "name", "status", "type"],
       },
     },
   },
@@ -103,8 +99,7 @@ const schema = {
 
 // Initialize store with the corrected schema
 const store = new Store({ watch: true });
-store.clear();
-console.log("rebuilt ==> ", store.get("rebuilt"));
+// store.clear();
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", (newDatabase) => {
