@@ -10,7 +10,7 @@ exports.createTemplate = (app, webContents) => {
           },
         },
         {
-          label: "Refresh Services",
+          label: "Refresh Application",
           click: () => {
             webContents.send("refresh-app", true);
           },
@@ -49,76 +49,6 @@ exports.createTemplate = (app, webContents) => {
           accelerator: "CmdOrCtrl+Z",
           // role defined already some predifined behaviour
           role: "undo",
-        },
-      ],
-    },
-    {
-      label: "View",
-      submenu: [
-        {
-          label: "Reload",
-          accelerator: "CmdOrCtrl+R",
-          click: (_, focusedWindow) => {
-            if (focusedWindow) {
-              // on reload, start fresh and close any old
-              // open secondary windows
-              if (focusedWindow.id === 1) {
-                const { BrowserWindow } = require("electron");
-                BrowserWindow.getAllWindows().forEach((win) => {
-                  if (win.id > 1) {
-                    win.close();
-                  }
-                });
-              }
-              focusedWindow.reload();
-            }
-          },
-        },
-        {
-          type: "separator",
-        },
-        {
-          label: "App Menu Demo",
-          click: function (_, focusedWindow) {
-            if (focusedWindow) {
-              const options = {
-                type: "info",
-                title: "Application Menu Demo",
-                buttons: ["Ok", "Cancel"],
-                message:
-                  "This demo is for the Menu section, showing how to create a clickable menu item in the application menu.",
-              };
-              const { dialog } = require("electron");
-              dialog.showMessageBox(focusedWindow, options);
-            }
-          },
-        },
-      ],
-    },
-    {
-      label: "Window",
-      role: "window",
-      submenu: [
-        {
-          label: "Minimize",
-          accelerator: "CmdOrCtrl+M",
-          role: "minimize",
-        },
-        {
-          label: "Close",
-          accelerator: "CmdOrCtrl+W",
-          role: "close",
-        },
-        {
-          type: "separator",
-        },
-        {
-          label: "Reopen Window",
-          accelerator: "CmdOrCtrl+Shift+T",
-          enabled: false,
-          click: () => {
-            app.emit("activate");
-          },
         },
       ],
     },

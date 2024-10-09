@@ -29,8 +29,9 @@ function createMainWindow() {
     y: windowState.y,
     height: windowState.height,
     width: windowState.width,
-    backgroundColor: "#212529",
+    resizable: false,
     show: false,
+    backgroundColor: "#212529",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
