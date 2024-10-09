@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const openSettings = () => {
+  console.log("In Open Settings Function")
   const myModal = new bootstrap.Modal(document.getElementById("main-modal"));
   openModal("Settings");
   myModal.show();

@@ -21,7 +21,6 @@ function setModalContent(content) {
   const modalContent = document.querySelector(".modal-content");
   modalContent.innerHTML = content;
 }
-cle
 
 function displayMessage(messageText, isSuccess, button) {
   const message = document.querySelector("#message");

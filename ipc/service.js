@@ -20,6 +20,23 @@ const serviceIPC = () => {
       throw error;
     }
   });
+
+  // //  Get services status
+  // ipcMain.handle("get-service-status", async (_e, refresh = false) => {
+  //   console.log("~~~~ Handling get-service-status ~~~~~");
+  //   try {
+  //     const statuses = await checkServiceStatus();
+  //     res.payload = services;
+  //     return res;
+  //   } catch (error) {
+  //     handleError(error, "fetchServices");
+  //   }
+  // });
+
+  // // update service status
+  // ipcMain.handle("set-service-status", async (_e, data) => {
+  //   console.log("~~~~ Handling set-service-status ~~~~~");
+  // });
 };
 
 const handleError = (error, functionName) => {

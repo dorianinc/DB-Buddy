@@ -7,24 +7,24 @@ contextBridge.exposeInMainWorld("api", {
   services: {
     getServices: async (refreshBool) =>
       ipcRenderer.invoke("get-service-data", refreshBool),
-    getSingleService: async (data) =>
-      ipcRenderer.invoke("get-single-service-data", data),
-    saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
-    setStatus: (callback) =>
-      ipcRenderer.on("set-service-status", (_e, data) => callback(data)),
+    // getSingleService: async (data) =>
+    //   ipcRenderer.invoke("get-single-service-data", data),
+    // saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
+    // setStatus: (callback) =>
+    //   ipcRenderer.on("set-service-status", (_e, data) => callback(data)),
   },
   database: {
     getDatabase: async (refreshBool) =>
       ipcRenderer.invoke("get-database-data", refreshBool),
-    saveDatabase: async (data) =>
-      ipcRenderer.invoke("save-database-data", data),
-    setStatus: (callback) =>
-      ipcRenderer.on("set-database-status", (_e, data) => callback(data)),
+    // saveDatabase: async (data) =>
+    //   ipcRenderer.invoke("save-database-data", data),
+    // setStatus: (callback) =>
+    //   ipcRenderer.on("set-database-status", (_e, data) => callback(data)),
   },
-  auth: {
-    getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
-    saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
-  },
+  // auth: {
+  //   getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
+  //   saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
+  // },
   settings: {
     open: (callback) => ipcRenderer.on("open-settings", callback),
     getSettings: async () => ipcRenderer.invoke("get-settings-data"),
