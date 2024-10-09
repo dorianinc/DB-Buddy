@@ -23,16 +23,20 @@ const fetchDatabase = async (refresh) => {
 
     if (!isEmpty(freeDatabase)) {
       const { id, name, version } = freeDatabase;
-      const database = { id, name, version };
-
-      database.status = refresh ? "creating" : await checkDbStatus(database);
-      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
-
       const { internalConnectionString } = await fetchConnectionInfo(id);
-      database.internalDatabaseUrl = internalConnectionString || null;
+      const database = {
+        id,
+        name,
+        version,
+        internalDatabaseUrl: internalConnectionString,
+      };
+      
+      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
+      database.status = "creating";
 
-      checkDbStatus(database);
       store.set("database", database);
+      checkDbStatus(database);
+
       return database;
     }
 
@@ -118,9 +122,8 @@ module.exports = {
   fetchConnectionInfo,
   createDatabase,
   deleteDatabase,
-  rebuildDatabase,
   checkDbStatus,
 };
 
-// click rebuild 
-//  
+// click rebuild
+//

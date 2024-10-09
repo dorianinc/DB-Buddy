@@ -25,13 +25,14 @@ const fetchServices = async (refresh) => {
       const { id, name, type } = service;
       const obj = { id, name, type };
 
-      obj.status = refresh ? "deploying" : await checkServiceStatus(service);
+      obj.status = "deploying";
       obj.lastDeployed = formatDistanceToNow(service.updatedAt);
+
       services[service.name] = obj;
     }
 
-    listenToServiceStatus(services);
     store.set("services", services);
+    listenToServiceStatus(services);
     return services;
   } catch (error) {
     handleError(error, "fetchServices");
@@ -100,7 +101,7 @@ const checkServiceStatus = async (service) => {
       store.set(`services.${service.name}.status`, serviceStatus);
       resolve(serviceStatus);
     } catch (error) {
-      handleError(error, "fetchServiceEvents");
+      console.error("error: ", error)
       resolve("error");
     }
   });

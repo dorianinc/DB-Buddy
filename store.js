@@ -98,11 +98,12 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true, schema });
-// store.clear();
+const store = new Store({ watch: true, schema  });
+store.clear();
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", (newDatabase) => {
+    console.log("database ==> ", store.get("database"))
     store.onDidChange("database.status", (newStatus) => {
       const name = newDatabase.name
       webContents.send("set-database-status", {
