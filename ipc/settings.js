@@ -1,6 +1,5 @@
 const { ipcMain } = require("electron");
 const { getSettings, saveSettings } = require("../controllers/settings");
-const { writeToFile, readFromFile } = require("../utils/helpers");
 
 const settingsIPC = () => {
   const res = {

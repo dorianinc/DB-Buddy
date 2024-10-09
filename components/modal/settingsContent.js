@@ -1,16 +1,3 @@
-const openModal = (type, databaseExists) => {
-  switch (type) {
-    case "Settings":
-      populateSettings();
-      break;
-    case "Warning":
-      populateWithWarning(databaseExists);
-      break;
-    default:
-      throw new Error(`Unsupported type: ${type}`);
-  }
-};
-
 async function populateSettings() {
   setModalSize("lg");
 
@@ -50,89 +37,36 @@ async function populateSettings() {
       <p class="note"><strong>Note:</strong> Ensure all keys and values are correct before saving.</p>
     </div>
     <div class="modal-footer d-flex justify-content-between align-items-center">
-      <div id="message-container" style="flex: 1; text-align: center">
+      <div id="message-container" style="flex: 1; text-align: center;">
         <span id="message" class="fs-6"></span>
       </div>
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary" id="save-settings-btn" style="width: 130px; height: 38px">
+      <button type="button" class="btn btn-primary" id="save-settings-btn" style="width: 130px; height: 38px;">
         <span>Save Changes</span>
       </button>
     </div>
   `);
 
-  // Toggle visibility for the API key
-  document
-    .getElementById("toggle-api-key")
-    .addEventListener("click", function () {
-      const apiKeyInput = document.getElementById("api-key");
-
-      // Toggle the input type
-      if (apiKeyInput.type === "password") {
-        apiKeyInput.type = "text";
-        this.textContent = "Hide";
-      } else {
-        apiKeyInput.type = "password";
-        this.textContent = "Show";
-      }
-    });
+  // Toggle visibility of the API key
+  document.getElementById("toggle-api-key").addEventListener("click", function () {
+    const apiKeyInput = document.getElementById("api-key");
+    const isHidden = apiKeyInput.type === "password";
+    apiKeyInput.type = isHidden ? "text" : "password";
+    this.textContent = isHidden ? "Hide" : "Show";
+  });
 
   const dbNameField = document.querySelector("#db-name");
   const dbKeyField = document.querySelector("#db-env-key");
   const apiKeyField = document.querySelector("#api-key");
   const regionField = document.querySelector("#region");
 
-  // Optionally populate fields with existing data if necessary
-  await populateFieldsWithSettingsData(
-    dbNameField,
-    dbKeyField,
-    apiKeyField,
-    regionField
-  );
+  // Populate fields with existing settings data
+  await populateFieldsWithSettingsData(dbNameField, dbKeyField, apiKeyField, regionField);
 
-  const saveButton = document.querySelector("#save-settings-btn");
-  saveButton.addEventListener("click", (e) =>
-    handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField)
-  );
-}
-
-function populateWithWarning(databaseExists) {
-  setModalSize("md");
-
-  setModalContent(`
-<div class="modal-header">
-  <h1 class="modal-title fs-5">${
-    databaseExists ? "Rebuild Database" : "Build Database"
-  }</h1>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-
-<div class="modal-body database">
-  <div class="alert alert-warning mt-3">
-    <strong>Warning:</strong> You are about to ${
-      databaseExists ? "rebuild your database" : "create a new database"
-    } and update your application environment variables.
-  </div>
-  
-  <p class="note">
-    <strong>Note: The may take a couple of minutes.</strong> 
-  </p>
-</div>
-
-<div class="modal-footer d-flex justify-content-between align-items-center">
-  <div id="message-container" style="flex: 1; text-align: center">
-    <span id="message" class="fs-6"></span>
-  </div>
-  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-btn"
-   style="width: 130px; height: 38px">
-    <span>Continue</span>
-  </button>
-</div>
-
-  `);
-
-  const confirmButton = document.querySelector("#confirm-btn");
-  confirmButton.addEventListener("click", async (e) => await window.api.app.rebuildRender());
+  // Handle Save button click
+  document.querySelector("#save-settings-btn").addEventListener("click", (e) => {
+    handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField);
+  });
 }
 
 async function populateFieldsWithSettingsData(
@@ -156,16 +90,6 @@ async function populateFieldsWithSettingsData(
   }
 }
 
-function setModalSize(size) {
-  const modal = document.querySelector(".modal-dialog");
-  modal.classList.remove("modal-sm", "modal-lg");
-  modal.classList.add(`modal-${size}`);
-}
-
-function setModalContent(content) {
-  const modalContent = document.querySelector(".modal-content");
-  modalContent.innerHTML = content;
-}
 
 async function handleSaveSettings(
   e,
@@ -299,24 +223,4 @@ function validateApiKey(key) {
   }
 
   return { success: true };
-}
-
-function displayMessage(messageText, isSuccess, button) {
-  const message = document.querySelector("#message");
-  setTimeout(() => {
-    button.innerHTML = isSuccess
-      ? `<i class="fa-solid fa-circle-check" style="color: #ffffff;"></i>`
-      : `<i class="fa-solid fa-circle-exclamation" style="color: #ffffff;"></i>`;
-    message.innerText = messageText;
-    message.style.color = isSuccess ? "white" : "red";
-    message.style.display = "block";
-  }, 1500);
-}
-
-// Function to reset the message and button state before showing new feedback
-function resetMessageAndButton(button) {
-  const message = document.querySelector("#message");
-  button.innerHTML = ""; // Clear any existing icon on the button
-  message.innerText = ""; // Clear the message
-  message.style.display = "none"; // Hide the message until next update
 }
