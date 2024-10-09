@@ -11,8 +11,6 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.invoke("get-single-service-data", data),
     saveEnv: async (data) => 
       ipcRenderer.invoke("save-service-data", data),
-    refreshService: (callback) => 
-      ipcRenderer.on("refresh-services", (_e, refreshBool) => callback(refreshBool)),
     setStatus: (callback) => 
       ipcRenderer.on("set-service-status", (_e, data) => callback(data)), 
   },
@@ -38,4 +36,8 @@ contextBridge.exposeInMainWorld("api", {
     saveSettings: async (data) => 
       ipcRenderer.invoke("save-settings-data", data),
   },
+  app: {
+    refreshApp: (callback) => 
+      ipcRenderer.on("refresh-app", (_e, refreshBool) => callback(refreshBool)),
+  }
 });

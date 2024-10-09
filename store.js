@@ -1,6 +1,10 @@
 const Store = require("electron-store");
 
 const schema = {
+  rebuilt: {
+    type: "boolean",
+    default: false,
+  },
   services: {
     type: "object",
     patternProperties: {
@@ -98,14 +102,14 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true, schema  });
+const store = new Store({ watch: true, schema });
 store.clear();
+console.log("rebuilt ==> ", store.get("rebuilt"));
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", (newDatabase) => {
-    console.log("database ==> ", store.get("database"))
     store.onDidChange("database.status", (newStatus) => {
-      const name = newDatabase.name
+      const name = newDatabase.name;
       webContents.send("set-database-status", {
         name,
         status: newStatus,
@@ -121,6 +125,12 @@ const deployStoreListeners = (webContents) => {
           status: newStatus,
         });
       });
+    }
+  });
+
+  store.onDidChange("rebuilt", (newValue) => {
+    if (newValue) {
+      console.log("rebuilt ==> ", newValue);
     }
   });
 };

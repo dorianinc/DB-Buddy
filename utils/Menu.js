@@ -12,7 +12,7 @@ exports.createTemplate = (app, webContents) => {
         {
           label: "Refresh Services",
           click: () => {
-            webContents.send("refresh-services", true);
+            webContents.send("refresh-app", true);
           },
         },
         {
