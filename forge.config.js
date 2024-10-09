@@ -21,7 +21,7 @@ module.exports = {
     {
       name: "@electron-forge/maker-deb",
       config: {
-        name: "DB Daddy"
+        name: "DB Buddy"
       },
     },
   ],

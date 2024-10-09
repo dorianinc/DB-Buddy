@@ -60,7 +60,7 @@ const schema = {
         type: "string",
         minLength: 1,
       },
-      internalDatabaseUrl: {
+      internalConnectionString: {
         type: "string",
         format: "uri",
       },
@@ -71,7 +71,7 @@ const schema = {
       "status",
       "version",
       "lastDeployed",
-      "internalDatabaseUrl",
+      "internalConnectionString",
     ],
   },
   settings: {
@@ -102,7 +102,7 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true, schema });
+const store = new Store({ watch: true });
 store.clear();
 console.log("rebuilt ==> ", store.get("rebuilt"));
 
@@ -131,6 +131,7 @@ const deployStoreListeners = (webContents) => {
   store.onDidChange("rebuilt", (newValue) => {
     if (newValue) {
       console.log("rebuilt ==> ", newValue);
+      webContents.send("refresh-app", true);
     }
   });
 };

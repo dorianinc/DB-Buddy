@@ -1,5 +1,5 @@
 <h1 style="display: flex; align-items: center;">
-  DB Daddy
+  DB Buddy
   <picture style="margin-left: 10px;">
     <source media="(prefers-color-scheme: dark)" srcset="/assets/images/db-white.png">
     <source media="(prefers-color-scheme: light)" srcset="/assets/images/db-black.png">
@@ -8,7 +8,7 @@
 </h1>
 
 
-DB-Daddy is an application that is designed to remove the stress of updating your Render database every month by automating it. It's simple but powerful.
+DB-Buddy is an application that is designed to remove the stress of updating your Render database every month by automating it. It's simple but powerful.
 
 
 #### Please see below links to project Wiki:

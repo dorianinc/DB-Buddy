@@ -1,3 +1,8 @@
+const axios = require("axios");
+
+const baseUrl = "https://api.render.com/v1";
+const options = require("./configs");
+
 // Helpers --------------------------------------------------------------------------------------------
 
 const validateVariables = async () => {
@@ -29,6 +34,42 @@ const validateVariables = async () => {
   return true;
 };
 
+const updateEnvVariable = async (serviceId, envKey, envValue) => {
+  const body = {
+    value: envValue,
+  };
+
+  try {
+    const response = await axios.put(
+      `${baseUrl}/services/${serviceId}/env-vars/${envKey}`,
+      body,
+      options
+    );
+    return response.data;
+  } catch (error) {
+    console.log("error ==> ", error)
+    handleError(error, "updateEnvVariable");
+  }
+};
+
+const deployService = async (service) => {
+  console.log("deploying services")
+  const body = {
+    clearCache: "do_not_clear",
+  };
+
+  try {
+    const response = await axios.post(
+      `${baseUrl}/services/${service.id}/deploys`,
+      body,
+      options
+    );
+    return response.data;
+  } catch (error) {
+    handleError(error, "deployServices");
+  }
+};
+
 const handleError = (error, functionName) => {
   const statusCode = error.response?.status;
   const errorMessage =
@@ -51,4 +92,10 @@ const isEmpty = (obj) => {
   return Object.values(obj).length === 0;
 };
 
-module.exports = { validateVariables, isEmpty, handleError };
+module.exports = {
+  validateVariables,
+  updateEnvVariable,
+  deployService,
+  isEmpty,
+  handleError,
+};

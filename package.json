@@ -1,5 +1,5 @@
 {
-  "name": "db-daddy",
+  "name": "db-buddy",
   "version": "1.0.0",
   "description": "Cause why not?",
   "author": "dorian macias <dorianrmacias@gmail.com> (https://dorianmacias.dev/)",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dorianinc/db-daddy.git"
+    "url": "git+https://github.com/dorianinc/db-buddy.git"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",

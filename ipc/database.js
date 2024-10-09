@@ -18,6 +18,7 @@ const databaseIPC = () => {
       res.payload = database;
       return res;
     } catch (error) {
+      console.error("error ==> ", error)
       handleError(error, "fetchDatabase");
     }
   });

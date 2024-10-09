@@ -5,39 +5,35 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
   services: {
-    getServices: async (refreshBool) => 
+    getServices: async (refreshBool) =>
       ipcRenderer.invoke("get-service-data", refreshBool),
-    getSingleService: async (data) => 
+    getSingleService: async (data) =>
       ipcRenderer.invoke("get-single-service-data", data),
-    saveEnv: async (data) => 
-      ipcRenderer.invoke("save-service-data", data),
-    setStatus: (callback) => 
-      ipcRenderer.on("set-service-status", (_e, data) => callback(data)), 
+    saveEnv: async (data) => ipcRenderer.invoke("save-service-data", data),
+    setStatus: (callback) =>
+      ipcRenderer.on("set-service-status", (_e, data) => callback(data)),
   },
   database: {
-    getDatabase: async (refreshBool) => 
+    getDatabase: async (refreshBool) =>
       ipcRenderer.invoke("get-database-data", refreshBool),
-    saveDatabase: async (data) => 
+    saveDatabase: async (data) =>
       ipcRenderer.invoke("save-database-data", data),
-    setStatus: (callback) => 
-      ipcRenderer.on("set-database-status", (_e, data) => callback(data)), 
+    setStatus: (callback) =>
+      ipcRenderer.on("set-database-status", (_e, data) => callback(data)),
   },
   auth: {
-    getLoginInfo: async () => 
-      ipcRenderer.invoke("get-login-info"),
-    saveLoginInfo: async (data) => 
-      ipcRenderer.invoke("save-login-info", data),
+    getLoginInfo: async () => ipcRenderer.invoke("get-login-info"),
+    saveLoginInfo: async (data) => ipcRenderer.invoke("save-login-info", data),
   },
   settings: {
-    open: (callback) => 
-      ipcRenderer.on("open-settings", callback),
-    getSettings: async () => 
-      ipcRenderer.invoke("get-settings-data"),
-    saveSettings: async (data) => 
+    open: (callback) => ipcRenderer.on("open-settings", callback),
+    getSettings: async () => ipcRenderer.invoke("get-settings-data"),
+    saveSettings: async (data) =>
       ipcRenderer.invoke("save-settings-data", data),
   },
   app: {
-    refreshApp: (callback) => 
+    rebuildRender: async () => ipcRenderer.invoke("rebuild-render"),
+    refreshApp: (callback) =>
       ipcRenderer.on("refresh-app", (_e, refreshBool) => callback(refreshBool)),
-  }
+  },
 });

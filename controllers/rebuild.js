@@ -1,8 +1,12 @@
 require("dotenv").config();
 // const options = require("./configs");
 const { fetchOwner } = require("./owner");
-const { listenToServiceStatus } = require("./service");
-const { validateVariables, handleError } = require("./helpers");
+const {
+  validateVariables,
+  updateEnvVariable,
+  deployService,
+  handleError,
+} = require("./helpers");
 const {
   createDatabase,
   deleteDatabase,
@@ -14,12 +18,13 @@ const { store } = require("../store");
 const databaseKey = process.env.DATABASE_ENV_KEY; // name of key for render database
 
 const rebuildRender = async () => {
-  const isValid = await validateVariables();
-  if (!isValid) return;
+  // const isValid = await validateVariables();
+  // if (!isValid) return;
 
   try {
+    store.set("rebuilt", false);
     const owner = await fetchOwner();
-    const services = store.get("services") || null;
+    const services = Object.values(store.get("services")) || null;
     const database = store.get("database") || null;
 
     if (database) {
@@ -30,33 +35,30 @@ const rebuildRender = async () => {
       }
     }
 
-    const { name, status, id, createdAt } = await createDatabase(owner.id);
-    const newDb = { name, status, id, createdAt };
+    const { id, name, status, createdAt } = await createDatabase(owner.id);
     const { internalConnectionString } = await fetchConnectionInfo(id);
-    newDb.internalDatabaseUrl = internalConnectionString;
+    const newDb = { id, name, status, internalConnectionString, createdAt };
 
     console.log("Waiting for database...");
-    let dbStatus = await checkDbStatus(database);
+    let dbStatus = await checkDbStatus(newDb);
 
     if (dbStatus === "available") {
       console.log("Database is available");
-      console.log("Updating Services");
       for (const service of services) {
         await updateEnvVariable(
           service.id,
           databaseKey,
-          newDb.internalDatabaseUrl
+          internalConnectionString
         );
         await deployService(service);
       }
-
-      listenToServiceStatus(services);
-
+      store.set("rebuilt", true);
       console.log("Done!");
     } else {
       console.log("Something went wrong with your database");
     }
   } catch (error) {
+    console.error("error ==> ", error);
     handleError(error, "rebuildRender");
   }
 };

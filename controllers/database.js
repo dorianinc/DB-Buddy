@@ -24,13 +24,8 @@ const fetchDatabase = async (refresh) => {
     if (!isEmpty(freeDatabase)) {
       const { id, name, version } = freeDatabase;
       const { internalConnectionString } = await fetchConnectionInfo(id);
-      const database = {
-        id,
-        name,
-        version,
-        internalDatabaseUrl: internalConnectionString,
-      };
-      
+      const database = { id, name, version, internalConnectionString };
+
       database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
       database.status = "creating";
 

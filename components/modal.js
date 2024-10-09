@@ -132,7 +132,7 @@ function populateWithWarning(databaseExists) {
   `);
 
   const confirmButton = document.querySelector("#confirm-btn");
-  confirmButton.addEventListener("click", (e) => buildApplication(true));
+  confirmButton.addEventListener("click", async (e) => await window.api.app.rebuildRender());
 }
 
 async function populateFieldsWithSettingsData(

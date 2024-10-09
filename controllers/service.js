@@ -39,22 +39,7 @@ const fetchServices = async (refresh) => {
   }
 };
 
-const deployService = async (service) => {
-  const body = {
-    clearCache: "do_not_clear",
-  };
 
-  try {
-    const response = await axios.post(
-      `${baseUrl}/services/${service.id}/deploys`,
-      body,
-      options
-    );
-    return response.data;
-  } catch (error) {
-    handleError(error, "deployServices");
-  }
-};
 
 const listenToServiceStatus = async (services) => {
   try {
@@ -109,7 +94,6 @@ const checkServiceStatus = async (service) => {
 
 module.exports = {
   fetchServices,
-  deployService,
   checkServiceStatus,
   listenToServiceStatus
 };
