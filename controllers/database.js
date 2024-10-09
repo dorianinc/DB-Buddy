@@ -1,12 +1,12 @@
 require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
+const { isEmpty, handleError } = require("./helpers");
 const { formatDistanceToNow } = require("date-fns");
 const { store } = require("../store");
 
 const baseUrl = "https://api.render.com/v1";
 const databaseName = process.env.DATABASE_NAME; // name of new render database
-const databaseKey = process.env.DATABASE_ENV_KEY; // name of key for render database
 const region = process.env.REGION.toLowerCase(); // region you use for your applications
 
 // Database --------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ const fetchDatabase = async (refresh) => {
 
       const { internalConnectionString } = await fetchConnectionInfo(id);
       database.internalDatabaseUrl = internalConnectionString || null;
-      
+
       checkDbStatus(database);
       store.set("database", database);
       return database;
@@ -113,78 +113,6 @@ const checkDbStatus = async (database) => {
   });
 };
 
-const rebuildDatabase = async () => {
-  const isValid = await validateVariables();
-  if (!isValid) return;
-
-  try {
-    const owner = await fetchOwner();
-    const services = await fetchServices();
-    const database = await fetchDatabase();
-
-    if (database) {
-      const deleteDb = await deleteDatabase(database.id);
-      if (deleteDb.status !== 204) {
-        console.error("Failed to delete existing database.");
-        return;
-      }
-    }
-
-    const { name, status, id, createdAt } = await createDatabase(owner.id);
-    const newDb = { name, status, id, createdAt };
-    const { internalConnectionString } = await fetchConnectionInfo(id);
-    newDb.internalDatabaseUrl = internalConnectionString;
-
-    console.log("Waiting for database...");
-    let dbStatus = await checkDbStatus(database);
-
-    if (dbStatus === "available") {
-      console.log("Database is available");
-      console.log("Updating Services");
-      for (const service of services) {
-        await updateEnvVariable(
-          service.id,
-          databaseKey,
-          newDb.internalDatabaseUrl
-        );
-        await deployService(service);
-      }
-
-      console.log("Waiting for service status(es)...");
-      console.log("You can close the program now if you like");
-
-      await Promise.all(services.map((service) => checkServiceStatus(service)));
-      console.log("Done!");
-    } else {
-      console.log("Something went wrong with your database");
-    }
-  } catch (error) {
-    handleError(error, "rebuildDatabase");
-  }
-};
-
-const handleError = (error, functionName) => {
-  const statusCode = error.response?.status;
-  const errorMessage =
-    error.response?.data?.message || "An unknown error occurred";
-
-  console.error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-
-  throw new Error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-};
-
-function isEmpty(obj) {
-  return Object.values(obj).length === 0;
-}
-
 module.exports = {
   fetchDatabase,
   fetchConnectionInfo,
@@ -193,3 +121,6 @@ module.exports = {
   rebuildDatabase,
   checkDbStatus,
 };
+
+// click rebuild 
+//  

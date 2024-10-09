@@ -1,9 +1,11 @@
 require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
-const baseUrl = "https://api.render.com/v1";
+const { isEmpty, handleError } = require("./helpers");
 const { formatDistanceToNow } = require("date-fns");
 const { store } = require("../store");
+
+const baseUrl = "https://api.render.com/v1";
 
 // Service --------------------------------------------------------------------------------------------
 
@@ -22,7 +24,7 @@ const fetchServices = async (refresh) => {
     for (let service of rawServices) {
       const { id, name, type } = service;
       const obj = { id, name, type };
-     
+
       obj.status = refresh ? "deploying" : await checkServiceStatus(service);
       obj.lastDeployed = formatDistanceToNow(service.updatedAt);
       services[service.name] = obj;
@@ -40,7 +42,7 @@ const deployService = async (service) => {
   const body = {
     clearCache: "do_not_clear",
   };
-  
+
   try {
     const response = await axios.post(
       `${baseUrl}/services/${service.id}/deploys`,
@@ -104,30 +106,9 @@ const checkServiceStatus = async (service) => {
   });
 };
 
-const handleError = (error, functionName) => {
-  const statusCode = error.response?.status;
-  const errorMessage =
-    error.response?.data?.message || "An unknown error occurred";
-
-  console.error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-
-  throw new Error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-};
-
-function isEmpty(obj) {
-  return Object.values(obj).length === 0;
-}
-
 module.exports = {
   fetchServices,
   deployService,
   checkServiceStatus,
+  listenToServiceStatus
 };
