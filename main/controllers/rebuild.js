@@ -5,7 +5,6 @@ const {
   validateVariables,
   updateEnvVariable,
   deployService,
-  handleError,
 } = require("./helpers");
 const {
   createDatabase,
@@ -53,8 +52,8 @@ const rebuildRender = async () => {
       store.set("rebuilt", true);
     }
   } catch (error) {
-    console.error("error ==> ", error);
-    handleError(error, "rebuildRender");
+    console.error("error in rebuildRender: ", error);
+    throw error
   }
 };
 

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
-const { isEmpty, handleError } = require("./helpers");
+const { isEmpty } = require("./helpers");
 const { formatDistanceToNow } = require("date-fns");
 const { store } = require("../store");
 
@@ -15,7 +15,7 @@ const fetchServices = async (refresh) => {
     if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);
-    const rawServices = await response.data
+    const rawServices = response.data
       .filter((item) => item.service.type === "web_service")
       .map((item) => item.service)
       .filter((service) => service !== null);
@@ -35,11 +35,10 @@ const fetchServices = async (refresh) => {
     listenToServiceStatus(services);
     return services;
   } catch (error) {
-    handleError(error, "fetchServices");
+    console.error("error in fetchServices: ", error);
+    return {}
   }
 };
-
-
 
 const listenToServiceStatus = async (services) => {
   try {
@@ -52,6 +51,7 @@ const listenToServiceStatus = async (services) => {
     );
   } catch (error) {
     console.error("Error during background service checks:", error);
+    throw error;
   }
 };
 
@@ -86,7 +86,7 @@ const checkServiceStatus = async (service) => {
       store.set(`services.${service.name}.status`, serviceStatus);
       resolve(serviceStatus);
     } catch (error) {
-      console.error("error: ", error)
+      console.error("error in checkServiceStatus: ", error);
       resolve("error");
     }
   });
@@ -95,5 +95,5 @@ const checkServiceStatus = async (service) => {
 module.exports = {
   fetchServices,
   checkServiceStatus,
-  listenToServiceStatus
+  listenToServiceStatus,
 };

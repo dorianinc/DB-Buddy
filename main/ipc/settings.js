@@ -18,7 +18,9 @@ const settingsIPC = () => {
       res.payload = settings;
       return res;
     } catch (error) {
-      handleError(error, "get settings IPC handler");
+      console.error("error in get-settings-data: ", error);
+      res.error = "Failed to retrieve settings.";
+      return res;
     }
   });
 
@@ -30,28 +32,12 @@ const settingsIPC = () => {
       res.message = "Successfully saved settings data";
       return res;
     } catch (error) {
-      console.error("Error in get-service-data IPC handler:", error);
-      throw error;
+      console.error("error in get-service-data", error);
+      res.error = "Failed to save settings.";
+      return res;
     }
   });
 };
 
-const handleError = (error, functionName) => {
-  const statusCode = error.response?.status;
-  const errorMessage =
-    error.response?.data?.message || "An unknown error occurred";
-
-  console.error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-
-  throw new Error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-};
 
 module.exports = settingsIPC;

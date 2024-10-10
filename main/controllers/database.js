@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const options = require("./configs");
-const { isEmpty, handleError } = require("./helpers");
+const { isEmpty } = require("./helpers");
 const { formatDistanceToNow } = require("date-fns");
 const { store } = require("../store");
 
@@ -31,14 +31,11 @@ const fetchDatabase = async (refresh) => {
 
       store.set("database", database);
       checkDbStatus(database);
-
       return database;
     }
-
-    return null;
   } catch (error) {
-    handleError(error, "fetchDatabase");
-    return null;
+    console.error("error in fetchDatabase: ", error);
+    return {};
   }
 };
 
@@ -50,8 +47,8 @@ const fetchConnectionInfo = async (databaseId) => {
     );
     return response.data;
   } catch (error) {
-    handleError(error, "fetchConnectionInfo");
-    return null;
+    console.error("error in fetchConnectionInfo: ", error);
+    return {};
   }
 };
 
@@ -69,7 +66,8 @@ const createDatabase = async (ownerId) => {
     const response = await axios.post(`${baseUrl}/postgres`, body, options);
     return response.data;
   } catch (error) {
-    handleError(error, "createDatabase");
+    console.error("error in createDatabase: ", error);
+    throw error;
   }
 };
 
@@ -81,7 +79,8 @@ const deleteDatabase = async (databaseId) => {
     );
     return response;
   } catch (error) {
-    handleError(error, "deleteDatabase");
+    console.error("error in deleteDatabase: ", error);
+    throw error;
   }
 };
 
@@ -104,7 +103,7 @@ const checkDbStatus = async (database) => {
       store.set("database.status", databaseStatus);
       resolve(databaseStatus);
     } catch (error) {
-      console.error("Failed checking database status: ", error.message);
+      console.error("Failed checkDbStatus: ", error);
       return false;
     }
   });
@@ -117,6 +116,3 @@ module.exports = {
   deleteDatabase,
   checkDbStatus,
 };
-
-// click rebuild
-//

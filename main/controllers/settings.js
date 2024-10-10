@@ -1,15 +1,8 @@
 const { store } = require("../store");
-const { isEmpty } = require("./helpers");
-
-// Settings --------------------------------------------------------------------------------------------
-const res = {
-  success: true,
-  message: "",
-  error: "",
-  payload: null,
-};
 
 const getSettings = () => {
+  const res = { success: false, message: "", error: "", payload: null };
+
   try {
     const settings = {
       dbName: null,
@@ -17,26 +10,42 @@ const getSettings = () => {
       apiKey: null,
       region: null,
     };
+
     const storedSettings = store.get("settings");
-    if (storedSettings && !isEmpty(storedSettings)) {
-      for (let key in storedSettings) {
-        settings[key] = storedSettings[key] || null;
-      }
+    if (!storedSettings) {
+      res.message = "No settings found. Returning default settings.";
+      res.success = true;
+      res.payload = settings;
+      return res; // Return early with defaults
     }
-    return settings;
+
+    Object.keys(storedSettings).forEach((key) => {
+      settings[key] = storedSettings[key] || null;
+    });
+
+    res.success = true;
+    res.message = "Settings retrieved successfully.";
+    res.payload = settings;
+    return res;
   } catch (error) {
-    console.error("error ==> ", error);
+    console.error("Error in getSettings: ", error);
+    res.error = "Failed to retrieve settings.";
+    return res;
   }
 };
 
 const saveSettings = (settings) => {
+  const res = { success: false, message: "", error: "", payload: null };
+
   try {
     store.set("settings", settings);
     res.success = true;
-    res.message = "Successfully saved variables";
+    res.message = "Successfully saved settings.";
     return res;
   } catch (error) {
-    console.error("error in saveSettings: ", error);
+    console.error("Error in saveSettings: ", error);
+    res.error = "Failed to save settings.";
+    return res;
   }
 };
 

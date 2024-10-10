@@ -14,7 +14,8 @@ const fetchOwner = async () => {
       return owner;
     }
   } catch (error) {
-    handleError(error, "fetchOwner");
+    console.error("error in fetchOwner: ", error);
+    throw error
   }
 };
 

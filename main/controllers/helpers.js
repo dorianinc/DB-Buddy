@@ -42,8 +42,8 @@ const updateEnvVariable = async (serviceId, envKey, envValue) => {
     );
     return response.data;
   } catch (error) {
-    console.error("error ==> ", error)
-    handleError(error, "updateEnvVariable");
+    console.error("updateEnvVariabl: ", error);
+    throw error;
   }
 };
 
@@ -60,26 +60,9 @@ const deployService = async (service) => {
     );
     return response.data;
   } catch (error) {
-    handleError(error, "deployServices");
+    console.error("error in deployService: ", error);
+    throw error;
   }
-};
-
-const handleError = (error, functionName) => {
-  const statusCode = error.response?.status;
-  const errorMessage =
-    error.response?.data?.message || "An unknown error occurred";
-
-  console.error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
-
-  throw new Error(
-    `Error in ${functionName}: ${errorMessage} ${
-      !statusCode ? "" : `Status code: ${statusCode}`
-    }`
-  );
 };
 
 const isEmpty = (obj) => {
@@ -91,5 +74,4 @@ module.exports = {
   updateEnvVariable,
   deployService,
   isEmpty,
-  handleError,
 };
