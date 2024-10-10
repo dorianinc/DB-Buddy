@@ -47,7 +47,7 @@ function createMainWindow() {
 
   windowState.manage(mainWindow);
   mainWindow.loadFile("./renderer/views/index.html");
-  // if (isDev) mainWindow.webContents.openDevTools();
+  if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
   deployStoreListeners(mainWindow.webContents);

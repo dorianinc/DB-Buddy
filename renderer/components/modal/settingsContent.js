@@ -77,6 +77,7 @@ async function populateFieldsWithSettingsData(
 ) {
   try {
     const settingsData = await window.api.settings.getSettings();
+    console.log("🖥️  settingsData: ", settingsData)
     dbNameField.value = settingsData.payload.dbName;
     dbKeyField.value = settingsData.payload.dbKey;
     apiKeyField.value = settingsData.payload.apiKey;
@@ -84,7 +85,6 @@ async function populateFieldsWithSettingsData(
       regionField.value = settingsData.payload.region;
     }
   } catch (error) {
-    // textArea.value = "";
     console.error("Error populating modal:", error);
     throw error;
   }

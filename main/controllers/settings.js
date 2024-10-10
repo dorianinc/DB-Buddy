@@ -12,6 +12,7 @@ const getSettings = () => {
     };
 
     const storedSettings = store.get("settings");
+    console.log("🖥️  storedSettings: ", storedSettings)
     if (!storedSettings) {
       res.message = "No settings found. Returning default settings.";
       res.success = true;
@@ -26,6 +27,7 @@ const getSettings = () => {
     res.success = true;
     res.message = "Settings retrieved successfully.";
     res.payload = settings;
+    console.log("🖥️  res: ", res)
     return res;
   } catch (error) {
     console.error("Error in getSettings: ", error);
