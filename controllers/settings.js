@@ -1,4 +1,5 @@
 const { store } = require("../store");
+const { isEmpty } = require("./helpers");
 
 // Settings --------------------------------------------------------------------------------------------
 const res = {
@@ -38,10 +39,6 @@ const saveSettings = (settings) => {
     console.error("error in saveSettings: ", error);
   }
 };
-
-function isEmpty(obj) {
-  return Object.values(obj).length === 0;
-}
 
 module.exports = {
   getSettings,

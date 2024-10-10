@@ -5,7 +5,7 @@ const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
 const { deployStoreListeners } = require("./store");
 
-const dockIcon = path.join(__dirname, "assets", "images", "react_app_logo.png");
+const dockIcon = path.join(__dirname, "assets", "images", "db-white.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 
 const isDev = !app.isPackaged;
@@ -42,7 +42,7 @@ function createMainWindow() {
 
   windowState.manage(mainWindow);
   mainWindow.loadFile("./views/index.html");
-  // if (isDev) mainWindow.webContents.openDevTools();
+  if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
   deployStoreListeners(mainWindow.webContents);
@@ -52,8 +52,11 @@ function createMainWindow() {
 }
 
 // Set Dock Icon for macOS
+// Set Dock Icon for macOS
 if (process.platform === "darwin") {
   app.dock.setIcon(dockIcon);
+  // Set app name for macOS menu bar
+  app.setName("DB Buddy"); // Replace "MyAppName" with your actual app name
 }
 
 //---------------------- app initialization ------------- //

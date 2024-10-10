@@ -11,7 +11,6 @@ const schema = {
       "^.+$": {
         type: "object",
         properties: {
-          // Add 'properties' inside 'patternProperties'
           id: {
             type: "string",
             minLength: 1,
@@ -98,7 +97,7 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true });
+const store = new Store({ watch: true, encryptionKey: "Pump3n1ck3l", schema });
 // store.clear();
 
 const deployStoreListeners = (webContents) => {

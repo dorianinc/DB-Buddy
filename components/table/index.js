@@ -1,5 +1,21 @@
 // Function to handle table population
-const populateTable = (table, database, apps) => {
+const setTable = (database, apps) => {
+  console.log("setting table & hiding statusContainer")
+  const databaseExists = database.name.length;
+  const buttonText = databaseExists ? "Rebuild Database" : "Build Database";
+  const table = document.getElementById("services-table");
+  table.style.display = "table";
+
+  const buildButton = document.getElementById("build-button");
+  buildButton.innerText = buttonText;
+  buildButton.style.display = "inline";
+
+  const statusContainer = document.querySelector(".status-container");
+  statusContainer.style.display = "none";
+  buildButton.addEventListener("click", () => {
+    openModal("Warning", databaseExists);
+  });
+
   const tableBody = table.querySelector("tbody");
   tableBody.innerHTML = "";
 
