@@ -28,13 +28,7 @@ body {
   font-size: 80px;
 }
 
-.status-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
+
 
 .main-container {
   flex: 4;
@@ -46,9 +40,22 @@ body {
   box-sizing: border-box;
 }
 
-.table {
+.status-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.table-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   width: 90%;
 }
+
 
 .status-badge{
   display: flex;

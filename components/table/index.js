@@ -1,22 +1,20 @@
 // Function to handle table population
 const setTable = (database, apps) => {
-  console.log("setting table & hiding statusContainer")
+  console.log("setting table & hiding statusContainer");
   const databaseExists = database.name.length;
   const buttonText = databaseExists ? "Rebuild Database" : "Build Database";
-  const table = document.getElementById("services-table");
-  table.style.display = "table";
+  const { statusContainer, tableContainer, buildButton } = getKeyElements();
 
-  const buildButton = document.getElementById("build-button");
+  tableContainer.style.display = "flex";
+  statusContainer.style.display = "none";
+  
   buildButton.innerText = buttonText;
   buildButton.style.display = "inline";
-
-  const statusContainer = document.querySelector(".status-container");
-  statusContainer.style.display = "none";
   buildButton.addEventListener("click", () => {
     openModal("Warning", databaseExists);
   });
 
-  const tableBody = table.querySelector("tbody");
+  const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
 
   // Function to create a row
@@ -60,10 +58,6 @@ const setTable = (database, apps) => {
     tableBody.appendChild(row);
     setStatus(service);
   }
-};
-
-const capitalize = (string) => {
-  return string.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
 const setStatus = async (item) => {

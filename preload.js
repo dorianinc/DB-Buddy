@@ -35,5 +35,7 @@ contextBridge.exposeInMainWorld("api", {
     rebuildRender: async () => ipcRenderer.invoke("rebuild-render"),
     refreshApp: (callback) =>
       ipcRenderer.on("refresh-app", (_e, refreshBool) => callback(refreshBool)),
+    reloadApp: (callback) =>
+      ipcRenderer.on("reload-app", (_e, reloadBool) => callback(reloadBool)),
   },
 });

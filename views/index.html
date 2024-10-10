@@ -28,29 +28,23 @@
       <i class="fa-solid fa-database fa-xl"></i>
     </div>
     <div class="main-container">
-      <!-- Spinner -->
       <div class="status-container"></div>
-
-      <!-- Table (hidden initially) -->
-      <table
-        class="table table-dark"
-        id="services-table"
-        style="display: none"
-      >
-        <thead>
-          <tr>
-            <!-- <th scope="col">Sync</th> -->
-            <th scope="col">Server Name</th>
-            <th scope="col">Status</th>
-            <th scope="col">Type</th>
-            <!-- <th scope="col">Last Deployed</th> -->
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <!-- Rows will be inserted here -->
-        </tbody>
-      </table>
-      <div>
+      <div class="table-container">
+        <table
+          class="table table-dark"
+          id="services-table"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Server Name</th>
+              <th scope="col">Status</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Rows will be inserted here -->
+          </tbody>
+        </table>
         <button
           type="button"
           id="build-button"
@@ -84,6 +78,7 @@
     ></script>
     <script src="../components/helpers.js"></script>
     <script src="../components/app.js"></script>
+    <script src="../components/statusContainer/index.js"></script>
     <script src="../components/table/index.js"></script>
     <script src="../components/modal/index.js"></script>
     <script src="../components/modal/settingsContent.js"></script>

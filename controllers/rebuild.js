@@ -22,7 +22,7 @@ const rebuildRender = async () => {
   // if (!isValid) return;
 
   try {
-    store.set("rebuilt", false);
+    store.set("reloading", true);
     const owner = await fetchOwner();
     const services = Object.values(store.get("services")) || null;
     const database = store.get("database") || null;

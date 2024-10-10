@@ -1,6 +1,10 @@
 const Store = require("electron-store");
 
 const schema = {
+  reloading: {
+    type: "boolean",
+    default: false,
+  },
   rebuilt: {
     type: "boolean",
     default: false,
@@ -122,10 +126,19 @@ const deployStoreListeners = (webContents) => {
     }
   });
 
+
+  store.onDidChange("reloading", (newValue) => {
+    if (newValue) {
+      console.log("reloading ==> ", newValue);
+      webContents.send("reload-app", true);
+      store.set("reloading", false);
+    }
+  });
   store.onDidChange("rebuilt", (newValue) => {
     if (newValue) {
       console.log("rebuilt ==> ", newValue);
       webContents.send("refresh-app", true);
+      store.set("rebuilt", false);
     }
   });
 };

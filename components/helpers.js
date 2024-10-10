@@ -2,6 +2,10 @@ const isEmpty = (obj) => {
   return Object.values(obj).length === 0;
 };
 
+const capitalize = (string) => {
+  return string.replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
 const fetchRenderData = async (refresh) => {
   try {
     const fetchDatabase = await window.api.database.getDatabase(refresh);
@@ -19,45 +23,10 @@ const fetchRenderData = async (refresh) => {
   }
 };
 
-const setStatusContainer = (status) => {
-  console.log("setting statusContainer & hiding table")
+const getKeyElements = () => {
   const statusContainer = document.querySelector(".status-container");
-  statusContainer.style.display = "flex";
+  const tableContainer = document.querySelector(".table-container");
+  const buildButton = document.querySelector("#build-button");
 
-  const table = document.getElementById("services-table");
-  table.style.display = "none";
-
-  const buildButton = document.getElementById("build-button");
-  buildButton.style.display = "none";
-
-  const retryButton = document.createElement("button");
-  retryButton.className = "btn btn-primary";
-  retryButton.innerText = "Retry";
-  retryButton.style.display = "none";
-
-  retryButton.addEventListener("click", async () => {
-    retryButton.disabled = true;
-    await buildApplication(true);
-    retryButton.disabled = false;
-  });
-
-  switch (status) {
-    case "loading":
-      statusContainer.innerHTML = `
-      <div class="spinner-border text-light" style="width: 3rem; height: 3rem" role="status"></div>
-      <h2 class="text-light">Loading Web Services...</h2>
-    `;
-      break;
-    case "failed":
-      statusContainer.innerHTML = `
-      <i class="fa-solid fa-circle-exclamation fa-2xl text-danger"></i>
-      <h2 class="text-danger">Failed to retrieve Render Data.</h2>
-    `;
-      break;
-    default:
-      statusContainer.innerHTML = `
-      <i class="fa-solid fa-circle-exclamation fa-2xl text-danger"></i>
-      <h2 class="text-danger">Unexpected Error.</h2>
-    `;
-  }
+  return { statusContainer, tableContainer, buildButton };
 };

@@ -3,6 +3,11 @@ window.api.app.refreshApp((refreshBool) => {
   buildApplication(refreshBool);
 });
 
+// Listen for the 'reload-app' event from the main process
+window.api.app.reloadApp((refreshBool) => {
+  setStatusContainer("loading");
+});
+
 // Listen for the 'set-services' event from the main process
 // window.api.services.setStatus((data) => {
 //   setStatus(data)
