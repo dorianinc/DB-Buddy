@@ -1,12 +1,13 @@
 const setStatusContainer = (status, text) => {
   const { statusContainer, tableContainer } = getContainers();
-  statusContainer.style.display = "flex";
 
+  statusContainer.innerHTML = "";
+  statusContainer.style.display = "flex";
   tableContainer.style.display = "none";
 
   const retryButton = document.createElement("button");
+  retryButton.innerHTML = "";
   retryButton.className = "btn btn-primary btn-lg";
-  retryButton.innerText = "Retry";
   retryButton.style.display = "block";
   retryButton.addEventListener("click", async () => {
     await buildApplication(true);

@@ -12,8 +12,9 @@ const region = store.get("settings.region");
 
 const fetchDatabase = async (refresh) => {
   try {
-    const storedDatabase = !refresh && store.get("database");
-    if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
+    // const storedDatabase = !refresh && store.get("database");
+    // console.log("🖥️  storedDatabase: ", storedDatabase)
+    // if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
 
     const response = await axios.get(`${baseUrl}/postgres`, options);
     const freeDatabase = response.data
@@ -21,11 +22,16 @@ const fetchDatabase = async (refresh) => {
       .map((db) => db.postgres)[0];
 
     if (!isEmpty(freeDatabase)) {
-      const { id, name, version } = freeDatabase;
+      const { id, name, version, createdAt } = freeDatabase;
       const { internalConnectionString } = await fetchConnectionInfo(id);
-      const database = { id, name, version, internalConnectionString };
+      const database = {
+        id,
+        name,
+        version,
+        createdAt,
+        internalConnectionString,
+      };
 
-      database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
       database.status = "creating";
 
       store.set("database", database);
@@ -115,3 +121,9 @@ module.exports = {
   deleteDatabase,
   checkDbStatus,
 };
+// dpg-cs3obdg8fa8c73derus0-a' 1st one when app launched
+// dpg-cs3obdg8fa8c73derus0-a' 2nd one when i clicked rebuild
+
+// 'dpg-cs3obdg8fa8c73derus0-a'
+
+// dpg-cs3obdg8fa8c73derus0-a

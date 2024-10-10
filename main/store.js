@@ -47,15 +47,15 @@ const schema = {
         type: "string",
         minLength: 1,
       },
-      status: {
-        type: "string",
-        enum: ["creating", "available", "unavailable"],
-      },
       version: {
         type: "string",
         pattern: "^[0-9]+$",
       },
-      lastDeployed: {
+      status: {
+        type: "string",
+        enum: ["creating", "available", "unavailable"],
+      },
+      createdAt: {
         type: "string",
         minLength: 1,
       },
@@ -69,7 +69,7 @@ const schema = {
       "name",
       "status",
       "version",
-      "lastDeployed",
+      "createdAt",
       "internalConnectionString",
     ],
   },
@@ -101,12 +101,14 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true, encryptionKey: "Pump3n1ck3l", schema });
+const store = new Store({ watch: true, encryptionKey: "Pump3n1ck3l" });
 // store.clear();
 
 const deployStoreListeners = (webContents) => {
   store.onDidChange("database", (newDatabase) => {
+    console.log("🖥️  newDatabase: ", newDatabase)
     store.onDidChange("database.status", (newStatus) => {
+      console.log("🖥️  newStatus: ", newStatus)
       const name = newDatabase.name;
       webContents.send("set-database-status", {
         name,

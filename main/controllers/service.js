@@ -10,8 +10,8 @@ const baseUrl = "https://api.render.com/v1";
 
 const fetchServices = async (refresh) => {
   try {
-    const storedServices = !refresh && store.get("services");
-    if (storedServices && !isEmpty(storedServices)) return storedServices;
+    // const storedServices = !refresh && store.get("services");
+    // if (storedServices && !isEmpty(storedServices)) return storedServices;
 
     const response = await axios.get(`${baseUrl}/services`, options);
     const rawServices = response.data

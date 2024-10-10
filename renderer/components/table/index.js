@@ -4,9 +4,12 @@ const setTable = (database, apps) => {
   const buildText = databaseExists ? "Rebuild Database" : "Build Database";
   const { statusContainer, tableContainer } = getContainers();
 
+  // Show the table container and hide the status container
+  tableContainer.innerHTML = "";
   tableContainer.style.display = "flex";
   statusContainer.style.display = "none";
 
+  // Create the build button and append it to the tableContainer
   const buildButton = document.createElement("button");
   buildButton.innerText = buildText;
   buildButton.style.display = "inline";
@@ -16,10 +19,37 @@ const setTable = (database, apps) => {
   buildButton.addEventListener("click", () => {
     openModal("Warning", databaseExists);
   });
+
+  // Create the table element
+  const table = document.createElement("table");
+  table.setAttribute("class", "table table-dark");
+  table.setAttribute("id", "services-table");
+
+  // Create the table header
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  const headers = ["Server Name", "Status", "Type"];
+  headers.forEach(text => {
+    const th = document.createElement("th");
+    th.setAttribute("scope", "col");
+    th.textContent = text;
+    headerRow.append(th);
+  });
+
+  thead.append(headerRow);
+  table.append(thead);
+
+  // Create the table body and append it to the table
+  const tableBody = document.createElement("tbody");
+  tableBody.setAttribute("id", "table-body");
+  table.append(tableBody);
+
+  // Append the table to the tableContainer
+  tableContainer.append(table);
   tableContainer.append(buildButton);
 
-  const tableBody = document.querySelector("#table-body");
-  tableBody.innerHTML = "";
+
 
   // Function to create a row
   const createRow = (name, type, version = null) => {
@@ -37,14 +67,14 @@ const setTable = (database, apps) => {
     statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
     statusSpan.setAttribute("id", `${name}-status`);
     statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Retrieving`;
-    statusCell.appendChild(statusSpan);
+    statusCell.append(statusSpan);
 
     const typeCell = document.createElement("td");
     typeCell.textContent = type === "Database" ? `PostgreSQL ${version}` : type;
 
-    row.appendChild(nameCell);
-    row.appendChild(statusCell);
-    row.appendChild(typeCell);
+    row.append(nameCell);
+    row.append(statusCell);
+    row.append(typeCell);
 
     return row;
   };
@@ -52,18 +82,19 @@ const setTable = (database, apps) => {
   // Add a row for the database service if it exists
   if (database) {
     const dbRow = createRow(database.name, "Database", database.version);
-    tableBody.appendChild(dbRow);
+    tableBody.append(dbRow);
     setStatus(database);
   }
 
   // Add rows for each app service
   for (const service of Object.values(apps)) {
     const row = createRow(service.name, "Web Service", null);
-    tableBody.appendChild(row);
+    tableBody.append(row);
     setStatus(service);
   }
 };
 
+// Function to set the status
 const setStatus = async (item) => {
   const name = item.name;
   const status = item.status;

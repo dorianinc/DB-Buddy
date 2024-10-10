@@ -13,16 +13,11 @@ const getSettings = () => {
 
     const storedSettings = store.get("settings");
     console.log("🖥️  storedSettings: ", storedSettings)
-    if (!storedSettings) {
-      res.message = "No settings found. Returning default settings.";
-      res.success = true;
-      res.payload = settings;
-      return res; // Return early with defaults
+    if(storedSettings){
+      Object.keys(storedSettings).forEach((key) => {
+        settings[key] = storedSettings[key] || null;
+      });
     }
-
-    Object.keys(storedSettings).forEach((key) => {
-      settings[key] = storedSettings[key] || null;
-    });
 
     res.success = true;
     res.message = "Settings retrieved successfully.";
@@ -38,6 +33,7 @@ const getSettings = () => {
 
 const saveSettings = (settings) => {
   const res = { success: false, message: "", error: "", payload: null };
+  console.log("🖥️  settings: ", settings)
 
   try {
     store.set("settings", settings);
