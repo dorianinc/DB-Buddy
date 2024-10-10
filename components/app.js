@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  setStatusContainer("loading");
+  setStatusContainer("loading", "Loading Web Services...");
   buildApplication();
 });
 
 const buildApplication = async (refreshApp = false) => {
   const renderData = await fetchRenderData(refreshApp);
+  console.log("🖥️  renderData: ", renderData)
   if (renderData && !isEmpty(renderData.apps)) {
     const database = renderData.database;
     const apps = Object.values(renderData.apps);

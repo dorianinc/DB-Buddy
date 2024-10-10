@@ -10,7 +10,8 @@ exports.createTemplate = (app, webContents) => {
           },
         },
         {
-          label: "Refresh Application",
+          label: "Rescan Render",
+          accelerator: "CmdOrCtrl+Shift+R", 
           click: () => {
             webContents.send("refresh-app", true);
           },
@@ -27,31 +28,51 @@ exports.createTemplate = (app, webContents) => {
       label: "Edit",
       submenu: [
         {
-          label: "Copy",
-          accelerator: "CmdOrCtrl+C",
-          // role defined already some predifined behaviour
-          role: "copy",
+          label: "Undo",
+          accelerator: "CmdOrCtrl+Z", // Undo shortcut
+          role: "undo",
+        },
+        {
+          label: "Redo",
+          accelerator: "CmdOrCtrl+Shift+Z", // Common redo shortcut on many platforms
+          role: "redo",
+        },
+        {
+          type: 'separator' // Line after Redo
         },
         {
           label: "Cut",
-          accelerator: "CmdOrCtrl+X",
-          // role defined already some predifined behaviour
+          accelerator: "CmdOrCtrl+X", // Standard cut shortcut
           role: "cut",
         },
         {
+          label: "Copy",
+          accelerator: "CmdOrCtrl+C", // Standard copy shortcut
+          role: "copy",
+        },
+        {
           label: "Paste",
-          accelerator: "CmdOrCtrl+V",
-          // role defined already some predifined behaviour
+          accelerator: "CmdOrCtrl+V", // Standard paste shortcut
           role: "paste",
         },
         {
-          label: "Undo",
-          accelerator: "CmdOrCtrl+Z",
-          // role defined already some predifined behaviour
-          role: "undo",
+          label: "Delete",
+          accelerator: "Delete", // Standard delete key
+          role: "delete",
         },
-      ],
-    },
+        {
+          type: 'separator' // Line before Delete
+        },
+        {
+          label: "Select All",
+          accelerator: "CmdOrCtrl+A", // Standard select all shortcut
+          role: "selectAll",
+        },
+        {
+          type: 'separator' // Line after Delete
+        }
+      ]
+    },      
     {
       label: "Help",
       role: "help",

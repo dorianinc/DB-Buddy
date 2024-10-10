@@ -14,6 +14,7 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 const fetchDatabase = async (refresh) => {
   try {
     const storedDatabase = !refresh && store.get("database");
+    console.log("🖥️  storedDatabase: ", storedDatabase)
     if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
 
     const response = await axios.get(`${baseUrl}/postgres`, options);
@@ -26,6 +27,7 @@ const fetchDatabase = async (refresh) => {
       const { internalConnectionString } = await fetchConnectionInfo(id);
       const database = { id, name, version, internalConnectionString };
 
+      console.log("🖥️  database: ", database)
       database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
       database.status = "creating";
 

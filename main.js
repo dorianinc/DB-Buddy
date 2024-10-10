@@ -4,6 +4,11 @@ const { app, BrowserWindow, Menu, Tray } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const deployIPCListeners = require("./ipc");
 const { deployStoreListeners } = require("./store");
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+
+// Increase the limit globally
+emitter.setMaxListeners(15);
 
 const dockIcon = path.join(__dirname, "assets", "images", "db-white.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");

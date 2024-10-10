@@ -1,4 +1,4 @@
-const setStatusContainer = (status) => {
+const setStatusContainer = (status, text) => {
   console.log("setting statusContainer & hiding table");
   const { statusContainer, tableContainer, buildButton } = getKeyElements();
   statusContainer.style.display = "flex";
@@ -18,7 +18,7 @@ const setStatusContainer = (status) => {
     case "loading":
       statusContainer.innerHTML = `
         <div class="spinner-border text-light" style="width: 3rem; height: 3rem" role="status"></div>
-        <h2 class="text-light">Loading Web Services...</h2>
+        <h2 class="text-light">${text}</h2>
       `;
       break;
     case "failed":

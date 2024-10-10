@@ -118,6 +118,8 @@ const deployStoreListeners = (webContents) => {
   store.onDidChange("services", (newServices) => {
     for (let serviceName in newServices) {
       store.onDidChange(`services.${serviceName}.status`, (newStatus) => {
+        console.log("in store.js: ", serviceName)
+        console.log("in store.js: ", newStatus)
         webContents.send("set-service-status", {
           name: serviceName,
           status: newStatus,

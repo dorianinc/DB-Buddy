@@ -7,7 +7,7 @@ const setTable = (database, apps) => {
 
   tableContainer.style.display = "flex";
   statusContainer.style.display = "none";
-  
+
   buildButton.innerText = buttonText;
   buildButton.style.display = "inline";
   buildButton.addEventListener("click", () => {
@@ -31,7 +31,7 @@ const setTable = (database, apps) => {
 
     const statusSpan = document.createElement("span");
     statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
-    statusSpan.setAttribute("id", `${name}-status`); // Use original name directly
+    statusSpan.setAttribute("id", `${name}-status`);
     statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Retrieving`;
     statusCell.appendChild(statusSpan);
 
@@ -61,6 +61,7 @@ const setTable = (database, apps) => {
 };
 
 const setStatus = async (item) => {
+  console.log("🖥️  item in set status: ", item);
   const name = item.name;
   const status = item.status;
 
