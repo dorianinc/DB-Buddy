@@ -39,11 +39,9 @@ const rebuildRender = async () => {
     const { internalConnectionString } = await fetchConnectionInfo(id);
     const newDb = { id, name, status, internalConnectionString, createdAt };
 
-    console.log("Waiting for database...");
     let dbStatus = await checkDbStatus(newDb);
 
     if (dbStatus === "available") {
-      console.log("Database is available");
       for (const service of services) {
         await updateEnvVariable(
           service.id,
@@ -53,9 +51,6 @@ const rebuildRender = async () => {
         await deployService(service);
       }
       store.set("rebuilt", true);
-      console.log("Done!");
-    } else {
-      console.log("Something went wrong with your database");
     }
   } catch (error) {
     console.error("error ==> ", error);

@@ -27,9 +27,9 @@
       <h1 id="title">DB Buddy</h1>
       <i class="fa-solid fa-database fa-xl"></i>
     </div>
-    <div class="main-container">
-      <div class="status-container"></div>
-      <div class="table-container">
+    <div class="containers" id="main-container">
+      <div class="containers" id="status-container"></div>
+      <div class="containers" id="table-container">
         <table
           class="table table-dark"
           id="services-table"
@@ -45,16 +45,6 @@
             <!-- Rows will be inserted here -->
           </tbody>
         </table>
-        <button
-          type="button"
-          id="build-button"
-          data-bs-toggle="modal"
-          data-bs-target="#main-modal"
-          class="btn btn-primary btn-lg"
-          style="display: none"
-        >
-          Rebuild Database
-        </button>
       </div>
     </div>
     <!-- Modal -->

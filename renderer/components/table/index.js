@@ -1,18 +1,22 @@
 // Function to handle table population
 const setTable = (database, apps) => {
-  console.log("setting table & hiding statusContainer");
   const databaseExists = database.name.length;
-  const buttonText = databaseExists ? "Rebuild Database" : "Build Database";
-  const { statusContainer, tableContainer, buildButton } = getKeyElements();
+  const buildText = databaseExists ? "Rebuild Database" : "Build Database";
+  const { statusContainer, tableContainer } = getContainers();
 
   tableContainer.style.display = "flex";
   statusContainer.style.display = "none";
 
-  buildButton.innerText = buttonText;
+  const buildButton = document.createElement("button");
+  buildButton.innerText = buildText;
   buildButton.style.display = "inline";
+  buildButton.setAttribute("class", "btn btn-primary btn-lg");
+  buildButton.setAttribute("data-bs-toggle", "modal");
+  buildButton.setAttribute("data-bs-target", "#main-modal");
   buildButton.addEventListener("click", () => {
     openModal("Warning", databaseExists);
   });
+  tableContainer.append(buildButton);
 
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
@@ -61,7 +65,6 @@ const setTable = (database, apps) => {
 };
 
 const setStatus = async (item) => {
-  console.log("🖥️  item in set status: ", item);
   const name = item.name;
   const status = item.status;
 

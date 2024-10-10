@@ -11,7 +11,6 @@ const settingsIPC = () => {
 
   //  Get settings store
   ipcMain.handle("get-settings-data", async (_e) => {
-    console.log("~~~~ Handling get-settings-data ~~~~~");
     try {
       const settings = getSettings();
       res.success = true;
@@ -25,7 +24,6 @@ const settingsIPC = () => {
 
   //  Get single service data from file
   ipcMain.handle("save-settings-data", async (_e, data) => {
-    console.log("~~~~ Handling save-settings-data ~~~~~");
     try {
       saveSettings(data)
       res.success = true;

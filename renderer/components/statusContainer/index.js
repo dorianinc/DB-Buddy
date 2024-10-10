@@ -1,10 +1,8 @@
 const setStatusContainer = (status, text) => {
-  console.log("setting statusContainer & hiding table");
-  const { statusContainer, tableContainer, buildButton } = getKeyElements();
+  const { statusContainer, tableContainer } = getContainers();
   statusContainer.style.display = "flex";
 
   tableContainer.style.display = "none";
-  buildButton.style.display = "none";
 
   const retryButton = document.createElement("button");
   retryButton.className = "btn btn-primary btn-lg";

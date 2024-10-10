@@ -7,12 +7,9 @@ const capitalize = (string) => {
 };
 
 const fetchRenderData = async (refresh) => {
-  console.log("fetching render data")
   try {
     const fetchDatabase = await window.api.database.getDatabase(refresh);
-    console.log("🖥️  fetchDatabase: ", fetchDatabase)
     const fetchServices = await window.api.services.getServices(refresh);
-    console.log("🖥️  fetchServices: ", fetchServices)
 
     // Handle both successful fetch and API-level failure
     if (!fetchDatabase.success || !fetchServices.success) {
@@ -26,10 +23,9 @@ const fetchRenderData = async (refresh) => {
   }
 };
 
-const getKeyElements = () => {
-  const statusContainer = document.querySelector(".status-container");
-  const tableContainer = document.querySelector(".table-container");
-  const buildButton = document.querySelector("#build-button");
+const getContainers = () => {
+  const statusContainer = document.querySelector("#status-container");
+  const tableContainer = document.querySelector("#table-container");
 
-  return { statusContainer, tableContainer, buildButton };
+  return { statusContainer, tableContainer };
 };

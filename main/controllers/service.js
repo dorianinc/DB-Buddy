@@ -30,7 +30,6 @@ const fetchServices = async (refresh) => {
 
       services[service.name] = obj;
     }
-    console.log("🖥️  services: ", services)
 
     store.set("services", services);
     listenToServiceStatus(services);
@@ -43,7 +42,6 @@ const fetchServices = async (refresh) => {
 
 
 const listenToServiceStatus = async (services) => {
-  console.log("listening to services ")
   try {
     await Promise.allSettled(
       Object.values(services).map((service) =>
@@ -58,7 +56,6 @@ const listenToServiceStatus = async (services) => {
 };
 
 const checkServiceStatus = async (service) => {
-  console.log("checking for services...")
   return new Promise(async (resolve) => {
     try {
       let serviceStatus = service.status || "deploying";
@@ -87,7 +84,6 @@ const checkServiceStatus = async (service) => {
         }
       }
       store.set(`services.${service.name}.status`, serviceStatus);
-      console.log(`${service.name} before ==>`, store.get(`services.${service.name}.status`))
       resolve(serviceStatus);
     } catch (error) {
       console.error("error: ", error)

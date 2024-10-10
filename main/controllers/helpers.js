@@ -24,10 +24,6 @@ const validateVariables = async () => {
   }
 
   if (missing.length) {
-    console.log(
-      `The following variables still don't have a value: ${missing.join(", ")}`
-    );
-    console.log("Please add them for the script to run");
     return false;
   }
   return true;
@@ -46,13 +42,12 @@ const updateEnvVariable = async (serviceId, envKey, envValue) => {
     );
     return response.data;
   } catch (error) {
-    console.log("error ==> ", error)
+    console.error("error ==> ", error)
     handleError(error, "updateEnvVariable");
   }
 };
 
 const deployService = async (service) => {
-  console.log("deploying services")
   const body = {
     clearCache: "do_not_clear",
   };

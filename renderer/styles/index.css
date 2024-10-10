@@ -24,40 +24,33 @@ body {
   color: #fff;
 }
 
-#title {
+.header > h1 {
   font-size: 80px;
 }
 
-
-
-.main-container {
-  flex: 4;
+.containers {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 }
 
-.status-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+#main-container {
+  flex: 3;
+  gap: 10px;
+}
+
+#status-container {
   gap: 20px;
 }
 
-.table-container{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+#table-container {
   width: 90%;
+  gap: 20px;
 }
 
-
-.status-badge{
+.status-badge {
   display: flex;
   align-items: center;
   justify-content: center;

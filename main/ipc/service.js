@@ -10,7 +10,6 @@ const serviceIPC = () => {
   };
 
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
-    console.log("~~~~ Handling get-service-data ~~~~~");
     try {
       const services = await fetchServices(refresh);
       res.payload = services;
@@ -23,7 +22,6 @@ const serviceIPC = () => {
 
   // //  Get services status
   // ipcMain.handle("get-service-status", async (_e, refresh = false) => {
-  //   console.log("~~~~ Handling get-service-status ~~~~~");
   //   try {
   //     const statuses = await checkServiceStatus();
   //     res.payload = services;
@@ -35,7 +33,6 @@ const serviceIPC = () => {
 
   // // update service status
   // ipcMain.handle("set-service-status", async (_e, data) => {
-  //   console.log("~~~~ Handling set-service-status ~~~~~");
   // });
 };
 

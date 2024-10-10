@@ -14,7 +14,6 @@ const region = process.env.REGION.toLowerCase(); // region you use for your appl
 const fetchDatabase = async (refresh) => {
   try {
     const storedDatabase = !refresh && store.get("database");
-    console.log("🖥️  storedDatabase: ", storedDatabase)
     if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
 
     const response = await axios.get(`${baseUrl}/postgres`, options);
@@ -27,7 +26,6 @@ const fetchDatabase = async (refresh) => {
       const { internalConnectionString } = await fetchConnectionInfo(id);
       const database = { id, name, version, internalConnectionString };
 
-      console.log("🖥️  database: ", database)
       database.lastDeployed = formatDistanceToNow(freeDatabase.updatedAt);
       database.status = "creating";
 
@@ -58,7 +56,6 @@ const fetchConnectionInfo = async (databaseId) => {
 };
 
 const createDatabase = async (ownerId) => {
-  console.log("Creating new database");
   const body = {
     enableHighAvailability: false,
     plan: "free",
@@ -77,7 +74,6 @@ const createDatabase = async (ownerId) => {
 };
 
 const deleteDatabase = async (databaseId) => {
-  console.log("Deleting existing database");
   try {
     const response = await axios.delete(
       `${baseUrl}/postgres/${databaseId}`,
