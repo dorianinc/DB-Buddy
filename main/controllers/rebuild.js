@@ -1,5 +1,3 @@
-require("dotenv").config();
-// const options = require("./configs");
 const { fetchOwner } = require("./owner");
 const {
   validateVariables,
