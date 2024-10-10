@@ -4,7 +4,6 @@ const { rebuildRender } = require("../controllers/rebuild");
 const rebuildIPC = () => {
   //  Trigger rebuild
   ipcMain.handle("rebuild-render", async (_e) => {
-    ("~~~~ Handling rebuild-render ~~~~~");
     try {
       await rebuildRender();
     } catch (error) {
