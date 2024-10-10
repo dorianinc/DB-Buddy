@@ -1,9 +1,9 @@
 const path = require("path");
-const { createTemplate } = require("./utils/Menu");
+const { createTemplate } = require("./main/utils/Menu");
 const { app, BrowserWindow, Menu, Tray } = require("electron");
 const windowStateKeeper = require("electron-window-state");
-const deployIPCListeners = require("./ipc");
-const { deployStoreListeners } = require("./store");
+const deployIPCListeners = require("./main/ipc");
+const { deployStoreListeners } = require("./main/store");
 const EventEmitter = require('events');
 const emitter = new EventEmitter();
 
@@ -38,7 +38,7 @@ function createMainWindow() {
     show: false,
     backgroundColor: "#212529",
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "main", "preload.js"),
       contextIsolation: true,
       enableRemoteModule: false,
       nodeIntegration: false,
@@ -46,7 +46,7 @@ function createMainWindow() {
   });
 
   windowState.manage(mainWindow);
-  mainWindow.loadFile("./views/index.html");
+  mainWindow.loadFile("./renderer/views/index.html");
   if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
