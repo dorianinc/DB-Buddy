@@ -15,7 +15,7 @@ const {
 } = require("./database");
 const { store } = require("../store");
 
-const databaseKey = process.env.DATABASE_ENV_KEY; // name of key for render database
+const databaseKey = store.get("settings.dbKey");
 
 const rebuildRender = async () => {
   // const isValid = await validateVariables();

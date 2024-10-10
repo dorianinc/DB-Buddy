@@ -18,8 +18,8 @@ const fetchRenderData = async (refresh) => {
 
     return { database: fetchDatabase.payload, apps: fetchServices.payload };
   } catch (error) {
-    console.error("Error fetching services:", error);
-    return null;
+    console.error("Error fetchRenderData:", error);
+    throw error
   }
 };
 

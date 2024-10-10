@@ -6,8 +6,8 @@ const { formatDistanceToNow } = require("date-fns");
 const { store } = require("../store");
 
 const baseUrl = "https://api.render.com/v1";
-const databaseName = process.env.DATABASE_NAME; // name of new render database
-const region = process.env.REGION.toLowerCase(); // region you use for your applications
+const databaseName = store.get("settings.dbName");
+const region = store.get("settings.region");
 
 // Database --------------------------------------------------------------------------------------------
 

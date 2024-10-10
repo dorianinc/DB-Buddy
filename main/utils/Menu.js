@@ -5,6 +5,7 @@ exports.createTemplate = (app, webContents) => {
       submenu: [
         {
           label: "Settings",
+          accelerator: "CmdOrCtrl+Shift+S", 
           click: () => {
             webContents.send("open-settings");
           },

@@ -1,6 +1,7 @@
 require("dotenv").config();
+const { store } = require("../store");
 
-const key = process.env.RENDER_API_KEY; // render API key
+const key = store.get("settings.apiKey"); 
 
 const options = {
   headers: {
