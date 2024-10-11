@@ -25,9 +25,9 @@ const buildApplication = async (refreshApp = false) => {
     const apps = Object.values(renderData.apps);
     setTable(database, apps);
 
-    if (!isEmpty(database)) {
-      checkAutoUpdater(database.createdAt);
-    }
+    // if (!isEmpty(database)) {
+    //   checkAutoUpdater(database.createdAt);
+    // }
   } else {
     // if there are no services/applications we throw an error message
     setStatusContainer("failed", "Failed to service data from Render");

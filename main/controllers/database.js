@@ -73,6 +73,7 @@ const createDatabase = async (ownerId) => {
     throw error;
   }
 };
+// id: 'dpg-cs4r52tumphs73ajg6tg-a',
 
 const deleteDatabase = async (databaseId) => {
   try {

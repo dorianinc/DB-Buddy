@@ -40,8 +40,7 @@ const rebuildRender = async () => {
       createdAt,
       internalConnectionString,
     };
-    console.log("🖥️  newDb: ", newDb)
-
+    console.log("🖥️  newDb: ", newDb);
     store.set("database", newDb);
 
     let dbStatus = await checkDbStatus(newDb);
@@ -82,10 +81,7 @@ const checkDaysRemaining = async (creationDate) => {
   const daysLeft = 30 - daysDifference;
   // const daysLeft = 1;
 
-
-  if (daysLeft > 1) {
-    console.log(`${daysLeft} days left until 30 days have passed.`);
-  } else {
+  if (daysLeft <= 1) {
     console.log("30 days have already passed.");
     await rebuildRender();
   }
