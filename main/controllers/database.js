@@ -35,7 +35,7 @@ const fetchDatabase = async (refresh) => {
     }
   } catch (error) {
     console.error("error in fetchDatabase: ", error);
-    return {};
+    throw error;
   }
 };
 
@@ -48,7 +48,7 @@ const fetchConnectionInfo = async (databaseId) => {
     return response.data;
   } catch (error) {
     console.error("error in fetchConnectionInfo: ", error);
-    return {};
+    throw error;
   }
 };
 
@@ -85,11 +85,12 @@ const deleteDatabase = async (databaseId) => {
 };
 
 const checkDbStatus = async (database) => {
-  console.log("CHECKING DATABASE STATUS")
+  console.log("CHECKING DATABASE STATUS");
   return new Promise(async (resolve) => {
     try {
       let databaseStatus = database.status || "creating";
-      while (databaseStatus === "creating") {
+      while (["creating","unknown"].includes(databaseStatus)) {
+        console.log("🖥️  databaseStatus in while: ", databaseStatus)
         await new Promise(async (timeoutResolve) =>
           setTimeout(timeoutResolve, 10000)
         );
@@ -101,11 +102,12 @@ const checkDbStatus = async (database) => {
         const { status } = response.data;
         databaseStatus = status;
       }
+      console.log("🖥️  databaseStatus post while: ", databaseStatus)
       store.set("database.status", databaseStatus);
       resolve(databaseStatus);
     } catch (error) {
       console.error("Failed checkDbStatus: ", error);
-      return false;
+      throw error;
     }
   });
 };
@@ -117,9 +119,3 @@ module.exports = {
   deleteDatabase,
   checkDbStatus,
 };
-// dpg-cs3obdg8fa8c73derus0-a' 1st one when app launched
-// dpg-cs3obdg8fa8c73derus0-a' 2nd one when i clicked rebuild
-
-// 'dpg-cs3obdg8fa8c73derus0-a'
-
-// dpg-cs3obdg8fa8c73derus0-a

@@ -30,7 +30,7 @@ const fetchServices = async (refresh) => {
     return services;
   } catch (error) {
     console.error("error in fetchServices: ", error);
-    return {};
+    throw error
   }
 };
 

@@ -108,6 +108,7 @@ const deployStoreListeners = (webContents) => {
   store.onDidChange("database", (newDatabase) => {
     console.log("🖥️  database in store: ", newDatabase)
     store.onDidChange("database.status", (newStatus) => {
+      console.log("🖥️  database.status: ", newStatus)
       const name = newDatabase.name;
       webContents.send("set-database-status", {
         name,

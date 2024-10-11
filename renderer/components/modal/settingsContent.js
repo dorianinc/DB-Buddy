@@ -12,20 +12,32 @@ async function populateSettings() {
       <div class="mb-3 row">
         <div class="col">
           <label for="db-name" class="form-label">Postgres Database Name</label>
+          <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-custom-class="custom-tooltip"
+          data-bs-title="The name of your new Render Postgres database."></i>
           <input type="text" class="form-control" id="db-name" placeholder="my-db">
         </div>
         <div class="col">
           <label for="db-env-key" class="form-label">Postgres Database Env Key</label>
+          <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-custom-class="custom-tooltip"
+          data-bs-title="The name of the database key you use Render applications."></i>
           <input type="text" class="form-control" id="db-env-key" placeholder="DATABASE_URL">
         </div>
       </div>
       <div class="mb-3">
         <label for="api-key" class="form-label">Render API Key</label>
+        <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-custom-class="custom-tooltip"
+        data-bs-title="Your Render API key."></i>
         <input type="password" class="form-control" id="api-key" placeholder="rnd_...">
         <button class="btn btn-outline-secondary mt-2" type="button" id="toggle-api-key">Show</button>
       </div>
       <div class="mb-3">
         <label for="region" class="form-label">Region</label>
+        <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-custom-class="custom-tooltip"
+        data-bs-title="The region you use for your applications."></i>
         <select class="form-select" id="region">
           <option value="oregon">Oregon, USA</option>
           <option value="ohio">Ohio, USA</option>
@@ -44,16 +56,26 @@ async function populateSettings() {
       <button type="button" class="btn btn-primary" id="save-settings-btn" style="width: 130px; height: 38px;">
         <span>Save Changes</span>
       </button>
+
     </div>
   `);
 
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+  );
+  const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+  );
+
   // Toggle visibility of the API key
-  document.getElementById("toggle-api-key").addEventListener("click", function () {
-    const apiKeyInput = document.getElementById("api-key");
-    const isHidden = apiKeyInput.type === "password";
-    apiKeyInput.type = isHidden ? "text" : "password";
-    this.textContent = isHidden ? "Hide" : "Show";
-  });
+  document
+    .getElementById("toggle-api-key")
+    .addEventListener("click", function () {
+      const apiKeyInput = document.getElementById("api-key");
+      const isHidden = apiKeyInput.type === "password";
+      apiKeyInput.type = isHidden ? "text" : "password";
+      this.textContent = isHidden ? "Hide" : "Show";
+    });
 
   const dbNameField = document.querySelector("#db-name");
   const dbKeyField = document.querySelector("#db-env-key");
@@ -61,12 +83,19 @@ async function populateSettings() {
   const regionField = document.querySelector("#region");
 
   // Populate fields with existing settings data
-  await populateFieldsWithSettingsData(dbNameField, dbKeyField, apiKeyField, regionField);
+  await populateFieldsWithSettingsData(
+    dbNameField,
+    dbKeyField,
+    apiKeyField,
+    regionField
+  );
 
   // Handle Save button click
-  document.querySelector("#save-settings-btn").addEventListener("click", (e) => {
-    handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField);
-  });
+  document
+    .querySelector("#save-settings-btn")
+    .addEventListener("click", (e) => {
+      handleSaveSettings(e, dbNameField, dbKeyField, apiKeyField, regionField);
+    });
 }
 
 async function populateFieldsWithSettingsData(
@@ -88,7 +117,6 @@ async function populateFieldsWithSettingsData(
     throw error;
   }
 }
-
 
 async function handleSaveSettings(
   e,
