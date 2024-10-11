@@ -11,17 +11,16 @@ const databaseIPC = () => {
 
   // get database data from file
   ipcMain.handle("get-database-data", async (_e, refresh = false) => {
-
     try {
       const database = await fetchDatabase(refresh);
-      checkDbStatus(database);
+      if (database) checkDbStatus(database);
+
       res.payload = database;
       return res;
     } catch (error) {
       console.error("error in get-database-data: ", error);
-      return {};
+      throw error;
     }
   });
-
 };
 module.exports = databaseIPC;

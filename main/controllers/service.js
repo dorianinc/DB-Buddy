@@ -1,16 +1,15 @@
 const axios = require("axios");
-const options = require("./configs");
-const { isEmpty } = require("./helpers");
-const { formatDistanceToNow } = require("date-fns");
+const { render, options } = require("./configs");
 const { store } = require("../store");
-
-const baseUrl = "https://api.render.com/v1";
+const { isEmpty } = require("./helpers");
 
 // Service --------------------------------------------------------------------------------------------
 
-const fetchServices = async (refresh) => {
+const fetchServices = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/services`, options);
+    const response = await axios.get(`${render.baseUrl}/services`, options);
+    if (isEmpty(response.data)) return null;
+
     const rawServices = response.data
       .filter((item) => item.service.type === "web_service")
       .map((item) => item.service)
@@ -22,7 +21,6 @@ const fetchServices = async (refresh) => {
       const obj = { id, name, type };
 
       obj.status = "deploying";
-      obj.lastDeployed = formatDistanceToNow(service.updatedAt);
       services[service.name] = obj;
     }
 
@@ -30,12 +28,11 @@ const fetchServices = async (refresh) => {
     return services;
   } catch (error) {
     console.error("error in fetchServices: ", error);
-    throw error
+    throw error;
   }
 };
 
 const checkServiceStatus = async (services) => {
-  console.log("CHECKING SERVICE STATUS")
   try {
     await Promise.allSettled(
       Object.values(services).map(async (service) => {
@@ -51,7 +48,7 @@ const checkServiceStatus = async (services) => {
 
             // Fetch the service events
             const response = await axios.get(
-              `${baseUrl}/services/${service.id}/events?limit=10`,
+              `${render.baseUrl}/services/${service.id}/events?limit=10`,
               options
             );
             const event = response.data[0].event;

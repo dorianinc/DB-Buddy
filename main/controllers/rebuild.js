@@ -1,10 +1,6 @@
 const { fetchOwner } = require("./owner");
 const { fetchServices } = require("./service");
-const {
-  validateVariables,
-  updateEnvVariable,
-  deployService,
-} = require("./helpers");
+const { updateEnvVariable, deployService } = require("./helpers");
 const {
   fetchDatabase,
   createDatabase,
@@ -13,19 +9,16 @@ const {
   checkDbStatus,
 } = require("./database");
 const { store } = require("../store");
+const { render } = require("./configs");
 
-const databaseKey = store.get("settings.dbKey");
 
 const rebuildRender = async () => {
-  // const isValid = await validateVariables();
-  // if (!isValid) return;
-
   try {
     store.set("reloading", true);
     const owner = await fetchOwner();
     const services = Object.values(await fetchServices()) || null;
     // block if no services
-    const database = await fetchDatabase() || null;
+    const database = (await fetchDatabase()) || null;
 
     if (database) {
       const deleteDb = await deleteDatabase(database.id);
@@ -51,13 +44,11 @@ const rebuildRender = async () => {
     store.set("database", newDb);
 
     let dbStatus = await checkDbStatus(newDb);
-    console.log("🖥️  dbStatus in rebuild: ", dbStatus)
-    console.log("🖥️  dbStatus in rebuild: ", dbStatus)
     if (dbStatus === "available") {
       for (const service of services) {
         await updateEnvVariable(
           service.id,
-          databaseKey,
+          render.databaseKey,
           internalConnectionString
         );
         await deployService(service);

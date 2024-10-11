@@ -1,18 +1,15 @@
 const axios = require("axios");
-const options = require("./configs");
-const { isEmpty } = require("./helpers");
-const { formatDistanceToNow } = require("date-fns");
+const { render, options } = require("./configs");
 const { store } = require("../store");
-
-const baseUrl = "https://api.render.com/v1";
-const databaseName = store.get("settings.dbName");
-const region = store.get("settings.region");
+const { isEmpty } = require("./helpers");
 
 // Database --------------------------------------------------------------------------------------------
 
-const fetchDatabase = async (refresh) => {
+const fetchDatabase = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/postgres`, options);
+    const response = await axios.get(`${render.baseUrl}/postgres`, options);
+    if (isEmpty(response.data)) return null;
+
     const freeDatabase = response.data
       .filter((db) => db.postgres.plan === "free")
       .map((db) => db.postgres)[0];
@@ -29,9 +26,11 @@ const fetchDatabase = async (refresh) => {
       };
 
       database.status = "creating";
-
       store.set("database", database);
+
       return database;
+    } else {
+      return null;
     }
   } catch (error) {
     console.error("error in fetchDatabase: ", error);
@@ -42,7 +41,7 @@ const fetchDatabase = async (refresh) => {
 const fetchConnectionInfo = async (databaseId) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/postgres/${databaseId}/connection-info`,
+      `${render.baseUrl}/postgres/${databaseId}/connection-info`,
       options
     );
     return response.data;
@@ -57,13 +56,17 @@ const createDatabase = async (ownerId) => {
     enableHighAvailability: false,
     plan: "free",
     version: "16",
-    name: databaseName,
+    name: render.databaseName,
     ownerId,
-    region,
+    region: render.region,
   };
 
   try {
-    const response = await axios.post(`${baseUrl}/postgres`, body, options);
+    const response = await axios.post(
+      `${render.baseUrl}/postgres`,
+      body,
+      options
+    );
     return response.data;
   } catch (error) {
     console.error("error in createDatabase: ", error);
@@ -74,7 +77,7 @@ const createDatabase = async (ownerId) => {
 const deleteDatabase = async (databaseId) => {
   try {
     const response = await axios.delete(
-      `${baseUrl}/postgres/${databaseId}`,
+      `${render.baseUrl}/postgres/${databaseId}`,
       options
     );
     return response;
@@ -85,24 +88,21 @@ const deleteDatabase = async (databaseId) => {
 };
 
 const checkDbStatus = async (database) => {
-  console.log("CHECKING DATABASE STATUS");
   return new Promise(async (resolve) => {
     try {
       let databaseStatus = database.status || "creating";
-      while (["creating","unknown"].includes(databaseStatus)) {
-        console.log("🖥️  databaseStatus in while: ", databaseStatus)
+      while (["creating", "unknown"].includes(databaseStatus)) {
         await new Promise(async (timeoutResolve) =>
           setTimeout(timeoutResolve, 10000)
         );
 
         const response = await axios.get(
-          `${baseUrl}/postgres/${database.id}`,
+          `${render.baseUrl}/postgres/${database.id}`,
           options
         );
         const { status } = response.data;
         databaseStatus = status;
       }
-      console.log("🖥️  databaseStatus post while: ", databaseStatus)
       store.set("database.status", databaseStatus);
       resolve(databaseStatus);
     } catch (error) {

@@ -7,6 +7,7 @@ const setStatusContainer = (status, text) => {
 
   const retryButton = document.createElement("button");
   retryButton.innerHTML = "";
+  retryButton.textContent = "Retry"
   retryButton.className = "btn btn-primary btn-lg";
   retryButton.style.display = "block";
   retryButton.addEventListener("click", async () => {
@@ -23,7 +24,7 @@ const setStatusContainer = (status, text) => {
     case "failed":
       statusContainer.innerHTML = `
         <i class="fa-solid fa-circle-exclamation fa-2xl text-danger"></i>
-        <h2 class="text-danger">Failed to retrieve Render Data.</h2>
+        <h2 class="text-danger">${text}</h2>
       `;
       statusContainer.append(retryButton);
 

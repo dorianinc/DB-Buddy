@@ -1,6 +1,6 @@
 // Function to handle table population
 const setTable = (database, apps) => {
-  const databaseExists = database.name.length;
+  const databaseExists = isEmpty(database);
   const buildText = databaseExists ? "Rebuild Database" : "Build Database";
   const { statusContainer, tableContainer } = getContainers();
 
@@ -29,8 +29,8 @@ const setTable = (database, apps) => {
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
 
-  const headers = ["Server Name", "Status", "Type"];
-  headers.forEach(text => {
+  const headers = ["Service Name", "Status", "Type"];
+  headers.forEach((text) => {
     const th = document.createElement("th");
     th.setAttribute("scope", "col");
     th.textContent = text;
@@ -49,8 +49,6 @@ const setTable = (database, apps) => {
   tableContainer.append(table);
   tableContainer.append(buildButton);
 
-
-
   // Function to create a row
   const createRow = (name, type, version = null) => {
     const row = document.createElement("tr");
@@ -66,6 +64,11 @@ const setTable = (database, apps) => {
     const statusSpan = document.createElement("span");
     statusSpan.setAttribute("class", "status-badge badge text-bg-secondary");
     statusSpan.setAttribute("id", `${name}-status`);
+    statusSpan.style.display = "flex";
+    statusSpan.style.alignItems = "center";
+    statusSpan.style.justifyContent = "center";
+    statusSpan.style.width = "fit-content";
+    statusSpan.style.gap = "5px";
     statusSpan.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Retrieving`;
     statusCell.append(statusSpan);
 
@@ -98,7 +101,6 @@ const setTable = (database, apps) => {
 const setStatus = async (item) => {
   const name = item.name;
   const status = item.status;
-
   const statusSpan = document.getElementById(`${name}-status`);
 
   switch (status) {

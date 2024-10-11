@@ -2,15 +2,14 @@ const { ipcMain } = require("electron");
 const { getSettings, saveSettings } = require("../controllers/settings");
 
 const settingsIPC = () => {
-
   //  Get settings store
   ipcMain.handle("get-settings-data", async (_e) => {
     try {
       const settings = getSettings();
       return settings;
     } catch (error) {
-      console.error("error in get-settings-data: ", error);;
-      return {};
+      console.error("error in get-settings-data: ", error);
+      throw error;
     }
   });
 
@@ -21,10 +20,9 @@ const settingsIPC = () => {
     } catch (error) {
       console.error("error in get-service-data", error);
       res.error = "Failed to save settings.";
-      return {};
+      throw error;
     }
   });
 };
-
 
 module.exports = settingsIPC;

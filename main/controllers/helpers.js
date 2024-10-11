@@ -1,33 +1,7 @@
 const axios = require("axios");
-const baseUrl = "https://api.render.com/v1";
-const options = require("./configs");
+const { render, options } = require("./configs");
 
 // Helpers --------------------------------------------------------------------------------------------
-
-const validateVariables = async () => {
-  let missing = [];
-
-  if (!databaseName) {
-    missing.push("databaseName");
-  }
-  if (!databaseKey) {
-    missing.push("databaseKey");
-  }
-  if (!region) {
-    missing.push("region");
-  }
-  if (!baseUrl) {
-    missing.push("baseUrl");
-  }
-  if (!key) {
-    missing.push("key");
-  }
-
-  if (missing.length) {
-    return false;
-  }
-  return true;
-};
 
 const updateEnvVariable = async (serviceId, envKey, envValue) => {
   const body = {
@@ -36,7 +10,7 @@ const updateEnvVariable = async (serviceId, envKey, envValue) => {
 
   try {
     const response = await axios.put(
-      `${baseUrl}/services/${serviceId}/env-vars/${envKey}`,
+      `${render.baseUrl}/services/${serviceId}/env-vars/${envKey}`,
       body,
       options
     );
@@ -54,7 +28,7 @@ const deployService = async (service) => {
 
   try {
     const response = await axios.post(
-      `${baseUrl}/services/${service.id}/deploys`,
+      `${render.baseUrl}/services/${service.id}/deploys`,
       body,
       options
     );
@@ -66,11 +40,11 @@ const deployService = async (service) => {
 };
 
 const isEmpty = (obj) => {
+  if (obj == null) return true;
   return Object.values(obj).length === 0;
 };
 
 module.exports = {
-  validateVariables,
   updateEnvVariable,
   deployService,
   isEmpty,

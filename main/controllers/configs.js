@@ -1,5 +1,12 @@
 const { store } = require("../store");
 
+const render = {
+  baseUrl: "https://api.render.com/v1",
+  databaseName: store.get("settings.dbName"),
+  region: store.get("settings.region"),
+  databaseKey: store.get("settings.dbKey"),
+};
+
 const options = {
   headers: {
     accept: "application/json",
@@ -8,4 +15,4 @@ const options = {
   },
 };
 
-module.exports = options;
+module.exports = { options, render };

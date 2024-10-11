@@ -12,14 +12,14 @@ async function populateSettings() {
       <div class="mb-3 row">
         <div class="col">
           <label for="db-name" class="form-label">Postgres Database Name</label>
-          <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+          <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-custom-class="custom-tooltip"
           data-bs-title="The name of your new Render Postgres database."></i>
           <input type="text" class="form-control" id="db-name" placeholder="my-db">
         </div>
         <div class="col">
           <label for="db-env-key" class="form-label">Postgres Database Env Key</label>
-          <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+          <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-custom-class="custom-tooltip"
           data-bs-title="The name of the database key you use Render applications."></i>
           <input type="text" class="form-control" id="db-env-key" placeholder="DATABASE_URL">
@@ -27,7 +27,7 @@ async function populateSettings() {
       </div>
       <div class="mb-3">
         <label for="api-key" class="form-label">Render API Key</label>
-        <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+        <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="right"
         data-bs-custom-class="custom-tooltip"
         data-bs-title="Your Render API key."></i>
         <input type="password" class="form-control" id="api-key" placeholder="rnd_...">
@@ -35,7 +35,7 @@ async function populateSettings() {
       </div>
       <div class="mb-3">
         <label for="region" class="form-label">Region</label>
-        <i class="fa-regular fa-circle-question fa-sm" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="top"
+        <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="right"
         data-bs-custom-class="custom-tooltip"
         data-bs-title="The region you use for your applications."></i>
         <select class="form-select" id="region">

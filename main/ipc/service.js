@@ -12,12 +12,13 @@ const serviceIPC = () => {
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     try {
       const services = await fetchServices(refresh);
-      checkServiceStatus(services);
+      if (services) checkServiceStatus(services);
+      
       res.payload = services;
       return res;
     } catch (error) {
       console.error("error in get-service-data: ", error);
-      return {};
+      throw error;
     }
   });
 };
