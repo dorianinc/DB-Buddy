@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron");
-const { fetchServices } = require("../controllers/service");
+const { fetchServices, checkServiceStatus } = require("../controllers/service");
 
 const serviceIPC = () => {
   const res = {
@@ -12,6 +12,7 @@ const serviceIPC = () => {
   ipcMain.handle("get-service-data", async (_e, refresh = false) => {
     try {
       const services = await fetchServices(refresh);
+      checkServiceStatus(services);
       res.payload = services;
       return res;
     } catch (error) {

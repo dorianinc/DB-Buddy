@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron");
-const { fetchDatabase } = require("../controllers/database");
+const { fetchDatabase, checkDbStatus } = require("../controllers/database");
 
 const databaseIPC = () => {
   const res = {
@@ -14,6 +14,7 @@ const databaseIPC = () => {
 
     try {
       const database = await fetchDatabase(refresh);
+      checkDbStatus(database);
       res.payload = database;
       return res;
     } catch (error) {

@@ -12,7 +12,6 @@ const getSettings = () => {
     };
 
     const storedSettings = store.get("settings");
-    console.log("🖥️  storedSettings: ", storedSettings)
     if(storedSettings){
       Object.keys(storedSettings).forEach((key) => {
         settings[key] = storedSettings[key] || null;
@@ -22,7 +21,6 @@ const getSettings = () => {
     res.success = true;
     res.message = "Settings retrieved successfully.";
     res.payload = settings;
-    console.log("🖥️  res: ", res)
     return res;
   } catch (error) {
     console.error("Error in getSettings: ", error);
@@ -33,7 +31,6 @@ const getSettings = () => {
 
 const saveSettings = (settings) => {
   const res = { success: false, message: "", error: "", payload: null };
-  console.log("🖥️  settings: ", settings)
 
   try {
     store.set("settings", settings);

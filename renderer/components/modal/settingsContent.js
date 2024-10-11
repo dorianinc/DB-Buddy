@@ -11,17 +11,17 @@ async function populateSettings() {
     <div class="modal-body settings">
       <div class="mb-3 row">
         <div class="col">
-          <label for="db-name" class="form-label">Database Name</label>
-          <input type="text" class="form-control" id="db-name" placeholder="Enter database name">
+          <label for="db-name" class="form-label">Postgres Database Name</label>
+          <input type="text" class="form-control" id="db-name" placeholder="my-db">
         </div>
         <div class="col">
-          <label for="db-env-key" class="form-label">Database Env Key</label>
-          <input type="text" class="form-control" id="db-env-key" placeholder="Enter database env key">
+          <label for="db-env-key" class="form-label">Postgres Database Env Key</label>
+          <input type="text" class="form-control" id="db-env-key" placeholder="DATABASE_URL">
         </div>
       </div>
       <div class="mb-3">
         <label for="api-key" class="form-label">Render API Key</label>
-        <input type="password" class="form-control" id="api-key" placeholder="Enter Render API key">
+        <input type="password" class="form-control" id="api-key" placeholder="rnd_...">
         <button class="btn btn-outline-secondary mt-2" type="button" id="toggle-api-key">Show</button>
       </div>
       <div class="mb-3">
@@ -77,7 +77,6 @@ async function populateFieldsWithSettingsData(
 ) {
   try {
     const settingsData = await window.api.settings.getSettings();
-    console.log("🖥️  settingsData: ", settingsData)
     dbNameField.value = settingsData.payload.dbName;
     dbKeyField.value = settingsData.payload.dbKey;
     apiKeyField.value = settingsData.payload.apiKey;

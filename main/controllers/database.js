@@ -12,10 +12,6 @@ const region = store.get("settings.region");
 
 const fetchDatabase = async (refresh) => {
   try {
-    // const storedDatabase = !refresh && store.get("database");
-    // console.log("🖥️  storedDatabase: ", storedDatabase)
-    // if (storedDatabase && !isEmpty(storedDatabase)) return storedDatabase;
-
     const response = await axios.get(`${baseUrl}/postgres`, options);
     const freeDatabase = response.data
       .filter((db) => db.postgres.plan === "free")
@@ -35,7 +31,6 @@ const fetchDatabase = async (refresh) => {
       database.status = "creating";
 
       store.set("database", database);
-      checkDbStatus(database);
       return database;
     }
   } catch (error) {
@@ -90,6 +85,7 @@ const deleteDatabase = async (databaseId) => {
 };
 
 const checkDbStatus = async (database) => {
+  console.log("CHECKING DATABASE STATUS")
   return new Promise(async (resolve) => {
     try {
       let databaseStatus = database.status || "creating";

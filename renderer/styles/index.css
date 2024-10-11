@@ -10,6 +10,7 @@ body {
   box-sizing: border-box;
   background-color: #212529;
   font-family: "Roboto", sans-serif;
+  color: #fff;
 }
 
 .header {
@@ -42,6 +43,7 @@ body {
 }
 
 #status-container {
+  text-align: center;
   gap: 20px;
 }
 
