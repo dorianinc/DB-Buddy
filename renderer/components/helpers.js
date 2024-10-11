@@ -32,6 +32,21 @@ const hasSettings = async () => {
   return true;
 };
 
+const requestSetup = () => {
+  const { statusContainer, tableContainer } = getContainers();
+  statusContainer.innerHTML = "";
+  statusContainer.style.display = "inline";
+  tableContainer.style.display = "none";
+
+  const mainMessage = document.createElement("h1");
+  mainMessage.textContent = "Please set up the app in settings.";
+  const subMessage = document.createElement("h3");
+  subMessage.textContent = "Use 'CmdOrCtrl+Shift+S' for a shortcut.";
+  statusContainer.append(mainMessage);
+  statusContainer.append(subMessage);
+};
+
+
 const isEmpty = (obj) => {
   if (obj == null) return true;
   return Object.values(obj).length === 0;

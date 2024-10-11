@@ -95,6 +95,10 @@ const schema = {
         type: "string",
         enum: ["oregon", "ohio", "virginia", "frankfurt", "singapore"],
       },
+      autoUpdate: {
+        type: "boolean",
+        default: false,
+      },
     },
     required: ["dbName", "dbKey", "apiKey", "region"],
   },
@@ -125,7 +129,6 @@ const deployStoreListeners = (webContents) => {
       });
     }
   });
-
 
   store.onDidChange("reloading", (newValue) => {
     if (newValue) {

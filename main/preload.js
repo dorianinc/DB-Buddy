@@ -23,6 +23,8 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.invoke("save-settings-data", data),
   },
   app: {
+    checkDaysRemaining: async (creationDate) =>
+      ipcRenderer.invoke("check-days-remaining", creationDate),
     rebuildRender: async () => ipcRenderer.invoke("rebuild-render"),
     refreshApp: (callback) =>
       ipcRenderer.on("refresh-app", (_e, refreshBool) => callback(refreshBool)),

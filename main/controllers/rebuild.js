@@ -10,7 +10,7 @@ const {
 } = require("./database");
 const { store } = require("../store");
 const { render } = require("./configs");
-
+const { differenceInDays } = require("date-fns");
 
 const rebuildRender = async () => {
   try {
@@ -40,6 +40,7 @@ const rebuildRender = async () => {
       createdAt,
       internalConnectionString,
     };
+    console.log("🖥️  newDb: ", newDb)
 
     store.set("database", newDb);
 
@@ -64,4 +65,30 @@ const rebuildRender = async () => {
   }
 };
 
-module.exports = { rebuildRender };
+const checkDaysRemaining = async (creationDate) => {
+  console.log("🖥️  creationDate ==> ", creationDate);
+  // Specify the past date
+  const pastDate = new Date(creationDate);
+  console.log("🖥️  pastDate: ", pastDate);
+
+  // Get today's date
+  const currentDate = new Date();
+
+  // Calculate the difference in days
+  const daysDifference = differenceInDays(currentDate, pastDate);
+  console.log("🖥️  daysDifference: ", daysDifference);
+
+  // Calculate days left until 30 days have passed
+  const daysLeft = 30 - daysDifference;
+  // const daysLeft = 1;
+
+
+  if (daysLeft > 1) {
+    console.log(`${daysLeft} days left until 30 days have passed.`);
+  } else {
+    console.log("30 days have already passed.");
+    await rebuildRender();
+  }
+};
+
+module.exports = { rebuildRender, checkDaysRemaining };
