@@ -29,7 +29,7 @@ const hasSettings = async () => {
   if (!dbName || !dbKey || !apiKey || !region) {
     return false;
   }
-  return false
+  return true;
 };
 
 const isEmpty = (obj) => {
