@@ -104,7 +104,14 @@ const schema = {
         default: false,
       },
     },
-    required: ["dbName", "dbKey", "apiKey", "region"],
+    required: [
+      "dbName",
+      "dbKey",
+      "apiKey",
+      "region",
+      "autoUpdate",
+      "autoLaunch",
+    ],
   },
 };
 

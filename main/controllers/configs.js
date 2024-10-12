@@ -5,6 +5,8 @@ const render = {
   databaseName: store.get("settings.dbName"),
   region: store.get("settings.region"),
   databaseKey: store.get("settings.dbKey"),
+  autoUpdate: store.get("settings.autoUpdate"),
+  autoLaunch: store.get("settings.autoLaunch")
 };
 
 const options = {

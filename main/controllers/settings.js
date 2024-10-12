@@ -8,7 +8,7 @@ const getSettings = () => {
       apiKey: null,
       region: null,
       autoUpdate: false,
-      launchStartup: false,
+      autoLaunch: false,
     };
 
     const storedSettings = store.get("settings");
@@ -25,7 +25,6 @@ const getSettings = () => {
 };
 
 const saveSettings = (settings) => {
-  console.log("🖥️  settings: ", settings);
   try {
     store.set("settings", settings);
   } catch (error) {

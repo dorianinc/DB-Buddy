@@ -10,13 +10,13 @@ const startApplication = async () => {
     buildApplication();
   } else {
     // if they aren't, we notifty user
-    requestSetup();
+    setStatusContainer("setup", "Use 'CmdOrCtrl+Shift+S' for a shortcut.");
   }
 };
 
 const buildApplication = async (refreshApp = false) => {
   const renderData = await fetchRenderData(refreshApp);
-  console.log("🖥️  renderData: ", renderData)
+  ("🖥️  renderData: ", renderData);
 
   // check to see if there is render data
   if (renderData && !isEmpty(renderData.apps)) {
@@ -41,6 +41,5 @@ const openSettings = () => {
 };
 
 const checkAutoUpdater = async (creationDate) => {
-  console.log("🖥️  creationDate: ", creationDate)
   await window.api.app.checkDaysRemaining(creationDate);
 };

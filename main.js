@@ -4,11 +4,7 @@ const { app, BrowserWindow, Menu, Tray } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
-const AutoLaunch = require("auto-launch");
-const EventEmitter = require("events");
-const emitter = new EventEmitter();
-
-emitter.setMaxListeners(15);
+const { handleAutoLaunch } = require("./main/utils/autoLaunch");
 
 const dockIcon = path.join(__dirname, "assets", "images", "db-white.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
@@ -45,8 +41,9 @@ function createMainWindow() {
     },
   });
 
+  const hmtlPath = path.join(__dirname, "renderer", "views", "index.html");
   windowState.manage(mainWindow);
-  mainWindow.loadFile("./renderer/views/index.html");
+  mainWindow.loadFile(hmtlPath);
   if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
@@ -70,29 +67,8 @@ app.whenReady().then(() => {
   mainApp.once("ready-to-show", () => {
     mainApp.show();
   });
-
-  // --------- Add Auto-Launch Code Here --------- //
-  if (!isDev) {
-    const appAutoLauncher = new AutoLaunch({
-      name: "DB Buddy", // Replace with your app's name
-      path: app.getPath("exe"), // Auto-launch the app executable
-    });
-
-    // Check if auto-launch is enabled and enable it if not
-    appAutoLauncher
-      .isEnabled()
-      .then((isEnabled) => {
-        if (!isEnabled) {
-          appAutoLauncher.enable();
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to enable auto-launch:", err);
-      });
-  }
-
-  // --------- End of Auto-Launch Code --------- //
 });
+handleAutoLaunch();
 
 // Quit the app when all windows are closed (except on macOS)
 app.on("window-all-closed", () => {

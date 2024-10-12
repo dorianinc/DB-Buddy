@@ -1,4 +1,5 @@
 const { ipcMain } = require("electron");
+const { handleAutoLaunch } = require("../utils/autoLaunch");
 const { getSettings, saveSettings } = require("../controllers/settings");
 
 const settingsIPC = () => {
@@ -34,6 +35,7 @@ const settingsIPC = () => {
 
     try {
       saveSettings(data);
+      handleAutoLaunch();
       res.message = "Settings saved successfully."; // Set success message
       return res; // Return the response object
     } catch (error) {

@@ -40,7 +40,7 @@ const rebuildRender = async () => {
       createdAt,
       internalConnectionString,
     };
-    console.log("🖥️  newDb: ", newDb);
+
     store.set("database", newDb);
 
     let dbStatus = await checkDbStatus(newDb);
@@ -65,24 +65,12 @@ const rebuildRender = async () => {
 };
 
 const checkDaysRemaining = async (creationDate) => {
-  console.log("🖥️  creationDate ==> ", creationDate);
-  // Specify the past date
   const pastDate = new Date(creationDate);
-  console.log("🖥️  pastDate: ", pastDate);
-
-  // Get today's date
   const currentDate = new Date();
-
-  // Calculate the difference in days
   const daysDifference = differenceInDays(currentDate, pastDate);
-  console.log("🖥️  daysDifference: ", daysDifference);
-
-  // Calculate days left until 30 days have passed
   const daysLeft = 30 - daysDifference;
-  // const daysLeft = 1;
-
+  
   if (daysLeft <= 1) {
-    console.log("30 days have already passed.");
     await rebuildRender();
   }
 };
