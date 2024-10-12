@@ -55,14 +55,29 @@ async function populateSettings() {
           </select>
         </div>
 
-        <!-- Auto Update Checkbox -->
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="checkbox" id="auto-update-checkbox">
-          <div class="input-label">
-            <label class="form-check-label" for="auto-update-checkbox">Enable Auto Update</label>
-            <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="right"
-            data-bs-custom-class="custom-tooltip"
-            data-bs-title="Automatically rebuild database every 30 days"></i>
+        <!-- Auto Update and Launch on Startup Checkboxes -->
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="auto-update-checkbox">
+              <div class="input-label">
+                <label class="form-check-label" for="auto-update-checkbox">Enable Auto Update</label>
+                <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Automatically rebuild database every 30 days"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="launch-startup-checkbox">
+              <div class="input-label">
+                <label class="form-check-label" for="launch-startup-checkbox">Launch on Startup</label>
+                <i class="fa-regular fa-circle-question" style="color: #ffffff;" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Start this application automatically when the system starts."></i>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -82,7 +97,7 @@ async function populateSettings() {
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'
   );
-  const tooltipList = [...tooltipTriggerList].map(
+  [...tooltipTriggerList].map(
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
   );
 
@@ -101,6 +116,9 @@ async function populateSettings() {
   const apiKeyField = document.querySelector("#api-key");
   const regionField = document.querySelector("#region");
   const autoUpdateCheckbox = document.querySelector("#auto-update-checkbox");
+  const launchStartupCheckbox = document.querySelector(
+    "#launch-startup-checkbox"
+  );
 
   // Populate fields with existing settings data
   await populateFieldsWithSettingsData(
@@ -108,7 +126,8 @@ async function populateSettings() {
     dbKeyField,
     apiKeyField,
     regionField,
-    autoUpdateCheckbox
+    autoUpdateCheckbox,
+    launchStartupCheckbox
   );
 
   // Handle Save button click
@@ -121,7 +140,8 @@ async function populateSettings() {
         dbKeyField,
         apiKeyField,
         regionField,
-        autoUpdateCheckbox
+        autoUpdateCheckbox,
+        launchStartupCheckbox
       );
     });
 }
@@ -131,7 +151,8 @@ async function populateFieldsWithSettingsData(
   dbKeyField,
   apiKeyField,
   regionField,
-  autoUpdateCheckbox
+  autoUpdateCheckbox,
+  launchStartupCheckbox
 ) {
   try {
     const settingsData = await window.api.settings.getSettings();
@@ -142,6 +163,7 @@ async function populateFieldsWithSettingsData(
       regionField.value = settingsData.payload.region;
     }
     autoUpdateCheckbox.checked = settingsData.payload.autoUpdate || false;
+    launchStartupCheckbox.checked = settingsData.payload.launchStartup || false;
   } catch (error) {
     console.error("Error populating modal:", error);
     throw error;
@@ -154,7 +176,8 @@ async function handleSaveSettings(
   dbKeyField,
   apiKeyField,
   regionField,
-  autoUpdateCheckbox
+  autoUpdateCheckbox,
+  launchStartupCheckbox
 ) {
   e.preventDefault();
   const saveButton = e.target;
@@ -163,6 +186,7 @@ async function handleSaveSettings(
   const apiKey = apiKeyField.value || null;
   const region = regionField.value || null;
   const autoUpdate = autoUpdateCheckbox.checked;
+  const launchStartup = launchStartupCheckbox.checked;
 
   // Clear any previous messages or icons
   resetMessageAndButton(saveButton);
@@ -174,19 +198,19 @@ async function handleSaveSettings(
   const isValidApiKey = validateApiKey(apiKey);
   const isValidRegion = validateRegion(region);
 
-  if (!isValidName.success) {
+  if (!isValidName?.success) {
     displayMessage(isValidName.message, false, saveButton);
     return; // Stop execution if validation fails
   }
-  if (!isValidDbKey.success) {
+  if (!isValidDbKey?.success) {
     displayMessage(isValidDbKey.message, false, saveButton);
     return; // Stop execution if validation fails
   }
-  if (!isValidApiKey.success) {
+  if (!isValidApiKey?.success) {
     displayMessage(isValidApiKey.message, false, saveButton);
     return; // Stop execution if validation fails
   }
-  if (!isValidRegion.success) {
+  if (!isValidRegion?.success) {
     displayMessage(isValidRegion.message, false, saveButton);
     return; // Stop execution if validation fails
   }
@@ -198,9 +222,10 @@ async function handleSaveSettings(
       apiKey,
       region,
       autoUpdate,
+      launchStartup,
     });
     displayMessage(
-      saveResponse.success ? "Settings saved!" : "Failed to save setting.",
+      saveResponse.success ? "Settings saved!" : "Failed to save settings.",
       saveResponse.success,
       saveButton
     );
@@ -208,4 +233,79 @@ async function handleSaveSettings(
     console.error("Error saving settings:", error);
     displayMessage("Failed to save settings", false, saveButton);
   }
+}
+
+// Validation for the database name
+function validateDatabaseName(name) {
+  if (name === null || !name.length) {
+    return {
+      success: false,
+      message: "Name is required",
+    };
+  }
+  const nameRegex = /^(?![_-])[a-zA-Z0-9_-]+(?<![_-])$/;
+  if (!nameRegex.test(name)) {
+    return {
+      success: false,
+      message: "Invalid name",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the database key
+function validateDatabaseKey(key) {
+  if (key === null || !key.length) {
+    return {
+      success: false,
+      message: "Env Key is required",
+    };
+  }
+  const keyRegex = /^[A-Z0-9_]+$/;
+  if (!keyRegex.test(key)) {
+    return {
+      success: false,
+      message: "Invalid env key",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the region
+function validateRegion(region) {
+  if (region === null || !region.length) {
+    return {
+      success: false,
+      message: "Region is required",
+    };
+  }
+  const validRegions = ["oregon", "ohio", "virginia", "frankfurt", "singapore"];
+  if (!validRegions.includes(region)) {
+    return {
+      success: false,
+      message: "Invalid region",
+    };
+  }
+
+  return { success: true };
+}
+
+// Validation for the region
+function validateApiKey(key) {
+  if (key === null || !key.length) {
+    return {
+      success: false,
+      message: "API key is required",
+    };
+  }
+  if (!key.startsWith("rnd_")) {
+    return {
+      success: false,
+      message: "Invalid API key",
+    };
+  }
+
+  return { success: true };
 }

@@ -36,4 +36,4 @@ const deployIPCListeners = () => {
   });
 };
 
-module.exports = deployIPCListeners;
+module.exports = { deployIPCListeners };

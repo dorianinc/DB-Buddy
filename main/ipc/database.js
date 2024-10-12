@@ -41,4 +41,5 @@ const checkDaysRemaining = (creationDate) => {
 
   return daysLeft;
 };
+
 module.exports = databaseIPC;

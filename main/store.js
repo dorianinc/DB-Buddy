@@ -99,6 +99,10 @@ const schema = {
         type: "boolean",
         default: false,
       },
+      autoLaunch: {
+        type: "boolean",
+        default: false,
+      },
     },
     required: ["dbName", "dbKey", "apiKey", "region"],
   },
