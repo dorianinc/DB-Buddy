@@ -78,7 +78,7 @@ app.whenReady().then(() => {
   mainApp.once("ready-to-show", () => {
     const minimize = store.get("settings.autoLaunch");
     if (!isDev && minimize) {
-      mainApp.hide();
+      mainApp.minimize();
     } else {
       mainApp.show();
     }
