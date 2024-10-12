@@ -4,7 +4,7 @@ const AutoLaunch = require("auto-launch");
 const isDev = !app.isPackaged;
 
 function handleAutoLaunch() {
-  if (isDev) {
+  if (!isDev) {
     const appAutoLauncher = new AutoLaunch({
       name: "DB Buddy", // Replace with your app's name
       path: app.getPath("exe"), // Auto-launch the app executable
