@@ -7,10 +7,7 @@ const rebuildIPC = () => {
     try {
       await rebuildRender();
     } catch (error) {
-      console.error("Error in rebuild-render IPC handler:", {
-        status: error.status,
-        nessage: error.data.message,
-      });
+      console.error("Error in rebuild-render IPC handler:", error);
       throw error;
     }
   });

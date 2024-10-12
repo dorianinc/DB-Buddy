@@ -57,7 +57,7 @@ const schema = {
       },
       status: {
         type: "string",
-        enum: ["creating", "available", "unavailable"],
+        enum: ["creating", "available", "unavailable", "unknown"],
       },
       createdAt: {
         type: "string",

@@ -58,7 +58,7 @@ const rebuildRender = async () => {
   } catch (error) {
     console.error("error in rebuildRender: ", {
       status: error.status,
-      nessage: append.message,
+      nessage: error.message,
     });
     throw error;
   }
