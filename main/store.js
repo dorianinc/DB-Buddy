@@ -9,6 +9,10 @@ const schema = {
     type: "boolean",
     default: false,
   },
+  isMinimized: {
+    type: "boolean",
+    default: false,
+  },
   services: {
     type: "object",
     patternProperties: {
@@ -116,7 +120,7 @@ const schema = {
 };
 
 // Initialize store with the corrected schema
-const store = new Store({ watch: true, encryptionKey: "Pump3n1ck3l" });
+const store = new Store({ watch: true, schema, encryptionKey: "Pump3n1ck3l" });
 // store.clear();
 
 const deployStoreListeners = (webContents) => {

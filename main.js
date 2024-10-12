@@ -1,17 +1,20 @@
 const path = require("path");
-const { createTemplate } = require("./main/utils/Menu");
 const { app, BrowserWindow, Menu, Tray } = require("electron");
 const windowStateKeeper = require("electron-window-state");
+const { createTemplate } = require("./main/utils/Menu");
 const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
 const { handleAutoLaunch } = require("./main/utils/autoLaunch");
+const { store } = require("./main/store");
 
+// Constants for icons
 const dockIcon = path.join(__dirname, "assets", "images", "db-white.png");
 const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
 
 const isDev = !app.isPackaged;
 let windowState;
 let mainWindow;
+let tray;
 
 // Exit if Electron Squirrel startup
 if (require("electron-squirrel-startup")) app.quit();
@@ -41,14 +44,23 @@ function createMainWindow() {
     },
   });
 
-  const hmtlPath = path.join(__dirname, "renderer", "views", "index.html");
+  const htmlPath = path.join(__dirname, "renderer", "views", "index.html");
   windowState.manage(mainWindow);
-  mainWindow.loadFile(hmtlPath);
+  mainWindow.loadFile(htmlPath);
   if (isDev) mainWindow.webContents.openDevTools();
 
   deployIPCListeners();
   deployStoreListeners(mainWindow.webContents);
-  setTray(app, mainWindow.webContents);
+  setTray(app, mainWindow);
+
+  // Listen for window state changes
+  mainWindow.on("minimize", () => {
+    setTray(app, mainWindow, true); // Pass 'true' to indicate the app is minimized
+  });
+
+  mainWindow.on("restore", () => {
+    setTray(app, mainWindow, false); // Pass 'false' to indicate the app is restored
+  });
 
   return mainWindow;
 }
@@ -56,7 +68,6 @@ function createMainWindow() {
 // Set Dock Icon for macOS
 if (process.platform === "darwin") {
   app.dock.setIcon(dockIcon);
-  // Set app name for macOS menu bar
   app.setName("DB Buddy");
 }
 
@@ -65,12 +76,15 @@ if (process.platform === "darwin") {
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
   mainApp.once("ready-to-show", () => {
+    store.set("isMinimized", false);
     mainApp.show();
+    // setTimeout(() => {
+    //   mainApp.hide();
+    // }, 2000);
   });
 });
 handleAutoLaunch();
 
-// Quit the app when all windows are closed (except on macOS)
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -80,11 +94,14 @@ app.on("window-all-closed", () => {
 //---------------------- helpers ------------- //
 
 // Set Tray Icon and Menu
-function setTray(app, webContents) {
-  const template = createTemplate(app, webContents);
+function setTray(app, mainWindow, isMinimized) {
+  const template = createTemplate(app, mainWindow, isMinimized);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  const tray = new Tray(trayIcon);
+  if (!tray) {
+    tray = new Tray(trayIcon);
+  }
+
   tray.setContextMenu(menu);
 }

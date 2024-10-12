@@ -1,20 +1,20 @@
-exports.createTemplate = (app, webContents) => {
-  return [
+exports.createTemplate = (app, mainWindow, isMinimized) => {
+  const menuTemplate = [
     {
       label: process.platform === "darwin" ? app.getName() : "Menu",
       submenu: [
         {
           label: "Settings",
-          accelerator: "CmdOrCtrl+Shift+S", 
+          accelerator: "CmdOrCtrl+Shift+S",
           click: () => {
-            webContents.send("open-settings");
+            mainWindow.webContents.send("open-settings");
           },
         },
         {
           label: "Rescan Render",
-          accelerator: "CmdOrCtrl+Shift+R", 
+          accelerator: "CmdOrCtrl+Shift+R",
           click: () => {
-            webContents.send("refresh-app", true);
+            mainWindow.webContents.send("refresh-app", true);
           },
         },
         {
@@ -25,55 +25,53 @@ exports.createTemplate = (app, webContents) => {
         },
       ],
     },
+
     {
       label: "Edit",
       submenu: [
         {
           label: "Undo",
-          accelerator: "CmdOrCtrl+Z", // Undo shortcut
+          accelerator: "CmdOrCtrl+Z",
           role: "undo",
         },
         {
           label: "Redo",
-          accelerator: "CmdOrCtrl+Shift+Z", // Common redo shortcut on many platforms
+          accelerator: "CmdOrCtrl+Shift+Z",
           role: "redo",
         },
         {
-          type: 'separator' // Line after Redo
+          type: "separator",
         },
         {
           label: "Cut",
-          accelerator: "CmdOrCtrl+X", // Standard cut shortcut
+          accelerator: "CmdOrCtrl+X",
           role: "cut",
         },
         {
           label: "Copy",
-          accelerator: "CmdOrCtrl+C", // Standard copy shortcut
+          accelerator: "CmdOrCtrl+C",
           role: "copy",
         },
         {
           label: "Paste",
-          accelerator: "CmdOrCtrl+V", // Standard paste shortcut
+          accelerator: "CmdOrCtrl+V",
           role: "paste",
         },
         {
           label: "Delete",
-          accelerator: "Delete", // Standard delete key
+          accelerator: "Delete",
           role: "delete",
         },
         {
-          type: 'separator' // Line before Delete
+          type: "separator",
         },
         {
           label: "Select All",
-          accelerator: "CmdOrCtrl+A", // Standard select all shortcut
+          accelerator: "CmdOrCtrl+A",
           role: "selectAll",
         },
-        {
-          type: 'separator' // Line after Delete
-        }
-      ]
-    },      
+      ],
+    },
     {
       label: "Help",
       role: "help",
@@ -81,8 +79,6 @@ exports.createTemplate = (app, webContents) => {
         {
           label: "Learn More",
           click: () => {
-            // The shell module provides functions related to desktop integration.
-            // An example of opening a URL in the user's default browser:
             const { shell } = require("electron");
             shell.openExternal("http://electron.atom.io");
           },
@@ -90,4 +86,24 @@ exports.createTemplate = (app, webContents) => {
       ],
     },
   ];
+
+  // Add "Show App" menu item if the app is minimized
+  if (isMinimized) {
+    const trayItem = [
+      {
+        label: "Show App",
+        click: () => {
+          mainWindow.show();
+        },
+      },
+      {
+        type: "separator",
+      },
+    ]
+    menuTemplate.unshift(
+      ...trayItem
+    );
+  }
+
+  return menuTemplate;
 };
