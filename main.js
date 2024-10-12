@@ -76,11 +76,12 @@ if (process.platform === "darwin") {
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
   mainApp.once("ready-to-show", () => {
-    store.set("isMinimized", false);
-    mainApp.show();
-    // setTimeout(() => {
-    //   mainApp.hide();
-    // }, 2000);
+    const minimize = store.get("settings.autoLaunch");
+    if (!isDev && minimize) {
+      mainApp.hide();
+    } else {
+      mainApp.show();
+    }
   });
 });
 handleAutoLaunch();

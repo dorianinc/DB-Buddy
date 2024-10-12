@@ -116,7 +116,7 @@ async function populateSettings() {
   const apiKeyField = document.querySelector("#api-key");
   const regionField = document.querySelector("#region");
   const autoUpdateCheckbox = document.querySelector("#auto-update-checkbox");
-  const autoStartCheckbox = document.querySelector(
+  const autoLaunchCheckbox = document.querySelector(
     "#launch-startup-checkbox"
   );
 
@@ -127,7 +127,7 @@ async function populateSettings() {
     apiKeyField,
     regionField,
     autoUpdateCheckbox,
-    autoStartCheckbox
+    autoLaunchCheckbox
   );
 
   // Handle Save button click
@@ -141,7 +141,7 @@ async function populateSettings() {
         apiKeyField,
         regionField,
         autoUpdateCheckbox,
-        autoStartCheckbox
+        autoLaunchCheckbox
       );
     });
 }
@@ -152,7 +152,7 @@ async function populateFieldsWithSettingsData(
   apiKeyField,
   regionField,
   autoUpdateCheckbox,
-  autoStartCheckbox
+  autoLaunchCheckbox
 ) {
   try {
     const settingsData = await window.api.settings.getSettings();
@@ -163,7 +163,7 @@ async function populateFieldsWithSettingsData(
       regionField.value = settingsData.payload.region;
     }
     autoUpdateCheckbox.checked = settingsData.payload.autoUpdate || false;
-    autoStartCheckbox.checked = settingsData.payload.autoStart || false;
+    autoLaunchCheckbox.checked = settingsData.payload.autoLaunch || false;
   } catch (error) {
     console.error("Error populating modal:", error);
     throw error;
@@ -177,7 +177,7 @@ async function handleSaveSettings(
   apiKeyField,
   regionField,
   autoUpdateCheckbox,
-  autoStartCheckbox
+  autoLaunchCheckbox
 ) {
   e.preventDefault();
   const saveButton = e.target;
@@ -186,7 +186,7 @@ async function handleSaveSettings(
   const apiKey = apiKeyField.value || null;
   const region = regionField.value || null;
   const autoUpdate = autoUpdateCheckbox.checked;
-  const autoStart = autoStartCheckbox.checked;
+  const autoLaunch = autoLaunchCheckbox.checked;
 
   // Clear any previous messages or icons
   resetMessageAndButton(saveButton);
@@ -222,7 +222,7 @@ async function handleSaveSettings(
       apiKey,
       region,
       autoUpdate,
-      autoStart,
+      autoLaunch,
     });
     displayMessage(
       saveResponse.success ? "Settings saved!" : "Failed to save settings.",

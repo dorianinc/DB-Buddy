@@ -11,7 +11,7 @@ function handleAutoLaunch() {
     });
 
     // Retrieve the auto-launch setting from your store
-    const autoLaunchEnabled = store.get("settings.autoStart");
+    const autoLaunchEnabled = store.get("settings.autoLaunch");
     
     // Handle enabling or disabling auto-launch based on the setting
     appAutoLauncher
