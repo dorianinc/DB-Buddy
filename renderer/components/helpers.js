@@ -4,8 +4,11 @@ const fetchRenderData = async (refresh) => {
     const fetchServices = await window.api.services.getServices(refresh);
 
     // Handle both successful fetch and API-level failure
-    if (!fetchDatabase.success || !fetchServices.success) {
-      throw new Error("Failed to retrieve Render Data");
+    if (!fetchServices.success) {
+      throw new Error(fetchServices.error.message);
+    }
+    if (!fetchDatabase.success) {
+      throw new Error(fetchDatabase.error.message);
     }
 
     return { database: fetchDatabase.payload, apps: fetchServices.payload };
@@ -45,7 +48,6 @@ const requestSetup = () => {
   statusContainer.append(mainMessage);
   statusContainer.append(subMessage);
 };
-
 
 const isEmpty = (obj) => {
   if (obj == null) return true;

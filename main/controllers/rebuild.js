@@ -56,10 +56,7 @@ const rebuildRender = async () => {
       store.set("rebuilt", true);
     }
   } catch (error) {
-    console.error("error in rebuildRender: ", {
-      status: error.status,
-      nessage: error.message,
-    });
+    console.error("error in rebuildRender: ", error);
     throw error;
   }
 };

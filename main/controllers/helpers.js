@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { render, options } = require("./configs");
+const { getConfigs } = require("./configs");
 
 // Helpers --------------------------------------------------------------------------------------------
 
@@ -10,9 +10,9 @@ const updateEnvVariable = async (serviceId, envKey, envValue) => {
 
   try {
     const response = await axios.put(
-      `${render.baseUrl}/services/${serviceId}/env-vars/${envKey}`,
+      `${getConfigs().render.baseUrl}/services/${serviceId}/env-vars/${envKey}`,
       body,
-      options
+      getConfigs().options
     );
     return response.data;
   } catch (error) {
@@ -28,9 +28,9 @@ const deployService = async (service) => {
 
   try {
     const response = await axios.post(
-      `${render.baseUrl}/services/${service.id}/deploys`,
+      `${getConfigs().render.baseUrl}/services/${service.id}/deploys`,
       body,
-      options
+      getConfigs().options
     );
     return response.data;
   } catch (error) {

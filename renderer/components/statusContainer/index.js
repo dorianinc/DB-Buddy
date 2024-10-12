@@ -11,7 +11,8 @@ const setStatusContainer = (status, text) => {
   retryButton.className = "btn btn-primary btn-lg";
   retryButton.style.display = "block";
   retryButton.addEventListener("click", async () => {
-    await buildApplication(true);
+    setStatusContainer("loading", "Loading Web Services...");
+    buildApplication(true);
   });
 
   switch (status) {

@@ -15,18 +15,21 @@ const startApplication = async () => {
 };
 
 const buildApplication = async (refreshApp = false) => {
-  const renderData = await fetchRenderData(refreshApp);
-
-  // check to see if there is render data
-  if (renderData && !isEmpty(renderData.apps)) {
-    // if there is service/appliction data we proceed
-    const database = renderData.database;
-    const apps = Object.values(renderData.apps);
-    setTable(database, apps);
-
-  } else {
+  try {
+    const renderData = await fetchRenderData(refreshApp);
+    // check to see if there is render data
+    if (renderData && !isEmpty(renderData.apps)) {
+      // if there is service/appliction data we proceed
+      const database = renderData.database;
+      const apps = Object.values(renderData.apps);
+      setTable(database, apps);
+    } else {
+      // if there are no services/applications we throw an error message
+      setStatusContainer("failed", "Failed to service data from Render");
+    }
+  } catch (error) {
     // if there are no services/applications we throw an error message
-    setStatusContainer("failed", "Failed to service data from Render");
+    setStatusContainer("failed", error);
   }
 };
 

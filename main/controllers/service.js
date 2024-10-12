@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { render, options } = require("./configs");
+const { getConfigs } = require("./configs");
 const { store } = require("../store");
 const { isEmpty } = require("./helpers");
 
@@ -7,7 +7,10 @@ const { isEmpty } = require("./helpers");
 
 const fetchServices = async () => {
   try {
-    const response = await axios.get(`${render.baseUrl}/services`, options);
+    const response = await axios.get(
+      `${getConfigs().render.baseUrl}/services`,
+      getConfigs().options
+    );
     if (isEmpty(response.data)) return null;
 
     const rawServices = response.data
@@ -27,8 +30,16 @@ const fetchServices = async () => {
     store.set("services", services);
     return services;
   } catch (error) {
-    console.error("error in fetchServices: ", error);
-    throw error;
+    console.error("error in fetchServices: ", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
 
@@ -48,8 +59,8 @@ const checkServiceStatus = async (services) => {
 
             // Fetch the service events
             const response = await axios.get(
-              `${render.baseUrl}/services/${service.id}/events?limit=10`,
-              options
+              `${getConfigs().render.baseUrl}/services/${service.id}/events?limit=10`,
+              getConfigs().options
             );
             const event = response.data[0].event;
             const eventType = event.type;
@@ -73,14 +84,31 @@ const checkServiceStatus = async (services) => {
           // Store the service status after it's no longer "deploying"
           store.set(`services.${service.name}.status`, serviceStatus);
         } catch (error) {
-          console.error(`Error checking service ${service.name}:`, error);
           store.set(`services.${service.name}.status`, "error");
+          console.error(`Error checking service ${service.name}:`, {
+            message: error.message,
+            statusCode: error.status,
+            method: error.request.method,
+          });
+          throw {
+            message: error.message,
+            statusCode: error.status,
+            method: error.request.method,
+          };
         }
       })
     );
   } catch (error) {
-    console.error("Error during background service checks:", error);
-    throw error;
+    console.error("Error during background service checks:", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
 

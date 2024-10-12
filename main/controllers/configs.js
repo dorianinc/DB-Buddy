@@ -1,20 +1,27 @@
 const { store } = require("../store");
+const { getSettings } = require("./settings");
 
-const render = {
-  baseUrl: "https://api.render.com/v1",
-  databaseName: store.get("settings.dbName"),
-  region: store.get("settings.region"),
-  databaseKey: store.get("settings.dbKey"),
-  autoUpdate: store.get("settings.autoUpdate"),
-  autoLaunch: store.get("settings.autoLaunch")
+const getConfigs = () => {
+  const settings = getSettings();
+
+  const render = {
+    baseUrl: "https://api.render.com/v1",
+    databaseName: settings.databaseName,
+    region: settings.region,
+    databaseKey: settings.dbKey,
+    autoUpdate: settings.autoUpdate,
+    autoLaunch: settings.autoLaunch,
+  };
+
+  const options = {
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${settings.apiKey}`,
+    },
+  };
+
+  return { render, options };
 };
 
-const options = {
-  headers: {
-    accept: "application/json",
-    "Content-Type": "application/json",
-    authorization: `Bearer ${store.get("settings.apiKey")}`,
-  },
-};
-
-module.exports = { options, render };
+module.exports = { getConfigs };

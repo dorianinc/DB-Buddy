@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { render, options } = require("./configs");
+const { getConfigs } = require("./configs");
 const { store } = require("../store");
 const { isEmpty } = require("./helpers");
 
@@ -7,7 +7,10 @@ const { isEmpty } = require("./helpers");
 
 const fetchDatabase = async () => {
   try {
-    const response = await axios.get(`${render.baseUrl}/postgres`, options);
+    const response = await axios.get(
+      `${getConfigs().render.baseUrl}/postgres`,
+      getConfigs().options
+    );
     if (isEmpty(response.data)) return null;
 
     const freeDatabase = response.data
@@ -33,21 +36,37 @@ const fetchDatabase = async () => {
       return null;
     }
   } catch (error) {
-    console.error("error in fetchDatabase: ", error);
-    throw error;
+    console.error("error in fetchDatabase: ", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
 
 const fetchConnectionInfo = async (databaseId) => {
   try {
     const response = await axios.get(
-      `${render.baseUrl}/postgres/${databaseId}/connection-info`,
-      options
+      `${getConfigs().render.baseUrl}/postgres/${databaseId}/connection-info`,
+      getConfigs().options
     );
     return response.data;
   } catch (error) {
-    console.error("error in fetchConnectionInfo: ", error);
-    throw error;
+    console.error("error in fetchConnectionInfo: ", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
 
@@ -63,28 +82,43 @@ const createDatabase = async (ownerId) => {
 
   try {
     const response = await axios.post(
-      `${render.baseUrl}/postgres`,
+      `${getConfigs().render.baseUrl}/postgres`,
       body,
-      options
+      getConfigs().options
     );
     return response.data;
   } catch (error) {
-    console.error("error in createDatabase: ", error);
-    throw error;
+    console.error("error in createDatabase: ", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
-// id: 'dpg-cs4r52tumphs73ajg6tg-a',
 
 const deleteDatabase = async (databaseId) => {
   try {
     const response = await axios.delete(
-      `${render.baseUrl}/postgres/${databaseId}`,
-      options
+      `${getConfigs().render.baseUrl}/postgres/${databaseId}`,
+      getConfigs().options
     );
     return response;
   } catch (error) {
-    console.error("error in deleteDatabase: ", error);
-    throw error;
+    console.error("error in deleteDatabase: ", {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    });
+    throw {
+      message: error.message,
+      statusCode: error.status,
+      method: error.request.method,
+    };
   }
 };
 
@@ -98,8 +132,8 @@ const checkDbStatus = async (database) => {
         );
 
         const response = await axios.get(
-          `${render.baseUrl}/postgres/${database.id}`,
-          options
+          `${getConfigs().render.baseUrl}/postgres/${database.id}`,
+          getConfigs().options
         );
         const { status } = response.data;
         databaseStatus = status;
@@ -107,8 +141,16 @@ const checkDbStatus = async (database) => {
       store.set("database.status", databaseStatus);
       resolve(databaseStatus);
     } catch (error) {
-      console.error("Failed checkDbStatus: ", error);
-      throw error;
+      console.error("error in checkDbStatus: ", {
+        message: error.message,
+        statusCode: error.status,
+        method: error.request.method,
+      });
+      throw {
+        message: error.message,
+        statusCode: error.status,
+        method: error.request.method,
+      };
     }
   });
 };
