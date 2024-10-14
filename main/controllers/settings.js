@@ -14,10 +14,9 @@ const getSettings = () => {
     const storedSettings = store.get("settings");
     if (storedSettings) {
       Object.keys(storedSettings).forEach((key) => {
-        settings[key] = storedSettings[key] || null;
+        settings[key] = storedSettings[key];
       });
-    }
-
+    } 
     return settings;
   } catch (error) {
     console.error("Error in getSettings: ", error);

@@ -116,9 +116,7 @@ async function populateSettings() {
   const apiKeyField = document.querySelector("#api-key");
   const regionField = document.querySelector("#region");
   const autoUpdateCheckbox = document.querySelector("#auto-update-checkbox");
-  const autoLaunchCheckbox = document.querySelector(
-    "#launch-startup-checkbox"
-  );
+  const autoLaunchCheckbox = document.querySelector("#launch-startup-checkbox");
 
   // Populate fields with existing settings data
   await populateFieldsWithSettingsData(
@@ -144,7 +142,14 @@ async function populateSettings() {
         autoLaunchCheckbox
       );
     });
+
+  console.log(
+    "#save-button ==> ",
+    document.querySelector("#save-settings-btn")
+  );
 }
+
+console.log("#save-button ===>", document.querySelector("#save-settings-btn"));
 
 async function populateFieldsWithSettingsData(
   dbNameField,

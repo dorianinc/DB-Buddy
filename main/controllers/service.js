@@ -7,10 +7,8 @@ const { isEmpty } = require("./helpers");
 
 const fetchServices = async () => {
   try {
-    const response = await axios.get(
-      `${getConfigs().render.baseUrl}/services`,
-      getConfigs().options
-    );
+    const { render, options } = getConfigs();
+    const response = await axios.get(`${render.baseUrl}/services`, options);
     if (isEmpty(response.data)) return null;
 
     const rawServices = response.data
@@ -30,21 +28,18 @@ const fetchServices = async () => {
     store.set("services", services);
     return services;
   } catch (error) {
-    console.error("error in fetchServices: ", {
-      message: error.message,
-      statusCode: error.status,
-      method: error.request.method,
-    });
+    console.error("error in fetchServices");
     throw {
-      message: error.message,
+      message: error.response?.data,
       statusCode: error.status,
-      method: error.request.method,
+      method: error.request?.method,
     };
   }
 };
 
 const checkServiceStatus = async (services) => {
   try {
+    const { render, options } = getConfigs();
     await Promise.allSettled(
       Object.values(services).map(async (service) => {
         try {
@@ -59,8 +54,8 @@ const checkServiceStatus = async (services) => {
 
             // Fetch the service events
             const response = await axios.get(
-              `${getConfigs().render.baseUrl}/services/${service.id}/events?limit=10`,
-              getConfigs().options
+              `${render.baseUrl}/services/${service.id}/events?limit=10`,
+              options
             );
             const event = response.data[0].event;
             const eventType = event.type;
@@ -85,29 +80,21 @@ const checkServiceStatus = async (services) => {
           store.set(`services.${service.name}.status`, serviceStatus);
         } catch (error) {
           store.set(`services.${service.name}.status`, "error");
-          console.error(`Error checking service ${service.name}:`, {
-            message: error.message,
-            statusCode: error.status,
-            method: error.request.method,
-          });
+          console.error(`Error checking service ${service.name}`);
           throw {
-            message: error.message,
+            message: error.response?.data,
             statusCode: error.status,
-            method: error.request.method,
+            method: error.request?.method,
           };
         }
       })
     );
   } catch (error) {
-    console.error("Error during background service checks:", {
-      message: error.message,
-      statusCode: error.status,
-      method: error.request.method,
-    });
+    console.error("Error during background service checks");
     throw {
-      message: error.message,
+      message: error.response?.data,
       statusCode: error.status,
-      method: error.request.method,
+      method: error.request?.method,
     };
   }
 };

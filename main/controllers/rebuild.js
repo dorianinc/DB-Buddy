@@ -9,11 +9,12 @@ const {
   checkDbStatus,
 } = require("./database");
 const { store } = require("../store");
-const { render } = require("./configs");
+const { getConfigs } = require("./configs");
 const { differenceInDays } = require("date-fns");
 
 const rebuildRender = async () => {
   try {
+    const { render } = getConfigs();
     store.set("reloading", true);
     const owner = await fetchOwner();
     const services = Object.values(await fetchServices()) || null;
@@ -22,7 +23,7 @@ const rebuildRender = async () => {
 
     if (database) {
       const deleteDb = await deleteDatabase(database.id);
-      if (deleteDb.status !== 204) {
+      if (!deleteDb.success) {
         console.error("Failed to delete existing database.");
         return;
       }
@@ -66,7 +67,7 @@ const checkDaysRemaining = async (creationDate) => {
   const currentDate = new Date();
   const daysDifference = differenceInDays(currentDate, pastDate);
   const daysLeft = 30 - daysDifference;
-  
+
   if (daysLeft <= 1) {
     await rebuildRender();
   }

@@ -1,4 +1,3 @@
-const { store } = require("../store");
 const { getSettings } = require("./settings");
 
 const getConfigs = () => {
@@ -6,7 +5,7 @@ const getConfigs = () => {
 
   const render = {
     baseUrl: "https://api.render.com/v1",
-    databaseName: settings.databaseName,
+    databaseName: settings.dbName,
     region: settings.region,
     databaseKey: settings.dbKey,
     autoUpdate: settings.autoUpdate,

@@ -19,6 +19,7 @@ const setTable = (database, apps) => {
   buildButton.addEventListener("click", () => {
     openModal("Warning", databaseExists);
   });
+  console.log("🖥️  buildButton: ", buildButton)
 
   // Create the table element
   const table = document.createElement("table");
@@ -102,6 +103,7 @@ const setStatus = async (item) => {
   const name = item.name;
   const status = item.status;
   const statusSpan = document.getElementById(`${name}-status`);
+  if (!statusSpan) return;
 
   switch (status) {
     case "creating":

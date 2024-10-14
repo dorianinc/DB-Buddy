@@ -4,38 +4,42 @@ const { getConfigs } = require("./configs");
 // Helpers --------------------------------------------------------------------------------------------
 
 const updateEnvVariable = async (serviceId, envKey, envValue) => {
-  const body = {
-    value: envValue,
-  };
-
   try {
+    const { render, options } = getConfigs();
+    const body = { value: envValue };
     const response = await axios.put(
-      `${getConfigs().render.baseUrl}/services/${serviceId}/env-vars/${envKey}`,
+      `${render.baseUrl}/services/${serviceId}/env-vars/${envKey}`,
       body,
-      getConfigs().options
+      options
     );
     return response.data;
   } catch (error) {
-    console.error("updateEnvVariabl: ", error);
-    throw error;
+    console.error("error in updateEnvVariable");
+    throw {
+      message: error.response?.data,
+      statusCode: error.status,
+      method: error.request?.method,
+    };
   }
 };
 
 const deployService = async (service) => {
-  const body = {
-    clearCache: "do_not_clear",
-  };
-
   try {
+    const { render, options } = getConfigs();
+    const body = { clearCache: "do_not_clear" };
     const response = await axios.post(
-      `${getConfigs().render.baseUrl}/services/${service.id}/deploys`,
+      `${render.baseUrl}/services/${service.id}/deploys`,
       body,
-      getConfigs().options
+      options
     );
     return response.data;
   } catch (error) {
-    console.error("error in deployService: ", error);
-    throw error;
+    console.error("error in deployService");
+    throw {
+      message: error.response?.data,
+      statusCode: error.status,
+      method: error.request?.method,
+    };
   }
 };
 

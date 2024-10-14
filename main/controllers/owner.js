@@ -5,24 +5,21 @@ const { getConfigs } = require("./configs");
 
 const fetchOwner = async () => {
   try {
+    const { render, options } = getConfigs();
     const response = await axios.get(
-      `${getConfigs().render.baseUrl}/owners?limit=1`,
-      getConfigs().options
+      `${render.baseUrl}/owners?limit=1`,
+      options
     );
     if (response.status === 200) {
       const { owner } = response.data[0];
       return owner;
     }
   } catch (error) {
-    console.error("error in fetchOwner: ", {
-      message: error.message,
-      statusCode: error.status,
-      method: error.request.method,
-    });
+    console.error("error in fetchOwner");
     throw {
-      message: error.message,
+      message: error.response?.data,
       statusCode: error.status,
-      method: error.request.method,
+      method: error.request?.method,
     };
   }
 };
