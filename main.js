@@ -87,8 +87,6 @@ function createMainWindow() {
   deployStoreListeners(mainWindow.webContents);
   setTray(app, mainWindow, startHidden);
 
-  app.dock.hide();
-
   // Handle window close: hide instead of quitting
   mainWindow.on("close", (e) => {
     if (isDev) return;
@@ -115,7 +113,7 @@ function createMainWindow() {
 
 // Set Dock Icon for macOS
 if (process.platform === "darwin") {
-  app.dock.setIcon(dockIcon);
+  app.dock.hide();
   app.setName("DB Buddy");
 }
 
@@ -163,4 +161,13 @@ function setTray(app, mainWindow, isHidden) {
   }
 
   tray.setContextMenu(menu);
+  if (process.platform === "win32") {
+    tray.on("click", () => {
+      if (!mainWindow.isVisible()) {
+        mainWindow.show();
+      }
+
+      mainWindow.focus();
+    });
+  }
 }
