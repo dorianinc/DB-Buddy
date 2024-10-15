@@ -49,11 +49,6 @@ DB-Buddy is an application that is designed to remove the stress of updating you
 
 You can access the Login and Signup Modal here. Also, we have a demo user button for you to check the website.
 
-<div style="text-align: center;">
-    <picture style="margin-left: 10px;">
-    <source media="(prefers-color-scheme: dark)" srcset="/assets/images/screenshot.png">
-  <img src="/assets/images/screenshot.png" alt="homepage">
-    <!-- <source media="(prefers-color-scheme: light)" srcset="/assets/images/db-black.png">
-    <img src="/assets/images/db-white.png" alt="logo" height="30" width="30"> -->
-  </picture>
-</div>
+<p align="center">
+    <img src="/assets/images/screenshot.png" alt="homepage">
+</p>
