@@ -6,7 +6,7 @@ const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
 const { handleAutoLaunch } = require("./main/utils/autoLaunch");
 const { store } = require("./main/store");
-const { updateElectronApp } = require("update-electron-app");
+// const { updateElectronApp } = require("update-electron-app");
 
 // Constants for icons based on platform
 let trayIcon;
@@ -101,12 +101,12 @@ if (process.platform === "darwin") {
 //---------------------- app initialization ------------- //
 
 app.whenReady().then(() => {
-  // Initialize auto-updates
-  updateElectronApp({
-    repo: "dorianinc/db-buddy.git",
-    updateInterval: "1 hour",
-    logger: require("electron-log"),
-  });
+  // // Initialize auto-updates
+  // updateElectronApp({
+  //   repo: "dorianinc/db-buddy.git",
+  //   updateInterval: "1 hour",
+  //   logger: require("electron-log"),
+  // });
 
   const mainApp = createMainWindow();
   mainApp.once("ready-to-show", () => {

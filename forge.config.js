@@ -8,30 +8,50 @@ module.exports = {
     asar: true,
     osxSign: {},
     appCategoryType: "public.app-category.developer-tools",
-    icon: path.join(__dirname, 'assets', 'icons', 'mac', 'db-white'), // For macOS
+    icon: path.join(__dirname, "assets", "icons", "mac", "db-white"),
   },
   rebuildConfig: {},
   makers: [
+    // Windows
     {
       name: "@electron-forge/maker-squirrel",
       config: {
+        name: "db-buddy",
+        icon: path.join(
+          __dirname,
+          "assets",
+          "icons",
+          "windows",
+          "db-white.ico"
+        ),
         certificateFile: "./cert.pfx",
         certificatePassword: process.env.CERTIFICATE_PASSWORD,
-        icon: path.join(__dirname, 'assets', 'icons', 'windows', 'db-white.ico'), // For Windows
       },
+    },
+
+    // macOS
+    {
+      name: "@electron-forge/maker-dmg",
+      config: {
+        background: './assets/images/dmg-background.jpg',
+        format: 'ULFO'
+      }
     },
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
       config: {
-        icon: path.join(__dirname, 'assets', 'icons', 'mac', 'db-white.png'), // Optional for ZIP on macOS
+        name: "DB Buddy",
+        icon: path.join(__dirname, "assets", "icons", "mac", "db-white.png"),
       },
     },
+
+    // Linux
     {
       name: "@electron-forge/maker-deb",
       config: {
-        name: "DB Buddy",
-        icon: path.join(__dirname, 'assets', 'icons', 'linux', 'db-white.png'), // For Linux
+        name: "db-buddy",
+        icon: path.join(__dirname, "assets", "icons", "linux", "db-white.png"),
       },
     },
   ],
