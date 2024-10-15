@@ -34,10 +34,9 @@ function displayMessage(messageText, isSuccess, button) {
   }, 1500);
 }
 
-// Function to reset the message and button state before showing new feedback
 function resetMessageAndButton(button) {
   const message = document.querySelector("#message");
-  button.innerHTML = ""; // Clear any existing icon on the button
-  message.innerText = ""; // Clear the message
-  message.style.display = "none"; // Hide the message until next update
+  button.innerHTML = "";
+  message.innerText = "";
+  message.style.display = "none";
 }

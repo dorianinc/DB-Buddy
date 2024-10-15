@@ -81,7 +81,6 @@ exports.createTemplate = (app, mainWindow, isHidden) => {
     },
   ];
 
-  // Add "Show App" menu item if the app is minimized
   if (isHidden) {
     const trayItem = [
       {

@@ -6,19 +6,16 @@ const isDev = !app.isPackaged;
 function handleAutoLaunch() {
   if (!isDev) {
     const appAutoLauncher = new AutoLaunch({
-      name: "DB Buddy", // Replace with your app's name
-      path: app.getPath("exe"), // Auto-launch the app executable
+      name: "DB Buddy",
+      path: app.getPath("exe"),
     });
 
-    // Retrieve the auto-launch setting from your store
     const autoLaunchEnabled = store.get("settings.autoLaunch");
     
-    // Handle enabling or disabling auto-launch based on the setting
     appAutoLauncher
     .isEnabled()
     .then((isEnabled) => {
         if (autoLaunchEnabled && !isEnabled) {
-          // If auto-launch is enabled in settings but not enabled in the system, enable it
           appAutoLauncher
             .enable()
             .then(() => {
@@ -28,7 +25,6 @@ function handleAutoLaunch() {
               console.error("Failed to enable auto-launch:", err);
             });
         } else if (!autoLaunchEnabled && isEnabled) {
-          // If auto-launch is disabled in settings but enabled in the system, disable it
           appAutoLauncher
             .disable()
             .then(() => {
