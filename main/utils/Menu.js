@@ -1,3 +1,6 @@
+const { store } = require("../store");
+
+
 exports.createTemplate = (app, mainWindow, isMinimized) => {
   const menuTemplate = [
     {
@@ -15,12 +18,6 @@ exports.createTemplate = (app, mainWindow, isMinimized) => {
           accelerator: "CmdOrCtrl+Shift+R",
           click: () => {
             mainWindow.webContents.send("refresh-app", true);
-          },
-        },
-        {
-          label: "Exit",
-          click: () => {
-            app.quit();
           },
         },
       ],
@@ -73,17 +70,14 @@ exports.createTemplate = (app, mainWindow, isMinimized) => {
       ],
     },
     {
-      label: "Help",
-      role: "help",
-      submenu: [
-        {
-          label: "Learn More",
-          click: () => {
-            const { shell } = require("electron");
-            shell.openExternal("http://electron.atom.io");
-          },
-        },
-      ],
+      type: "separator",
+    },
+    {
+      label: "Exit",
+      click: () => {
+        store.set("isExiting", true);
+        app.quit();
+      },
     },
   ];
 

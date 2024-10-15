@@ -68,7 +68,7 @@ const settingsSchema = {
 const schema = {
   reloading: { type: "boolean", default: false },
   rebuilt: { type: "boolean", default: false },
-  isMinimized: { type: "boolean", default: false },
+  isExiting: { type: "boolean", default: false },
   services: serviceSchema,
   database: databaseSchema,
   settings: settingsSchema,

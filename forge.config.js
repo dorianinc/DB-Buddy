@@ -30,13 +30,19 @@ module.exports = {
     },
 
     // macOS
-    {
-      name: "@electron-forge/maker-dmg",
-      config: {
-        background: './assets/images/dmg-background.jpg',
-        format: 'ULFO'
-      }
-    },
+    // {
+    //   name: "@electron-forge/maker-dmg",
+    //   config: {
+    //     iconSize: 100, 
+    //     background: path.join(__dirname, "assets", "images", "dmg-background.jpg"),
+    //     window: {
+    //       width: 600,
+    //       height: 400
+    //     },
+    //     format: 'ULFO' 
+    //   }
+    // },
+    
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],

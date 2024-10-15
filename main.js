@@ -6,9 +6,7 @@ const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
 const { handleAutoLaunch } = require("./main/utils/autoLaunch");
 const { store } = require("./main/store");
-// const { updateElectronApp } = require("update-electron-app");
 
-// Constants for icons based on platform
 let trayIcon;
 let dockIcon;
 
@@ -24,7 +22,13 @@ switch (process.platform) {
     dockIcon = trayIcon;
     break;
   case "darwin":
-    trayIcon = path.join(__dirname, "assets", "icons", "mac", "db-white-tray.png");
+    trayIcon = path.join(
+      __dirname,
+      "assets",
+      "icons",
+      "mac",
+      "db-white-tray.png"
+    );
     dockIcon = path.join(__dirname, "assets", "icons", "mac", "db-white.png");
     break;
   case "linux":
@@ -46,7 +50,6 @@ let tray;
 if (require("electron-squirrel-startup")) app.quit();
 
 //---------------------- create windows ------------- //
-
 // Main Window Creation
 function createMainWindow() {
   windowState = windowStateKeeper({
@@ -80,12 +83,23 @@ function createMainWindow() {
   deployStoreListeners(mainWindow.webContents);
   setTray(app, mainWindow);
 
+  // Handle window close: hide instead of quitting
+  mainWindow.on("close", (e) => {
+    const isExiting = store.get("isExiting");
+    if (!isExiting && mainWindow.isVisible()) {
+      console.log("is visible?? ", mainWindow.isVisible());
+      e.preventDefault();
+      mainWindow.hide();
+    }
+  });
+
   // Listen for window state changes
-  mainWindow.on("minimize", () => {
+  mainWindow.on("hide", () => {
     setTray(app, mainWindow, true); // Pass 'true' to indicate the app is minimized
   });
 
-  mainWindow.on("restore", () => {
+  mainWindow.on("show", () => {
+    store.set("isExiting", false);
     setTray(app, mainWindow, false); // Pass 'false' to indicate the app is restored
   });
 
@@ -101,14 +115,8 @@ if (process.platform === "darwin") {
 //---------------------- app initialization ------------- //
 
 app.whenReady().then(() => {
-  // // Initialize auto-updates
-  // updateElectronApp({
-  //   repo: "dorianinc/db-buddy.git",
-  //   updateInterval: "1 hour",
-  //   logger: require("electron-log"),
-  // });
-
   const mainApp = createMainWindow();
+  app.dock.hide(); // Hides the app from the Dock (macOS only)
   mainApp.once("ready-to-show", () => {
     const minimize = store.get("settings.autoLaunch");
     if (!isDev && minimize) {
@@ -120,9 +128,17 @@ app.whenReady().then(() => {
 });
 handleAutoLaunch();
 
+// Ensure the app quits when all windows are closed on non-macOS
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// Reopen the window when the dock icon is clicked (for macOS)
+app.on("activate", () => {
+  if (mainWindow) {
+    mainWindow.show();
   }
 });
 
