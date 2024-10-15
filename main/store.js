@@ -6,14 +6,24 @@ const serviceSchema = {
     "^.+$": {
       type: "object",
       properties: {
-        id: { type: "string", minLength: 1 },
-        name: { type: "string", minLength: 1 },
+        id: {
+          type: "string",
+          default: null,
+          minLength: 1,
+        },
+        name: {
+          type: "string",
+          default: null,
+          minLength: 1,
+        },
         status: {
           type: "string",
+          default: null,
           enum: ["deployed", "deploying", "pending", "failed"],
         },
         type: {
           type: "string",
+          default: null,
           enum: ["web_service"],
         },
       },
@@ -25,15 +35,36 @@ const serviceSchema = {
 const databaseSchema = {
   type: "object",
   properties: {
-    id: { type: "string", minLength: 1 },
-    name: { type: "string", minLength: 1 },
-    version: { type: "string", pattern: "^[0-9]+$" },
+    id: {
+      type: "string",
+      default: null,
+      minLength: 1,
+    },
+    name: {
+      type: "string",
+      default: null,
+      minLength: 1,
+    },
+    version: {
+      type: "string",
+      default: null,
+      pattern: "^[0-9]+$",
+    },
     status: {
       type: "string",
+      default: null,
       enum: ["creating", "available", "unavailable", "unknown"],
     },
-    createdAt: { type: "string", minLength: 1 },
-    internalConnectionString: { type: "string", format: "uri" },
+    createdAt: {
+      type: "string",
+      default: null,
+      minLength: 1,
+    },
+    internalConnectionString: {
+      type: "string",
+      default: null,
+      format: "uri",
+    },
   },
   required: [
     "id",
@@ -51,24 +82,55 @@ const settingsSchema = {
     dbName: {
       type: "string",
       pattern: "^(?![_-])[a-zA-Z0-9_-]+(?<![_-])$",
+      default: null,
       minLength: 1,
     },
-    dbKey: { type: "string", pattern: "^[A-Z0-9_]+$", minLength: 1 },
-    apiKey: { type: "string", pattern: "^rnd_.*$", minLength: 5 },
+    dbKey: {
+      type: "string",
+      pattern: "^[A-Z0-9_]+$",
+      minLength: 1,
+      default: null,
+    },
+    apiKey: {
+      type: "string",
+      pattern: "^rnd_.*$",
+      minLength: 5,
+      default: null,
+    },
     region: {
       type: "string",
+      default: null,
       enum: ["oregon", "ohio", "virginia", "frankfurt", "singapore"],
     },
-    autoUpdate: { type: "boolean", default: false },
-    autoLaunch: { type: "boolean", default: false },
+    autoUpdate: {
+      type: "boolean",
+      default: false,
+    },
+    autoLaunch: {
+      type: "boolean",
+      default: false,
+    },
+    launchMinimized: {
+      type: "boolean",
+      default: false,
+    },
   },
-  required: ["dbName", "dbKey", "apiKey", "region", "autoUpdate", "autoLaunch"],
+  required: [
+    "dbName",
+    "dbKey",
+    "apiKey",
+    "region",
+    "autoUpdate",
+    "autoLaunch",
+    "launchMinimized",
+  ],
 };
 
 const schema = {
   reloading: { type: "boolean", default: false },
   rebuilt: { type: "boolean", default: false },
   isExiting: { type: "boolean", default: false },
+  isHidden: { type: "boolean", default: false },
   services: serviceSchema,
   database: databaseSchema,
   settings: settingsSchema,

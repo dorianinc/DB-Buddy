@@ -10,6 +10,7 @@ const getConfigs = () => {
     databaseKey: settings.dbKey,
     autoUpdate: settings.autoUpdate,
     autoLaunch: settings.autoLaunch,
+    launchMinimized: settings.launchMinimized
   };
 
   const options = {

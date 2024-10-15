@@ -9,6 +9,7 @@ const getSettings = () => {
       region: null,
       autoUpdate: false,
       autoLaunch: false,
+      launchMinimized: false
     };
 
     const storedSettings = store.get("settings");

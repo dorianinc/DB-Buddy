@@ -42,6 +42,10 @@ switch (process.platform) {
 }
 
 const isDev = !app.isPackaged;
+const startLaunched = store.get("settings.autoLaunch");
+const startMinimized = store.get("settings.launchMinimized");
+const startHidden = startLaunched && startMinimized;
+
 let windowState;
 let mainWindow;
 let tray;
@@ -81,13 +85,15 @@ function createMainWindow() {
 
   deployIPCListeners();
   deployStoreListeners(mainWindow.webContents);
-  setTray(app, mainWindow);
+  setTray(app, mainWindow, startHidden);
+
+  app.dock.hide();
 
   // Handle window close: hide instead of quitting
   mainWindow.on("close", (e) => {
+    if (isDev) return;
     const isExiting = store.get("isExiting");
     if (!isExiting && mainWindow.isVisible()) {
-      console.log("is visible?? ", mainWindow.isVisible());
       e.preventDefault();
       mainWindow.hide();
     }
@@ -95,12 +101,13 @@ function createMainWindow() {
 
   // Listen for window state changes
   mainWindow.on("hide", () => {
-    setTray(app, mainWindow, true); // Pass 'true' to indicate the app is minimized
+    const isHidden = store.set("isHidden", true);
+    setTray(app, mainWindow, isHidden); // Pass 'true' to indicate the app is minimized
   });
 
   mainWindow.on("show", () => {
-    store.set("isExiting", false);
-    setTray(app, mainWindow, false); // Pass 'false' to indicate the app is restored
+    const isHidden = store.set("isHidden", false);
+    setTray(app, mainWindow, isHidden); // Pass 'false' to indicate the app is restored
   });
 
   return mainWindow;
@@ -116,11 +123,12 @@ if (process.platform === "darwin") {
 
 app.whenReady().then(() => {
   const mainApp = createMainWindow();
-  app.dock.hide(); // Hides the app from the Dock (macOS only)
   mainApp.once("ready-to-show", () => {
-    const minimize = store.get("settings.autoLaunch");
-    if (!isDev && minimize) {
-      mainApp.minimize();
+    const autoLaunch = store.get("settings.autoLaunch");
+    const minimizeLaunch = store.get("settings.launchMinimized");
+
+    if (autoLaunch && minimizeLaunch) {
+      mainApp.hide();
     } else {
       mainApp.show();
     }
@@ -145,8 +153,8 @@ app.on("activate", () => {
 //---------------------- helpers ------------- //
 
 // Set Tray Icon and Menu
-function setTray(app, mainWindow, isMinimized) {
-  const template = createTemplate(app, mainWindow, isMinimized);
+function setTray(app, mainWindow, isHidden) {
+  const template = createTemplate(app, mainWindow, isHidden);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
