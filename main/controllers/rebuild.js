@@ -15,7 +15,7 @@ const { differenceInDays } = require("date-fns");
 const rebuildRender = async () => {
   try {
     const { render } = getConfigs();
-    store.set("reloading", true);
+    store.set("isReloading", true);
     const owner = await fetchOwner();
     const services = Object.values(await fetchServices()) || null;
     // block if no services
@@ -54,7 +54,7 @@ const rebuildRender = async () => {
         );
         await deployService(service);
       }
-      store.set("rebuilt", true);
+      store.set("isRebuilt", true);
     }
   } catch (error) {
     console.error("error in rebuildRender: ", error);

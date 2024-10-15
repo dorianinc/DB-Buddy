@@ -127,8 +127,8 @@ const settingsSchema = {
 };
 
 const schema = {
-  reloading: { type: "boolean", default: false },
-  rebuilt: { type: "boolean", default: false },
+  isReloading: { type: "boolean", default: false },
+  isRebuilt: { type: "boolean", default: false },
   isExiting: { type: "boolean", default: false },
   isHidden: { type: "boolean", default: false },
   services: serviceSchema,
@@ -167,17 +167,17 @@ const deployStoreListeners = (webContents) => {
     });
   });
 
-  store.onDidChange("reloading", (newValue) => {
+  store.onDidChange("isReloading", (newValue) => {
     if (newValue) {
       webContents.send("reload-app", true);
-      store.set("reloading", false);
+      store.set("isReloading", false);
     }
   });
 
-  store.onDidChange("rebuilt", (newValue) => {
+  store.onDidChange("isRebuilt", (newValue) => {
     if (newValue) {
       webContents.send("refresh-app", true);
-      store.set("rebuilt", false);
+      store.set("isRebuilt", false);
     }
   });
 };
