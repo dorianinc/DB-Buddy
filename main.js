@@ -166,7 +166,6 @@ function setTray(app, mainWindow, isHidden) {
       if (!mainWindow.isVisible()) {
         mainWindow.show();
       }
-
       mainWindow.focus();
     });
   }
