@@ -9,13 +9,14 @@
 
 DB-Buddy is a super simple application that is designed to remove the stress of updating your Render database every month by automating it. It's simple but powerful.
 
-#### Please see below links to project Wiki:
+## 📥 Download DB Buddy
 
-- [Feature List](https://github.com/dorianinc/Lilypad/wiki/Features-List)
-- [Database Schema](https://github.com/dorianinc/01-AirBnB/wiki/Database-Schema)
-- [Frontend Routes](https://github.com/dorianinc/Lilypad/wiki/Front-End-Routes)
-- [Backend Routes](https://github.com/dorianinc/01-AirBnB/wiki/Back-End-Routes)
-- [Redux Store State Shape](https://github.com/dorianinc/01-AirBnB/wiki/Redux-Store-Shape)
+You can download DB Buddy from the links below:
+
+| Platform | Download Link |
+| -------- | ------------- |
+| **MacOS** | [Download DB Buddy for MacOS (dmg)](https://drive.google.com/file/d/10pdhVTs2aP5_gb3Nfvacqpm8kknkadRv/view) |
+| **Windows** | [Download DB Buddy for Windows (exe)](https://drive.google.com/file/d/1lpWqaAfPuqZEEwqr5fQGPIiNENFcgma3/view) |
 
 ## 💻 Tech Stack
 
@@ -35,7 +36,6 @@ DB-Buddy is a super simple application that is designed to remove the stress of 
    ```bash
    npm start
    ```
-
 
 ## Landing Page
 
