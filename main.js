@@ -6,7 +6,7 @@ const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
 const { handleAutoLaunch } = require("./main/utils/autoLaunch");
 const { store } = require("./main/store");
-const updateElectronApp = require("update-electron-app");
+const { updateElectronApp } = require("update-electron-app");
 
 // Constants for icons based on platform
 let trayIcon;
@@ -14,12 +14,18 @@ let dockIcon;
 
 switch (process.platform) {
   case "win32":
-    trayIcon = path.join(__dirname, "assets", "icons", "windows", "db-white.ico");
+    trayIcon = path.join(
+      __dirname,
+      "assets",
+      "icons",
+      "windows",
+      "db-white.ico"
+    );
     dockIcon = trayIcon;
     break;
   case "darwin":
-    trayIcon = path.join(__dirname, "assets", "icons", "mac", "db-white.icns");
-    dockIcon = trayIcon;
+    trayIcon = path.join(__dirname, "assets", "icons", "mac", "db-white-tray.png");
+    dockIcon = path.join(__dirname, "assets", "icons", "mac", "db-white.png");
     break;
   case "linux":
     trayIcon = path.join(__dirname, "assets", "icons", "linux", "db-white.png");

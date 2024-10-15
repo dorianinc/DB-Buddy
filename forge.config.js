@@ -1,5 +1,6 @@
 const { FusesPlugin } = require("@electron-forge/plugin-fuses");
 const { FuseV1Options, FuseVersion } = require("@electron/fuses");
+const path = require("path"); // Import path module
 
 module.exports = {
   packagerConfig: {
@@ -7,6 +8,7 @@ module.exports = {
     asar: true,
     osxSign: {},
     appCategoryType: "public.app-category.developer-tools",
+    icon: path.join(__dirname, 'assets', 'icons', 'mac', 'db-white'), // For macOS
   },
   rebuildConfig: {},
   makers: [
@@ -15,16 +17,21 @@ module.exports = {
       config: {
         certificateFile: "./cert.pfx",
         certificatePassword: process.env.CERTIFICATE_PASSWORD,
+        icon: path.join(__dirname, 'assets', 'icons', 'windows', 'db-white.ico'), // For Windows
       },
     },
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
+      config: {
+        icon: path.join(__dirname, 'assets', 'icons', 'mac', 'db-white.png'), // Optional for ZIP on macOS
+      },
     },
     {
       name: "@electron-forge/maker-deb",
       config: {
         name: "DB Buddy",
+        icon: path.join(__dirname, 'assets', 'icons', 'linux', 'db-white.png'), // For Linux
       },
     },
   ],
@@ -33,8 +40,6 @@ module.exports = {
       name: "@electron-forge/plugin-auto-unpack-natives",
       config: {},
     },
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,

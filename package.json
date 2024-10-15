@@ -23,15 +23,16 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^31.1.0",
-    "update-electron-app": "^3.0.0"
+    "electron": "^31.1.0"
   },
   "dependencies": {
     "auto-launch": "^5.0.6",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
+    "electron-log": "^5.2.0",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.2.0",
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "update-electron-app": "^3.0.0"
   }
 }
