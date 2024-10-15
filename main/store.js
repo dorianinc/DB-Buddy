@@ -1,6 +1,5 @@
 const Store = require("electron-store");
 
-// Splitting schema into sections for readability
 const serviceSchema = {
   type: "object",
   patternProperties: {
@@ -75,57 +74,48 @@ const schema = {
   settings: settingsSchema,
 };
 
-// Initialize store with schema and encryption key
 const store = new Store({ watch: true, schema, encryptionKey: "Pump3n1ck3l" });
 
-// Set to track which service listeners are already attached
-const deployedDatabaseListeners = new Set();
 const deployedServicesListeners = new Set();
-
-// Function to deploy listeners efficiently without reattaching them unnecessarily
 const deployStoreListeners = (webContents) => {
-  // Attach listener for database.status only once
   store.onDidChange("database.status", (newStatus) => {
     const { name } = store.get("database");
     webContents.send("set-database-status", { name, status: newStatus });
   });
 
-  // Attach service status listeners only if they haven't been attached
   store.onDidChange("services", (newServices) => {
     Object.keys(newServices).forEach((serviceName) => {
-      // Check if we've already attached a listener for this service's status
       if (!deployedServicesListeners.has(serviceName)) {
         store.onDidChange(`services.${serviceName}.status`, (newStatus) => {
-          webContents.send("set-service-status", { name: serviceName, status: newStatus });
+          webContents.send("set-service-status", {
+            name: serviceName,
+            status: newStatus,
+          });
         });
 
-        // Mark this service as having its listener attached
         deployedServicesListeners.add(serviceName);
       }
     });
 
-    // Optional: Clean up listeners for removed services
     const currentServices = Object.keys(newServices);
     deployedServicesListeners.forEach((serviceName) => {
       if (!currentServices.includes(serviceName)) {
-        deployedServicesListeners.delete(serviceName); // Remove from the tracking set if no longer present
+        deployedServicesListeners.delete(serviceName);
       }
     });
   });
 
-  // Listener for reloading the app
   store.onDidChange("reloading", (newValue) => {
     if (newValue) {
       webContents.send("reload-app", true);
-      store.set("reloading", false); // Reset the reloading flag after sending the event
+      store.set("reloading", false);
     }
   });
 
-  // Listener for rebuilding the app
   store.onDidChange("rebuilt", (newValue) => {
     if (newValue) {
       webContents.send("refresh-app", true);
-      store.set("rebuilt", false); // Reset the rebuilt flag after sending the event
+      store.set("rebuilt", false);
     }
   });
 };

@@ -6,10 +6,30 @@ const { deployIPCListeners } = require("./main/ipc");
 const { deployStoreListeners } = require("./main/store");
 const { handleAutoLaunch } = require("./main/utils/autoLaunch");
 const { store } = require("./main/store");
+const updateElectronApp = require("update-electron-app");
 
-// Constants for icons
-const dockIcon = path.join(__dirname, "assets", "images", "db-white.png");
-const trayIcon = path.join(__dirname, "assets", "images", "react_icon.png");
+// Constants for icons based on platform
+let trayIcon;
+let dockIcon;
+
+switch (process.platform) {
+  case "win32":
+    trayIcon = path.join(__dirname, "assets", "icons", "windows", "db-white.ico");
+    dockIcon = trayIcon;
+    break;
+  case "darwin":
+    trayIcon = path.join(__dirname, "assets", "icons", "mac", "db-white.icns");
+    dockIcon = trayIcon;
+    break;
+  case "linux":
+    trayIcon = path.join(__dirname, "assets", "icons", "linux", "db-white.png");
+    dockIcon = trayIcon;
+    break;
+  default:
+    trayIcon = path.join(__dirname, "assets", "icons", "linux", "db-white.png");
+    dockIcon = trayIcon;
+    break;
+}
 
 const isDev = !app.isPackaged;
 let windowState;
@@ -42,6 +62,7 @@ function createMainWindow() {
       enableRemoteModule: false,
       nodeIntegration: false,
     },
+    icon: dockIcon, // Set the window icon
   });
 
   const htmlPath = path.join(__dirname, "renderer", "views", "index.html");
@@ -74,6 +95,13 @@ if (process.platform === "darwin") {
 //---------------------- app initialization ------------- //
 
 app.whenReady().then(() => {
+  // Initialize auto-updates
+  updateElectronApp({
+    repo: "dorianinc/db-buddy.git",
+    updateInterval: "1 hour",
+    logger: require("electron-log"),
+  });
+
   const mainApp = createMainWindow();
   mainApp.once("ready-to-show", () => {
     const minimize = store.get("settings.autoLaunch");

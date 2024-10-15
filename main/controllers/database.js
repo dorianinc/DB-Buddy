@@ -63,7 +63,6 @@ const fetchConnectionInfo = async (databaseId) => {
 };
 
 const createDatabase = async (ownerId) => {
-  console.log("creating new database");
   try {
     const { render, options } = getConfigs();
     const body = {
@@ -79,7 +78,6 @@ const createDatabase = async (ownerId) => {
       body,
       options
     );
-    console.log("data ==>", response.data);
     if (isEmpty(response.data)) return null;
     return response.data;
   } catch (error) {

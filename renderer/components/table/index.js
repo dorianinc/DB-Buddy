@@ -19,7 +19,6 @@ const setTable = (database, apps) => {
   buildButton.addEventListener("click", () => {
     openModal("Warning", databaseExists);
   });
-  console.log("🖥️  buildButton: ", buildButton)
 
   // Create the table element
   const table = document.createElement("table");

@@ -1,7 +1,7 @@
 {
   "name": "db-buddy",
   "version": "1.0.0",
-  "description": "Cause why not?",
+  "description": "An application for easily updating your database on Render",
   "author": "dorian macias <dorianrmacias@gmail.com> (https://dorianmacias.dev/)",
   "main": "main.js",
   "scripts": {
@@ -23,7 +23,8 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^31.1.0"
+    "electron": "^31.1.0",
+    "update-electron-app": "^3.0.0"
   },
   "dependencies": {
     "auto-launch": "^5.0.6",

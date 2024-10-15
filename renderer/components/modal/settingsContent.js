@@ -142,14 +142,7 @@ async function populateSettings() {
         autoLaunchCheckbox
       );
     });
-
-  console.log(
-    "#save-button ==> ",
-    document.querySelector("#save-settings-btn")
-  );
 }
-
-console.log("#save-button ===>", document.querySelector("#save-settings-btn"));
 
 async function populateFieldsWithSettingsData(
   dbNameField,
