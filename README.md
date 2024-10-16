@@ -18,7 +18,7 @@ You can download DB Buddy from the links below:
 
 | Platform | Download Link |
 | -------- | ------------- | 
-| **MacOS** | [Download DB Buddy for MacOS (dmg)](https://drive.google.com/file/d/1DcNlniuPogP7JDdFgYYUKpPQS5nPVxkk/view) |
+| **MacOS** | [Download DB Buddy for MacOS (dmg)](https://drive.google.com/file/d/1JHexc5c3CtcY6E3viSgH4H_XE9zpswAe/view) |
 | **Windows** | [Download DB Buddy for Windows (exe)](https://drive.google.com/file/d/1gylur8ZN9Qh6hOgPlSw-1PxU2AwkMxOl/view) |
 
 ## 💻 Tech Stack
