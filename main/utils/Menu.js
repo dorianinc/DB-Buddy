@@ -3,6 +3,7 @@ const { store } = require("../store");
 
 exports.createTemplate = (app, mainWindow) => {
    const isHidden = store.get("isHidden")
+   console.log("🖥️  isHidden: ", isHidden)
   const menuTemplate = [
     {
       label: process.platform === "darwin" ? app.getName() : "Menu",

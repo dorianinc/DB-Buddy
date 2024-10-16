@@ -132,7 +132,11 @@ const checkDbStatus = async (database) => {
       store.set("database.status", databaseStatus);
       resolve(databaseStatus);
     } catch (error) {
-      console.error("error in checkDbStatus");
+      console.error("error in checkDbStatus", {
+        message: error.response?.data,
+        statusCode: error.status,
+        method: error.request?.method,
+      });
       throw {
         message: error.response?.data,
         statusCode: error.status,

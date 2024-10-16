@@ -39,6 +39,8 @@ const startLaunched = store.get("settings.autoLaunch");
 const startMinimized = store.get("settings.launchMinimized");
 const startHidden = startLaunched && startMinimized;
 store.set("isHidden", startHidden);
+// store.set("isExiting", false);
+
 
 // Variables for window state and main window
 let windowState;
@@ -88,21 +90,28 @@ function createMainWindow() {
   mainWindow.on("close", (e) => {
     // if (isDev) return;
     const isExiting = store.get("isExiting");
+    console.log("🖥️  isExiting: ", isExiting)
+    console.log("🖥️  mainWindow.isVisible(): ", mainWindow.isVisible())
     if (!isExiting && mainWindow.isVisible()) {
+      console.log("preventing default behavior")
       e.preventDefault();
       mainWindow.hide();
     }
+    console.log("closing window like normal")
   });
 
   // Handle window hide event
   mainWindow.on("hide", () => {
+    console.log(" ----> hiding app")
     store.set("isHidden", true);
     setTray(app, mainWindow); // Pass 'true' to indicate the app is minimized
   });
 
   // Handle window show event
   mainWindow.on("show", () => {
+    console.log(" ----> showing app")
     store.set("isHidden", false);
+    store.set("isExiting", false);
     setTray(app, mainWindow); // Pass 'false' to indicate the app is restored
   });
   
