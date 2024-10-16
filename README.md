@@ -13,10 +13,11 @@ DB-Buddy is a super simple application that is designed to remove the stress of 
 
 You can download DB Buddy from the links below:
 
+10/15/2024 8:20pm fixing bug in app download links will be back shortly
 | Platform | Download Link |
-| -------- | ------------- |
-| **MacOS** | [Download DB Buddy for MacOS (dmg)](https://drive.google.com/file/d/10pdhVTs2aP5_gb3Nfvacqpm8kknkadRv/view) |
-| **Windows** | [Download DB Buddy for Windows (exe)](https://drive.google.com/file/d/1lpWqaAfPuqZEEwqr5fQGPIiNENFcgma3/view) |
+| -------- | ------------- | 
+<!-- | **MacOS** | [Download DB Buddy for MacOS (dmg)](https://drive.google.com/file/d/10pdhVTs2aP5_gb3Nfvacqpm8kknkadRv/view) |
+| **Windows** | [Download DB Buddy for Windows (exe)](https://drive.google.com/file/d/1lpWqaAfPuqZEEwqr5fQGPIiNENFcgma3/view) | -->
 
 ## 💻 Tech Stack
 
