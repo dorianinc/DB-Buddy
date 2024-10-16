@@ -128,7 +128,7 @@ function createMainWindow() {
 
 // macOS-specific behavior to hide the dock icon and set the app name
 if (process.platform === "darwin") {
-  app.dock.hide(); // Hide the dock icon on macOS
+  app.dock.setIcon(dockIcon)
   app.setName("DB Buddy"); // Set the app name
 }
 
