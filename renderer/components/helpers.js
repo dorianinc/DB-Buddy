@@ -3,7 +3,6 @@ const fetchRenderData = async (refresh) => {
     const fetchDatabase = await window.api.database.getDatabase(refresh);
     const fetchServices = await window.api.services.getServices(refresh);
 
-    // Handle both successful fetch and API-level failure
     if (!fetchServices.success) {
       throw new Error(fetchServices.error.message);
     }

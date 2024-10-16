@@ -18,7 +18,6 @@ const rebuildRender = async () => {
     store.set("isReloading", true);
     const owner = await fetchOwner();
     const services = Object.values(await fetchServices()) || null;
-    // block if no services
     const database = (await fetchDatabase()) || null;
 
     if (database) {

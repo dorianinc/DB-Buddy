@@ -1,15 +1,12 @@
-// Function to handle table population
 const setTable = (database, apps) => {
   const databaseExists = isEmpty(database);
   const buildText = databaseExists ? "Rebuild Database" : "Build Database";
   const { statusContainer, tableContainer } = getContainers();
 
-  // Show the table container and hide the status container
   tableContainer.innerHTML = "";
   tableContainer.style.display = "flex";
   statusContainer.style.display = "none";
 
-  // Create the build button and append it to the tableContainer
   const buildButton = document.createElement("button");
   buildButton.innerText = buildText;
   buildButton.style.display = "inline";
@@ -20,12 +17,10 @@ const setTable = (database, apps) => {
     openModal("Warning", databaseExists);
   });
 
-  // Create the table element
   const table = document.createElement("table");
   table.setAttribute("class", "table table-dark");
   table.setAttribute("id", "services-table");
 
-  // Create the table header
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
 
@@ -40,16 +35,13 @@ const setTable = (database, apps) => {
   thead.append(headerRow);
   table.append(thead);
 
-  // Create the table body and append it to the table
   const tableBody = document.createElement("tbody");
   tableBody.setAttribute("id", "table-body");
   table.append(tableBody);
 
-  // Append the table to the tableContainer
   tableContainer.append(table);
   tableContainer.append(buildButton);
 
-  // Function to create a row
   const createRow = (name, type, version = null) => {
     const row = document.createElement("tr");
     row.setAttribute("class", "table-row");
@@ -82,14 +74,12 @@ const setTable = (database, apps) => {
     return row;
   };
 
-  // Add a row for the database service if it exists
   if (database) {
     const dbRow = createRow(database.name, "Database", database.version);
     tableBody.append(dbRow);
     setStatus(database);
   }
 
-  // Add rows for each app service
   for (const service of Object.values(apps)) {
     const row = createRow(service.name, "Web Service", null);
     tableBody.append(row);
@@ -97,7 +87,6 @@ const setTable = (database, apps) => {
   }
 };
 
-// Function to set the status
 const setStatus = async (item) => {
   const name = item.name;
   const status = item.status;

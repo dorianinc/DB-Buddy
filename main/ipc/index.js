@@ -28,10 +28,9 @@ fs.readdirSync(ipcDir)
 
 // Function to deploy all IPC listeners
 const deployIPCListeners = () => {
-  // Iterate over all listeners and invoke them
   Object.keys(ipcListeners).forEach((key) => {
     if (typeof ipcListeners[key] === "function") {
-      ipcListeners[key](); // Call the listener function
+      ipcListeners[key]();
     }
   });
 };

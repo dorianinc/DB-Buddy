@@ -35,7 +35,6 @@ const populateWithWarning = async (databaseExists) => {
     </div>
   `);
 
-  // Add an event listener for the confirm button
   if (settingsCheck) {
     document.querySelector("#confirm-btn").addEventListener("click", async () => {
       await window.api.app.rebuildRender();

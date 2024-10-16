@@ -118,7 +118,6 @@ async function populateSettings() {
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
   );
 
-  // Toggle visibility of the API key
   document.getElementById("toggle-api-key").addEventListener("click", () => {
     const apiKeyInput = document.getElementById("api-key");
     const isHidden = apiKeyInput.type === "password";
@@ -134,7 +133,7 @@ async function populateSettings() {
   const autoLaunchCheckbox = document.querySelector("#launch-startup-checkbox");
   const launchMinimizedCheckbox = document.querySelector(
     "#start-minimized-checkbox"
-  ); // New checkbox reference
+  );
 
   autoLaunchCheckbox.addEventListener("click", () => {
     if (autoLaunchCheckbox.checked === true) {
@@ -144,7 +143,6 @@ async function populateSettings() {
     }
   });
 
-  // Populate fields with existing settings data
   await populateFieldsWithSettingsData(
     dbNameField,
     dbKeyField,
@@ -152,10 +150,9 @@ async function populateSettings() {
     regionField,
     autoUpdateCheckbox,
     autoLaunchCheckbox,
-    launchMinimizedCheckbox // Add this line
+    launchMinimizedCheckbox
   );
 
-  // Handle Save button click
   document
     .querySelector("#save-settings-btn")
     .addEventListener("click", (e) => {
@@ -167,7 +164,7 @@ async function populateSettings() {
         regionField,
         autoUpdateCheckbox,
         autoLaunchCheckbox,
-        launchMinimizedCheckbox // Add this line
+        launchMinimizedCheckbox 
       );
     });
 }
@@ -190,7 +187,6 @@ async function populateFieldsWithSettingsData(
     autoUpdateCheckbox.checked = settingsData.payload.autoUpdate || false;
     autoLaunchCheckbox.checked = settingsData.payload.autoLaunch || false;
 
-    // Enable or disable the "Start Minimized" checkbox based on "Launch on Startup" value
     if (autoLaunchCheckbox.checked) {
       launchMinimizedCheckbox.disabled = false;
     } else {
@@ -211,34 +207,29 @@ async function handleSaveSettings(
   regionField,
   autoUpdateCheckbox,
   autoLaunchCheckbox,
-  launchMinimizedCheckbox // Add this parameter for start minimized
+  launchMinimizedCheckbox
 ) {
-  e.preventDefault(); // Prevent form submission if part of a form
-  const saveButton = e.target; // The button that triggered the event
+  e.preventDefault();
+  const saveButton = e.target;
 
-  // Collect values from input fields
-  const dbName = dbNameField.value || null; // Default to null if empty
+  const dbName = dbNameField.value || null;
   const dbKey = dbKeyField.value || null;
   const apiKey = apiKeyField.value || null;
   const region = regionField.value || null;
-  const autoUpdate = autoUpdateCheckbox.checked; // Get checkbox state
+  const autoUpdate = autoUpdateCheckbox.checked
   const autoLaunch = autoLaunchCheckbox.checked;
-  const launchMinimized = launchMinimizedCheckbox.checked; // Get checkbox state for start minimized
+  const launchMinimized = launchMinimizedCheckbox.checked;
 
-  // Clear any previous messages or icons
   resetMessageAndButton(saveButton);
 
-  // Set button to loading state
   saveButton.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...`;
 
-  // Perform input validation if necessary (for example, ensure required fields are filled)
   if (!dbName || !dbKey || !apiKey) {
     displayMessage("Please fill in all required fields.", false, saveButton);
     return;
   }
 
   try {
-    // Make an async call to save settings using the API
     const saveResponse = await window.api.settings.saveSettings({
       dbName,
       dbKey,
@@ -246,10 +237,9 @@ async function handleSaveSettings(
       region,
       autoUpdate,
       autoLaunch,
-      launchMinimized, // Add start minimized to the settings object
+      launchMinimized,
     });
 
-    // Handle response and update the UI based on success or failure
     if (saveResponse.success) {
       displayMessage("Settings saved successfully!", true, saveButton);
     } else {
@@ -265,7 +255,6 @@ async function handleSaveSettings(
   }
 }
 
-// Validation for the database name
 function validateDatabaseName(name) {
   if (name === null || !name.length) {
     return {
@@ -284,7 +273,6 @@ function validateDatabaseName(name) {
   return { success: true };
 }
 
-// Validation for the database key
 function validateDatabaseKey(key) {
   if (key === null || !key.length) {
     return {
@@ -303,7 +291,6 @@ function validateDatabaseKey(key) {
   return { success: true };
 }
 
-// Validation for the region
 function validateRegion(region) {
   if (region === null || !region.length) {
     return {
@@ -322,7 +309,6 @@ function validateRegion(region) {
   return { success: true };
 }
 
-// Validation for the region
 function validateApiKey(key) {
   if (key === null || !key.length) {
     return {

@@ -45,14 +45,10 @@ const checkServiceStatus = async (services) => {
         try {
           let serviceStatus = service.status || "deploying";
 
-          // Poll the service status while it's "deploying"
           while (serviceStatus === "deploying") {
-            // Wait 10 seconds before the next status check
             await new Promise((timeoutResolve) =>
               setTimeout(timeoutResolve, 10000)
             );
-
-            // Fetch the service events
             const response = await axios.get(
               `${render.baseUrl}/services/${service.id}/events?limit=10`,
               options
@@ -61,7 +57,6 @@ const checkServiceStatus = async (services) => {
             const eventType = event.type;
             const statusCode = event.details.status;
 
-            // Update the status based on the event type and status code
             if (eventType === "deploy_ended") {
               switch (statusCode) {
                 case 2:
@@ -76,7 +71,6 @@ const checkServiceStatus = async (services) => {
             }
           }
 
-          // Store the service status after it's no longer "deploying"
           store.set(`services.${service.name}.status`, serviceStatus);
         } catch (error) {
           store.set(`services.${service.name}.status`, "error");
