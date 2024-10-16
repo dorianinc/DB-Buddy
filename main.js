@@ -45,6 +45,7 @@ const isDev = !app.isPackaged;
 const startLaunched = store.get("settings.autoLaunch");
 const startMinimized = store.get("settings.launchMinimized");
 const startHidden = startLaunched && startMinimized;
+store.set("isHidden", startHidden);
 
 let windowState;
 let mainWindow;
@@ -91,7 +92,7 @@ function createMainWindow() {
 
   // Handle window close: hide instead of quitting
   mainWindow.on("close", (e) => {
-    if (isDev) return;
+    // if (isDev) return;
     const isExiting = store.get("isExiting");
     if (!isExiting && mainWindow.isVisible()) {
       e.preventDefault();
@@ -101,15 +102,15 @@ function createMainWindow() {
 
   // Listen for window state changes
   mainWindow.on("hide", () => {
-    const isHidden = store.set("isHidden", true);
-    setTray(app, mainWindow, isHidden); // Pass 'true' to indicate the app is minimized
+    store.set("isHidden", true);
+    setTray(app, mainWindow); // Pass 'true' to indicate the app is minimized
   });
 
   mainWindow.on("show", () => {
-    const isHidden = store.set("isHidden", false);
-    setTray(app, mainWindow, isHidden); // Pass 'false' to indicate the app is restored
+    store.set("isHidden", false);
+    setTray(app, mainWindow); // Pass 'false' to indicate the app is restored
   });
-
+  
   return mainWindow;
 }
 
@@ -153,8 +154,8 @@ app.on("activate", () => {
 //---------------------- helpers ------------- //
 
 // Set Tray Icon and Menu
-function setTray(app, mainWindow, isHidden) {
-  const template = createTemplate(app, mainWindow, isHidden);
+function setTray(app, mainWindow) {
+  const template = createTemplate(app, mainWindow);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 

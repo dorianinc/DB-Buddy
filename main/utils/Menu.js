@@ -1,7 +1,8 @@
 const { store } = require("../store");
 
 
-exports.createTemplate = (app, mainWindow, isHidden) => {
+exports.createTemplate = (app, mainWindow) => {
+   const isHidden = store.get("isHidden")
   const menuTemplate = [
     {
       label: process.platform === "darwin" ? app.getName() : "Menu",
@@ -83,6 +84,7 @@ exports.createTemplate = (app, mainWindow, isHidden) => {
 
   // Add "Show App" menu item if the app is minimized
   if (isHidden) {
+    console.log("condition is met to show 'Show App'")
     const trayItem = [
       {
         label: "Show App",
