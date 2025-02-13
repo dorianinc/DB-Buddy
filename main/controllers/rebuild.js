@@ -1,13 +1,8 @@
 const { fetchOwner } = require("./owner");
 const { fetchServices } = require("./service");
 const { updateEnvVariable, deployService } = require("./helpers");
-const {
-  fetchDatabase,
-  createDatabase,
-  deleteDatabase,
-  fetchConnectionInfo,
-  checkDbStatus,
-} = require("./database");
+const { fetchDatabase, createDatabase, deleteDatabase } = require("./database");
+const { fetchConnectionInfo, checkDbStatus } = require("./database");
 const { store } = require("../store");
 const { getConfigs } = require("./configs");
 const { differenceInDays } = require("date-fns");

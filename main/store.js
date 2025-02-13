@@ -7,63 +7,115 @@ const serviceSchema = {
       type: "object",
       properties: {
         id: {
-          type: "string",
+          oneOf: [
+            {
+              type: "string",
+              minLength: 1,
+            },
+            { type: "null" },
+          ],
           default: null,
-          minLength: 1,
         },
         name: {
-          type: "string",
+          oneOf: [
+            {
+              type: "string",
+              minLength: 1,
+            },
+            { type: "null" },
+          ],
           default: null,
-          minLength: 1,
         },
         status: {
-          type: "string",
+          oneOf: [
+            {
+              type: "string",
+              enum: ["deployed", "deploying", "pending", "failed"],
+            },
+            { type: "null" },
+          ],
           default: null,
-          enum: ["deployed", "deploying", "pending", "failed"],
         },
         type: {
-          type: "string",
+          oneOf: [
+            {
+              type: "string",
+              enum: ["web_service"],
+            },
+            { type: "null" },
+          ],
           default: null,
-          enum: ["web_service"],
         },
       },
       required: ["id", "name", "status", "type"],
     },
   },
+  default: {},
+  additionalProperties: false,
 };
 
 const databaseSchema = {
   type: "object",
   properties: {
     id: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          minLength: 1,
+        },
+        { type: "null" },
+      ],
       default: null,
-      minLength: 1,
     },
     name: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          minLength: 1,
+        },
+        { type: "null" },
+      ],
       default: null,
-      minLength: 1,
     },
     version: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          pattern: "^[0-9]+$",
+        },
+        { type: "null" },
+      ],
       default: null,
-      pattern: "^[0-9]+$",
     },
     status: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          enum: ["creating", "available", "unavailable", "unknown"],
+        },
+        { type: "null" },
+      ],
       default: null,
-      enum: ["creating", "available", "unavailable", "unknown"],
     },
     createdAt: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          minLength: 1,
+        },
+        { type: "null" },
+      ],
       default: null,
-      minLength: 1,
     },
     internalConnectionString: {
-      type: "string",
+      oneOf: [
+        {
+          type: "string",
+          format: "uri",
+        },
+        { type: "null" },
+      ],
       default: null,
-      format: "uri",
     },
   },
   required: [
@@ -74,32 +126,43 @@ const databaseSchema = {
     "createdAt",
     "internalConnectionString",
   ],
+  default: {},
+  additionalProperties: false,
 };
 
 const settingsSchema = {
   type: "object",
   properties: {
     dbName: {
-      type: "string",
-      pattern: "^(?![_-])[a-zA-Z0-9_-]+(?<![_-])$",
+      oneOf: [
+        {
+          type: "string",
+          pattern: "^(?![_-])[a-zA-Z0-9_-]+(?<![_-])$",
+          minLength: 1,
+        },
+        { type: "null" },
+      ],
       default: null,
-      minLength: 1,
     },
     dbKey: {
-      type: "string",
-      pattern: "^[A-Z0-9_]+$",
-      minLength: 1,
+      oneOf: [
+        { type: "string", pattern: "^[A-Z0-9_]+$", minLength: 1 },
+        { type: "null" },
+      ],
+
       default: null,
     },
     apiKey: {
-      type: "string",
-      pattern: "^rnd_.*$",
-      minLength: 5,
+      oneOf: [
+        { type: "string", pattern: "^rnd_.*$", minLength: 5 },
+        { type: "null" },
+      ],
+
       default: null,
     },
     region: {
       type: "string",
-      default: null,
+      default: "oregon",
       enum: ["oregon", "ohio", "virginia", "frankfurt", "singapore"],
     },
     autoUpdate: {
@@ -124,6 +187,8 @@ const settingsSchema = {
     "autoLaunch",
     "launchMinimized",
   ],
+  default: {},
+  additionalProperties: false,
 };
 
 const schema = {
@@ -136,7 +201,16 @@ const schema = {
   settings: settingsSchema,
 };
 
-const store = new Store({ watch: true, schema, encryptionKey: "Pump3n1ck3l" });
+const store = new Store({ watch: true, schema });
+
+(() => {
+  const defaultSettings = Object.entries(settingsSchema.properties);
+  for (const [key, config] of defaultSettings) {
+    if (!store.has(`settings.${key}`)) {
+      store.set(`settings.${key}`, config.default);
+    }
+  }
+})();
 
 const deployedServicesListeners = new Set();
 const deployStoreListeners = (webContents) => {

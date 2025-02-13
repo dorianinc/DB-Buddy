@@ -5,6 +5,7 @@ const path = require("path"); // Import path module
 module.exports = {
   packagerConfig: {
     name: "DB Buddy",
+    executableName: "db-buddy",
     asar: true,
     osxSign: {},
     appCategoryType: "public.app-category.developer-tools",
@@ -28,21 +29,6 @@ module.exports = {
         certificatePassword: process.env.CERTIFICATE_PASSWORD,
       },
     },
-
-    // macOS
-    // {
-    //   name: "@electron-forge/maker-dmg",
-    //   config: {
-    //     iconSize: 100, 
-    //     background: path.join(__dirname, "assets", "images", "dmg-background.jpg"),
-    //     window: {
-    //       width: 600,
-    //       height: 400
-    //     },
-    //     format: 'ULFO' 
-    //   }
-    // },
-    
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],

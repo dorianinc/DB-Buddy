@@ -43,6 +43,7 @@ const checkServiceStatus = async (services) => {
     await Promise.allSettled(
       Object.values(services).map(async (service) => {
         try {
+          const inProgress = ["update_in_progress", "build_in_progress"];
           let serviceStatus = service.status || "deploying";
 
           while (serviceStatus === "deploying") {
@@ -50,19 +51,20 @@ const checkServiceStatus = async (services) => {
               setTimeout(timeoutResolve, 10000)
             );
             const response = await axios.get(
-              `${render.baseUrl}/services/${service.id}/events?limit=10`,
+              `${render.baseUrl}/services/${service.id}/deploys?limit=20`,
               options
             );
-            const event = response.data[0].event;
-            const eventType = event.type;
-            const statusCode = event.details.status;
+            const deployStatus = response.data[0].deploy.status;
 
-            if (eventType === "deploy_ended") {
-              switch (statusCode) {
-                case 2:
+            if (!inProgress.includes(deployStatus)) {
+              switch (deployStatus) {
+                case "live":
                   serviceStatus = "deployed";
                   break;
-                case 3:
+                case "build_failed":
+                case "update_failed":
+                case "pre_deployed_failed":
+                case "deactivated":
                   serviceStatus = "not deployed";
                   break;
                 default:
@@ -70,7 +72,6 @@ const checkServiceStatus = async (services) => {
               }
             }
           }
-
           store.set(`services.${service.name}.status`, serviceStatus);
         } catch (error) {
           store.set(`services.${service.name}.status`, "error");

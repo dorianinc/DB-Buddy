@@ -8,7 +8,6 @@ const { deployIPCListeners } = require("./main/ipc"); // Sets up Inter-Process C
 const { deployStoreListeners } = require("./main/store"); // Sets up listeners for handling store events (persistent storage)
 const { handleAutoLaunch } = require("./main/utils/autoLaunch"); // Manages auto-launch functionality
 const { store } = require("./main/store"); // Persistent storage for app settings and state
-
 // Variables to store tray and dock icons, based on the platform (Windows, macOS, or Linux)
 let trayIcon;
 let dockIcon;
@@ -144,8 +143,11 @@ app.whenReady().then(() => {
   mainApp.once("ready-to-show", () => {
     // Retrieve launch settings from persistent store
     const startLaunched = store.get("settings.autoLaunch"); // Whether the app auto-launches on startup
+    console.log("🖥️  startLaunched: ", startLaunched)
     const startMinimized = store.get("settings.launchMinimized"); // Whether the app starts minimized
+    console.log("🖥️  startMinimized: ", startMinimized)
     const startHidden = startLaunched && startMinimized; // Determine if the app should start hidden
+    console.log("🖥️  startHidden: ", startHidden)
 
     // Handle the window's visibility based on startup settings
     if (startHidden) {
@@ -154,7 +156,7 @@ app.whenReady().then(() => {
       mainApp.show(); // Show the window otherwise
     }
 
-    store.set("isHidden", startHidden); // Store the initial hidden state
+    // store.set("isHidden", startHidden); // Store the initial hidden state
     setMenu(app, mainWindow); // Set up the main application menu
     setTray(app, mainWindow); // Set up the tray icon and menu
   });
