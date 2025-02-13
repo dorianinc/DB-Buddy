@@ -9,7 +9,7 @@ module.exports = {
     asar: true,
     osxSign: {},
     appCategoryType: "public.app-category.developer-tools",
-    icon: path.join(__dirname, "assets", "icons", "mac", "db-white"),
+    icon: path.join(__dirname, "assets", "icons", "db-white"), // No extension for cross-platform
   },
   rebuildConfig: {},
   makers: [
@@ -18,23 +18,21 @@ module.exports = {
       name: "@electron-forge/maker-squirrel",
       config: {
         name: "db-buddy",
-        icon: path.join(
-          __dirname,
-          "assets",
-          "icons",
-          "windows",
-          "db-white.ico"
-        ),
+        iconUrl: "https://yourwebsite.com/path-to-icon.ico", // Optional for metadata
+        setupIcon: path.join(__dirname, "assets", "icons", "windows", "db-white.ico"), // Desktop shortcut icon
         certificateFile: "./cert.pfx",
         certificatePassword: process.env.CERTIFICATE_PASSWORD,
       },
     },
+
+    // macOS
     {
       name: "@electron-forge/maker-zip",
       platforms: ["darwin"],
       config: {
         name: "DB Buddy",
         icon: path.join(__dirname, "assets", "icons", "mac", "db-white.png"),
+        // icon: path.join(__dirname, "assets", "icons", "mac", "db-white.icns"), // Use .icns for macOS
       },
     },
 
@@ -43,7 +41,7 @@ module.exports = {
       name: "@electron-forge/maker-deb",
       config: {
         name: "db-buddy",
-        icon: path.join(__dirname, "assets", "icons", "linux", "db-white.png"),
+        icon: path.join(__dirname, "assets", "icons", "linux", "db-white.png"), // Use .png for Linux
       },
     },
   ],
