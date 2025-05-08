@@ -143,11 +143,8 @@ app.whenReady().then(() => {
   mainApp.once("ready-to-show", () => {
     // Retrieve launch settings from persistent store
     const startLaunched = store.get("settings.autoLaunch"); // Whether the app auto-launches on startup
-    console.log("🖥️  startLaunched: ", startLaunched)
     const startMinimized = store.get("settings.launchMinimized"); // Whether the app starts minimized
-    console.log("🖥️  startMinimized: ", startMinimized)
     const startHidden = startLaunched && startMinimized; // Determine if the app should start hidden
-    console.log("🖥️  startHidden: ", startHidden)
 
     // Handle the window's visibility based on startup settings
     if (startHidden) {

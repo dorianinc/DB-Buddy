@@ -92,7 +92,6 @@ const setStatus = async (item) => {
   const status = item.status;
   const statusSpan = document.getElementById(`${name}-status`);
   if (!statusSpan) return;
-
   switch (status) {
     case "creating":
     case "deploying":

@@ -65,7 +65,7 @@ const checkServiceStatus = async (services) => {
                 case "update_failed":
                 case "pre_deployed_failed":
                 case "deactivated":
-                  serviceStatus = "not deployed";
+                  serviceStatus = "failed";
                   break;
                 default:
                   serviceStatus = "error";
